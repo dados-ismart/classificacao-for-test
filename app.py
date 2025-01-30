@@ -3,8 +3,10 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 from time import sleep
+import pytz
 
 st.set_page_config(layout="wide")
+fuso_horario = pytz.timezone('America/Sao_Paulo')
 
 def check_password():
     """Returns `True` if the user had a correct password."""
@@ -315,7 +317,7 @@ if check_password():
                             df_insert = pd.DataFrame([{
                                                     'RA': ra, 
                                                     'nome': nome, 
-                                                    'data_submit': datetime.now(), 
+                                                    'data_submit': datetime.now(fuso_horario), 
                                                     'classificacao': classificar(), 
                                                     'periodo': periodo,	
                                                     'nomenclatura': nomenclatura,	
