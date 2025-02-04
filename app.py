@@ -71,7 +71,7 @@ if check_password():
         except:
             return None
         
-    def registrar(df, df_insert, tabela):
+    def registrar(df, df_insert, tabela, coluna_apoio):
         #Limpar linhas repetidas
         df = df[df['RA'] != ra]
 
@@ -86,7 +86,7 @@ if check_password():
             #verificar
             sleep(3)
             df = ler_sheets(tabela)
-            if not df.query(f'RA == {ra}').empty:
+            if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
                 st.success('Registrado com sucesso!')
                 sleep(2)
                 break
@@ -136,13 +136,13 @@ if check_password():
     if ra_nome is not None:
         if st.session_state["authenticated_username"] == 'coord':
             try:
-                ra = bd.loc[bd['RA - NOME - FINAL'] == ra_nome, 'RA'].iloc[0]
+                st.session_state["ra"] = bd.loc[bd['RA - NOME - FINAL'] == ra_nome, 'RA'].iloc[0]
             except IndexError:
                 st.warning('Aluno não encontrado na base.')
                 st.stop()
         else:
             try:
-                ra = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
+                st.session_state["ra"] = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
             except IndexError:
                 st.warning('Aluno não encontrado na base.')
                 st.stop()
@@ -299,7 +299,7 @@ if check_password():
                                             'classificacao_final': resposta_classificacao_final,
                                             'motivo_final': resposta_motivo_final
                                             }])
-                registrar(df, df_insert, 'registro')
+                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao')
         if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty:
             #Variaveis Registro
             if df.query(f'RA == {ra}').empty:
@@ -470,7 +470,7 @@ if check_password():
                                                 'classificacao_automatica': classificar(), 
                                                 'motivo_classificao_automatica': justificar_classificacao_automatica(),
                                                 }])
-                        registrar(df, df_insert, 'registro')
+                        registrar(df, df_insert, 'registro', 'classificacao_automatica')
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
                 #colunas
                 elegivel_prep_ismart = df.loc[df['RA'] == ra, 'elegivel_prep_ismart'].iloc[0]
@@ -493,7 +493,7 @@ if check_password():
                 col2.metric("Motivo", motivo_classificao_automatica, border=True)
 
                 resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=0,placeholder="Confirma classificação?")
-                resposta_elegivel_prep_ismart = st.selectbox("Elegível ao prep ismart?",caixa_sim_nao,index=None,placeholder="Elegível ao prep ismart?")
+                resposta_elegivel_prep_ismart = st.selectbox("Elegível ao prep ismart?",['-', 'Sim', 'Não'],index=0,placeholder="Elegível ao prep ismart?")
                 
 
                 if resposta_confirmar_classificacao == 'Sim':
@@ -553,4 +553,4 @@ if check_password():
                                                 'descricao_caso': resposta_descricao_caso,
                                                 'plano_intervencao': resposta_plano_intervencao
                                                 }])
-                    registrar(df, df_insert, 'registro')
+                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')
