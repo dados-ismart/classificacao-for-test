@@ -117,12 +117,12 @@ if check_password():
 
         # progresso
         qtd_alunos_registrados_coord = bd.query(f"apoio_registro_final == 'Não' or apoio_registro_final == 'Sim'").shape[0]
-        qtd_alunos_registrados_analistas = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
-        st.progress(qtd_alunos_registrados_analistas/bd.shape[0], f'Analistas registraram: **{qtd_alunos_registrados_analistas}/{bd.shape[0]}**')
-        st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_analistas, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_analistas}**')
+        qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+        st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Orientadoras registraram: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
+        st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
 
     else:
-        bd = bd[bd['Analista'] == st.session_state["authenticated_username"]]
+        bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         bd['RA - NOME'],
@@ -130,8 +130,8 @@ if check_password():
         placeholder="RA")
 
         # progresso
-        qtd_alunos_registrados_analistas = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
-        st.progress(qtd_alunos_registrados_analistas/bd.shape[0], f'Você registrou: **{qtd_alunos_registrados_analistas}/{bd.shape[0]}**')
+        qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+        st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
    
     if ra_nome is not None:
         if st.session_state["authenticated_username"] == 'coord':
@@ -191,7 +191,7 @@ if check_password():
             qtd_somas_humanas += 1
 
         #extras
-        analista = bd.loc[bd['RA'] == ra, 'Analista'].iloc[0]
+        orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
         segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
         ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
             
@@ -221,7 +221,7 @@ if check_password():
         #Segmento
         st.header('Segmento')
         col1, col2 = st.columns(2)
-        col1.metric("Orientadora", analista, border=True)
+        col1.metric("Orientadora", orientadora, border=True)
         col2.metric("Segmento", segmento, border=True)
 
         #formulario
@@ -387,7 +387,7 @@ if check_password():
                 # Acadêmico
                 st.divider()
                 st.subheader('Acadêmico')
-                resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com analistas, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
+                resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
                 resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
                 resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
                 resposta_atividades_extracurriculares = st.radio('**O aluno faz atividades acadêmicas extracurriculares com vias a desenvolver seu talento acadêmico? (olimpiadas, projetos de iniciação cientifica, programação, Cultura inglesa/Inglês/Prep)**', caixa_atividades_extracurriculares, index=retornar_indice(lista=caixa_atividades_extracurriculares,variavel=registro_resposta_atividades_extracurriculares), horizontal=True)
