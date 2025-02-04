@@ -92,6 +92,7 @@ if check_password():
                 st.error('Erro ao registrar')
                 sleep(1)
                 continue
+        del st.session_state['lista_ra']
         st.rerun()
 
     #importar e tratar datasets
@@ -107,9 +108,11 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if st.session_state["authenticated_username"] == 'coord':
+        if 'lista_ra' not in st.session_state:
+            st.session_state['lista_ra'] = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
-        bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL'],
+        st.session_state['lista_ra'],
         index=None,
         placeholder="RA")
 
@@ -120,10 +123,12 @@ if check_password():
         st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
 
     else:
+        if 'lista_ra' not in st.session_state:
+            st.session_state['lista_ra'] = bd['RA - NOME']
         bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
-        bd['RA - NOME'],
+        st.session_state['lista_ra'],
         index=None,
         placeholder="RA")
 
@@ -256,7 +261,7 @@ if check_password():
             else:
                 resposta_classificacao_final = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
                 resposta_motivo_final = st.selectbox("Novo motivo da classificação",caixa_justificativa_classificacao,index=None,placeholder="Novo motivo da classificação")
-                resposta_justificativa_classificacao_coord = st.text_input(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
+                resposta_justificativa_classificacao_coord = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
 
             if st.button(label='REGISTRAR'):
                 df_insert = pd.DataFrame([{
@@ -501,7 +506,7 @@ if check_password():
                 else:
                     resposta_nova_classificacao_orientadora = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
                     resposta_novo_motivo_classificacao_orientadora = st.selectbox("Novo motivo da classificação",caixa_justificativa_classificacao,index=None,placeholder="Novo motivo da classificação")
-                    resposta_nova_justificativa_classificacao_orientadora = st.text_input(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
+                    resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
                 
                 deseja_plano_intervencao = st.radio('Deseja adicionar plano de intervenção?',caixa_sim_nao,index=1, horizontal=True)
                 if deseja_plano_intervencao == 'Sim':
