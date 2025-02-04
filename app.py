@@ -137,12 +137,14 @@ if check_password():
         if st.session_state["authenticated_username"] == 'coord':
             try:
                 st.session_state["ra"] = bd.loc[bd['RA - NOME - FINAL'] == ra_nome, 'RA'].iloc[0]
+                ra = st.session_state["ra"]
             except IndexError:
                 st.warning('Aluno não encontrado na base.')
                 st.stop()
         else:
             try:
                 st.session_state["ra"] = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
+                ra = st.session_state["ra"]
             except IndexError:
                 st.warning('Aluno não encontrado na base.')
                 st.stop()
