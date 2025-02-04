@@ -80,11 +80,9 @@ if check_password():
                 updared_df = pd.concat([df, df_insert], ignore_index=True)
                 conn.update(worksheet="registro", data=updared_df)
             except:
-                sleep(2)
                 continue
 
             #verificar
-            sleep(3)
             df = ler_sheets(tabela)
             if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
                 st.success('Registrado com sucesso!')
@@ -440,9 +438,7 @@ if check_password():
                     if not periodo or not nomenclatura or not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_medalha or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
                         st.warning('Preencha o formuário')
                         st.stop()
-                    else:
-                        df = ler_sheets('registro')
-                        
+                    else:    
                         #inserir classificação
                         df_insert = pd.DataFrame([{
                                                 'RA': ra, 
