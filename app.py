@@ -92,8 +92,10 @@ if check_password():
         if resposta_faltas == 'Sim':
             classificacao = caixa_classificacao[3]
             motivo = caixa_justificativa_classificacao[0]
-        return 'classificacao', 'motivo'
-
+        classificacao = 'classificacao'
+        motivo = 'motivo'
+        return classificacao, motivo
+        
 
     def retornar_indice(lista, variavel):
         if variavel == None:
