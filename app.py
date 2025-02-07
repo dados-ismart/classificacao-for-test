@@ -92,10 +92,7 @@ if check_password():
         if resposta_faltas == 'Sim':
             classificacao = caixa_classificacao[3]
             motivo = caixa_justificativa_classificacao[0]
-        classificacao = 'classificacao'
-        motivo = 'motivo'
-        return classificacao, motivo
-        
+        return 'classificacao', 'motivo'
 
     def retornar_indice(lista, variavel):
         if variavel == None:
@@ -234,7 +231,28 @@ if check_password():
         orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
         segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
         ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
-            
+        ## LISTAS PARA MULTIPLA ESCOLHA
+        caixa_periodo = ['-', '1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°']
+        caixa_nomenclatura = ['bimestre', 'trimestre', 'simestre', 'ciclo', 'período', 'etapa']
+        # Acadêmico
+        caixa_argumentacao = ['Superficial - apenas reproduz', 
+                            'Argumenta e se posiciona, trazendo sua opinião de forma consistente', 
+                            'Sempre traz elementos além dos solicitados']
+        caixa_rotina_estudos = ['Não', 'Precisa melhorar', 'Sim']
+        caixa_atividades_extracurriculares = ['Nenhuma', 'Uma', 'Mais de uma']
+        #Perfil
+        caixa_nunca_eventualmente_sempre = ['Nunca', 'Eventualmente', 'Sempre']
+        caixa_networking = ['Tem dificuldade', 'Sim (dentro da escola)', 'Sim, (além da escola)']
+        # Psicológico
+        caixa_fragilidade = ['Não', 
+                            'Sim, com baixa probabilidade de impacto', 
+                            'Sim, com média probabilidade de impacto',
+                            'Sim, com alta probabilidade de impacto']
+        caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
+        # Apenas para alunos do 3º Ano
+        caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
+        caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
+
         #Dados pessoais
         st.title('Aluno')
         col1, col2 = st.columns([2, 5])
@@ -397,27 +415,6 @@ if check_password():
                 registro_resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
 
             with st.form(key='formulario'):
-                ## LISTAS PARA MULTIPLA ESCOLHA
-                caixa_periodo = ['-', '1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°']
-                caixa_nomenclatura = ['bimestre', 'trimestre', 'simestre', 'ciclo', 'período', 'etapa']
-                # Acadêmico
-                caixa_argumentacao = ['Superficial - apenas reproduz', 
-                                    'Argumenta e se posiciona, trazendo sua opinião de forma consistente', 
-                                    'Sempre traz elementos além dos solicitados']
-                caixa_rotina_estudos = ['Não', 'Precisa melhorar', 'Sim']
-                caixa_atividades_extracurriculares = ['Nenhuma', 'Uma', 'Mais de uma']
-                #Perfil
-                caixa_nunca_eventualmente_sempre = ['Nunca', 'Eventualmente', 'Sempre']
-                caixa_networking = ['Tem dificuldade', 'Sim (dentro da escola)', 'Sim, (além da escola)']
-                # Psicológico
-                caixa_fragilidade = ['Não', 
-                                    'Sim, com baixa probabilidade de impacto', 
-                                    'Sim, com média probabilidade de impacto',
-                                    'Sim, com alta probabilidade de impacto']
-                caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
-                # Apenas para alunos do 3º Ano
-                caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
-                caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
                 # Período
