@@ -56,10 +56,44 @@ if check_password():
         return df
 
     def classificar():
-        return 'bom'
-    
-    def justificar_classificacao_automatica():
-        return 'nota'
+        return 'Destaque'
+
+    def pontuar(resposta, lista):
+        try:
+            for index, elemento in enumerate(lista):
+                if elemento == resposta:
+                    return int(index + 1)    
+        except:
+            return -100
+
+    caixa_classificacao = ['Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
+    caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
+
+    def classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao):
+        #Pontuação Perfil 
+        pontuacao_perfil = 0
+        pontuacao_perfil += pontuar(resposta_argumentacao, caixa_argumentacao)
+        pontuacao_perfil += pontuar(resposta_rotina_estudos , caixa_rotina_estudos)
+        pontuacao_perfil += pontuar(resposta_atividades_extracurriculares , caixa_atividades_extracurriculares)
+        pontuacao_perfil += pontuar(resposta_medalha , caixa_sim_nao)
+        #Pontuação Academico
+        pontuacao_academico = 0
+        pontuacao_academico += pontuar(resposta_respeita_escola , caixa_nunca_eventualmente_sempre)
+        pontuacao_academico += pontuar(resposta_atividades_obrigatorias_ismart , caixa_nunca_eventualmente_sempre)
+        pontuacao_academico += pontuar(resposta_colaboracao , caixa_nunca_eventualmente_sempre)
+        pontuacao_academico += pontuar(resposta_atividades_nao_obrigatorias_ismart , caixa_nunca_eventualmente_sempre)
+        pontuacao_academico += pontuar(resposta_networking , caixa_networking)
+        pontuacao_academico += pontuar(resposta_proatividade , caixa_nunca_eventualmente_sempre)
+        
+        if pontuacao_perfil >= 6 and pontuacao_perfil <= 10:
+            classificacao = caixa_classificacao[2]
+            motivo = caixa_justificativa_classificacao[1]
+
+        if resposta_faltas == 'Sim':
+            classificacao = caixa_classificacao[3]
+            motivo = caixa_justificativa_classificacao[0]
+        return 'classificacao', 'motivo'
+
 
     def retornar_indice(lista, variavel):
         if variavel == None:
@@ -104,10 +138,11 @@ if check_password():
     bd['apoio_registro'] = bd['apoio_registro'].astype(str)
     bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
     bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
+    df_login = ler_sheets('login')
 
     st.title('Formulário de Classificação')
     #Seleção do aluno
-    if st.session_state["authenticated_username"] == 'coord':
+    if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         if 'lista_ra' not in st.session_state:
             st.session_state['lista_ra'] = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
         ra_nome = st.selectbox(
@@ -137,7 +172,7 @@ if check_password():
         st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
    
     if ra_nome is not None:
-        if st.session_state["authenticated_username"] == 'coord':
+        if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
             try:
                 st.session_state["ra"] = bd.loc[bd['RA - NOME - FINAL'] == ra_nome, 'RA'].iloc[0]
                 ra = st.session_state["ra"]
@@ -230,9 +265,9 @@ if check_password():
         #formulario
         st.divider()
         caixa_sim_nao = ['Sim', 'Não']
-        caixa_classificacao = [1, 2 ,3 ,4 ,5]
-        caixa_justificativa_classificacao = [1, 2 ,3 ,4 ,5]
-        if st.session_state["authenticated_username"] == 'coord':
+        caixa_classificacao = ['Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
+        caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
+        if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
             #colunas
             novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
             nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -470,8 +505,8 @@ if check_password():
                                                 'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                 'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificar(), 
-                                                'motivo_classificao_automatica': justificar_classificacao_automatica(),
+                                                'classificacao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                'motivo_classificao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                 }])
                         registrar(df, df_insert, 'registro', 'classificacao_automatica')
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
@@ -545,8 +580,8 @@ if check_password():
                                                 'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                 'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificar(), 
-                                                'motivo_classificao_automatica': justificar_classificacao_automatica(),
+                                                'classificacao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                'motivo_classificao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                 'elegivel_prep_ismart': resposta_elegivel_prep_ismart,
                                                 'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
                                                 'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
