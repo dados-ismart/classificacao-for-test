@@ -88,11 +88,13 @@ if check_password():
         if pontuacao_perfil >= 6 and pontuacao_perfil <= 10:
             classificacao = caixa_classificacao[2]
             motivo = caixa_justificativa_classificacao[1]
-
-        if resposta_faltas == 'Sim':
+        elif resposta_faltas == 'Sim':
             classificacao = caixa_classificacao[3]
             motivo = caixa_justificativa_classificacao[0]
-        return 'classificacao', 'motivo'
+        else:
+            classificacao = caixa_classificacao[3]
+            motivo = caixa_justificativa_classificacao[0]
+        return classificacao, motivo
 
     def retornar_indice(lista, variavel):
         if variavel == None:
@@ -231,28 +233,7 @@ if check_password():
         orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
         segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
         ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
-        ## LISTAS PARA MULTIPLA ESCOLHA
-        caixa_periodo = ['-', '1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°']
-        caixa_nomenclatura = ['bimestre', 'trimestre', 'simestre', 'ciclo', 'período', 'etapa']
-        # Acadêmico
-        caixa_argumentacao = ['Superficial - apenas reproduz', 
-                            'Argumenta e se posiciona, trazendo sua opinião de forma consistente', 
-                            'Sempre traz elementos além dos solicitados']
-        caixa_rotina_estudos = ['Não', 'Precisa melhorar', 'Sim']
-        caixa_atividades_extracurriculares = ['Nenhuma', 'Uma', 'Mais de uma']
-        #Perfil
-        caixa_nunca_eventualmente_sempre = ['Nunca', 'Eventualmente', 'Sempre']
-        caixa_networking = ['Tem dificuldade', 'Sim (dentro da escola)', 'Sim, (além da escola)']
-        # Psicológico
-        caixa_fragilidade = ['Não', 
-                            'Sim, com baixa probabilidade de impacto', 
-                            'Sim, com média probabilidade de impacto',
-                            'Sim, com alta probabilidade de impacto']
-        caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
-        # Apenas para alunos do 3º Ano
-        caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
-        caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
-
+            
         #Dados pessoais
         st.title('Aluno')
         col1, col2 = st.columns([2, 5])
@@ -415,6 +396,27 @@ if check_password():
                 registro_resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
 
             with st.form(key='formulario'):
+                ## LISTAS PARA MULTIPLA ESCOLHA
+                caixa_periodo = ['-', '1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°']
+                caixa_nomenclatura = ['bimestre', 'trimestre', 'simestre', 'ciclo', 'período', 'etapa']
+                # Acadêmico
+                caixa_argumentacao = ['Superficial - apenas reproduz', 
+                                    'Argumenta e se posiciona, trazendo sua opinião de forma consistente', 
+                                    'Sempre traz elementos além dos solicitados']
+                caixa_rotina_estudos = ['Não', 'Precisa melhorar', 'Sim']
+                caixa_atividades_extracurriculares = ['Nenhuma', 'Uma', 'Mais de uma']
+                #Perfil
+                caixa_nunca_eventualmente_sempre = ['Nunca', 'Eventualmente', 'Sempre']
+                caixa_networking = ['Tem dificuldade', 'Sim (dentro da escola)', 'Sim, (além da escola)']
+                # Psicológico
+                caixa_fragilidade = ['Não', 
+                                    'Sim, com baixa probabilidade de impacto', 
+                                    'Sim, com média probabilidade de impacto',
+                                    'Sim, com alta probabilidade de impacto']
+                caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
+                # Apenas para alunos do 3º Ano
+                caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
+                caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
                 # Período
@@ -504,8 +506,8 @@ if check_password():
                                                 'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                 'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                'motivo_classificao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                'classificacao_automatica': 'classificacao', 
+                                                'motivo_classificao_automatica': 'motivo',
                                                 }])
                         registrar(df, df_insert, 'registro', 'classificacao_automatica')
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
@@ -579,8 +581,8 @@ if check_password():
                                                 'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                 'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                'motivo_classificao_automatica': classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                'classificacao_automatica': 'classificacao', 
+                                                'motivo_classificao_automatica': 'motivo',
                                                 'elegivel_prep_ismart': resposta_elegivel_prep_ismart,
                                                 'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
                                                 'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
