@@ -55,9 +55,6 @@ if check_password():
                 st.rerun()
         return df
 
-    def classificar():
-        return 'Destaque'
-
     def pontuar(resposta, lista):
         try:
             for index, elemento in enumerate(lista):
@@ -69,7 +66,7 @@ if check_password():
     caixa_classificacao = ['Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
     caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
 
-    def classificacao_automatica(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao):
+    def classificar(resposta_argumentacao, resposta_rotina_estudos, resposta_faltas, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao):
         #Pontuação Perfil 
         pontuacao_perfil = 0
         pontuacao_perfil += pontuar(resposta_argumentacao, caixa_argumentacao)
@@ -85,7 +82,7 @@ if check_password():
         pontuacao_academico += pontuar(resposta_networking , caixa_networking)
         pontuacao_academico += pontuar(resposta_proatividade , caixa_nunca_eventualmente_sempre)
         
-        if pontuacao_perfil >= 6 and pontuacao_perfil <= 10:
+        if pontuacao_perfil >= 6 and pontuacao_perfil <= 10 and pontuacao_academico >= 4 and pontuacao_perfil <= 6:
             classificacao = caixa_classificacao[2]
             motivo = caixa_justificativa_classificacao[1]
         elif resposta_faltas == 'Sim':
@@ -162,6 +159,7 @@ if check_password():
         if 'lista_ra' not in st.session_state:
             st.session_state['lista_ra'] = bd['RA - NOME']
         bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
+
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         st.session_state['lista_ra'],
@@ -428,9 +426,9 @@ if check_password():
                 st.subheader('Acadêmico')
                 resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
                 resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
-                resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
                 resposta_atividades_extracurriculares = st.radio('**O aluno faz atividades acadêmicas extracurriculares com vias a desenvolver seu talento acadêmico? (olimpiadas, projetos de iniciação cientifica, programação, Cultura inglesa/Inglês/Prep)**', caixa_atividades_extracurriculares, index=retornar_indice(lista=caixa_atividades_extracurriculares,variavel=registro_resposta_atividades_extracurriculares), horizontal=True)
                 resposta_medalha = st.radio('**O aluno possui medalha em alguma olimpiada do conhecimento (oficial) ou é TOP 3 em competições acadêmicas no ano corrente?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_medalha), horizontal=True)
+                resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
                 # Perfil
                 st.divider()
                 st.subheader('Perfil')
@@ -474,7 +472,7 @@ if check_password():
                     resposta_seguranca_profissional = '-'
 
                 #Botão registrar
-                submit_button = st.form_submit_button(label='REGISTRAR')
+                submit_button = st.form_submit_button(label='SALVAR')
                 if submit_button:
                     if not periodo or not nomenclatura or not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_medalha or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
                         st.warning('Preencha o formuário')
