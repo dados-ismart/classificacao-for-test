@@ -118,6 +118,7 @@ if check_password():
                 classificacao = caixa_classificacao[4]
                 motivo += caixa_justificativa_classificacao[0]+'; ' 
                 motivo += caixa_justificativa_classificacao[1]+'; ' 
+                motivo = motivo[:-2]
                 return classificacao, motivo
         
         #Nota escolar 
@@ -181,7 +182,7 @@ if check_password():
             motivo += caixa_justificativa_classificacao[0]+'; '
         elif classificacao == '':
             if status_nota_escolar == 0 or (status_nota_escolar == 1 and status_perfil == 0 and status_academico == 0):
-                classificacao = caixa_classificacao[4]
+                classificacao = caixa_classificacao[4]                                      
                 motivo = caixa_justificativa_classificacao[0]+'; '
                 if status_perfil == 0:
                     motivo += caixa_justificativa_classificacao[1]+'; '
@@ -215,6 +216,8 @@ if check_password():
                 else:  
                     classificacao = caixa_classificacao[3]    
                     motivo = caixa_justificativa_classificacao[1]+'; '
+        
+        motivo = motivo[:-2]
         return classificacao, motivo
 
     def retornar_indice(lista, variavel):
