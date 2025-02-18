@@ -319,8 +319,7 @@ if check_password():
         nome = bd.loc[bd['RA'] == ra, 'Nome'].iloc[0]
         escola = bd.loc[bd['RA'] == ra, 'Escola'].iloc[0]
         cidade = bd.loc[bd['RA'] == ra, 'Cidade'].iloc[0]
-        media_pu = bd.loc[bd['RA'] == ra, 'Média PU'].iloc[0]
-        enem_projetado = bd.loc[bd['RA'] == ra, 'ENEM Projetado'].iloc[0]
+
         #materias
         matematica = bd.loc[bd['RA'] == ra, 'Nota Matemática'].iloc[0]
         ingles = bd.loc[bd['RA'] == ra, 'Nota Inglês'].iloc[0]
@@ -363,12 +362,20 @@ if check_password():
         orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
         segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
         ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
-            
+        # periodo = bd.loc[bd['RA'] == ra, 'periodo'].iloc[0]
+        # nomenclatura = bd.loc[bd['RA'] == ra, 'nomenclatura'].iloc[0]
+
         #Dados pessoais
         st.title('Aluno')
         col1, col2 = st.columns([2, 5])
         col1.metric("RA", ra, border=True)
         col2.metric("Nome", nome, border=True)
+        st.divider()
+        #Segmento
+        st.header('Segmento')
+        col1, col2 = st.columns(2)
+        col1.metric("Orientadora", orientadora, border=True)
+        col2.metric("Segmento", segmento, border=True)
         st.divider()
         st.header('Local')
         col1, col2 = st.columns(2)
@@ -390,19 +397,27 @@ if check_password():
         except:
             col1.metric("Idiomas", f"{0}", border=True)
         col2.metric("Ciências Naturais", biologia, border=True)
-        col1, col2 = st.columns(2)
-        col1.metric("Enem Projetado", enem_projetado, border=True)
-        col2.metric("Média PU", media_pu, border=True)
-        #Segmento
-        st.header('Segmento')
-        col1, col2 = st.columns(2)
-        col1.metric("Orientadora", orientadora, border=True)
-        col2.metric("Segmento", segmento, border=True)
+        with st.expander("Notas detalhadas"):
+            st.subheader('Idiomas')
+            col1, col2, col3 = st.columns(3)
+            col1.metric('Inglês', ingles, border=True)
+            col2.metric('Francês', frances, border=True)
+            col3.metric('Espanhol', espanhol, border=True)
+            st.subheader('Humanas')
+            col1, col2 = st.columns(2)
+            col1.metric('Geografia', geografia, border=True)
+            col2.metric('História', historia, border=True)
+
+        # col1, col2 = st.columns(2)
+        # col1.metric("Período", periodo, border=True)
+        # col2.metric("Nomenclatura", nomenclatura, border=True)
+
 
         #formulario
         st.divider()
         caixa_sim_nao = ['Não', 'Sim']
         caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
+        caixa_reversao = ["Alta", "Média", "Baixa"]
         caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
             #colunas
@@ -439,8 +454,6 @@ if check_password():
                                             'RA': ra, 
                                             'nome': nome, 
                                             'data_submit': datetime.now(fuso_horario), 
-                                            'periodo': df.loc[df['RA'] == ra, 'periodo'].iloc[0],
-                                            'nomenclatura':	df.loc[df['RA'] == ra, 'nomenclatura'].iloc[0],
                                             'resposta_argumentacao':df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0],
                                             'resposta_rotina_estudos':df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0],
                                             'resposta_faltas':	df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0],
@@ -460,7 +473,6 @@ if check_password():
                                             'resposta_seguranca_profissional':df.loc[df['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0],
                                             'resposta_curso_apoiado':df.loc[df['RA'] == ra, 'resposta_curso_apoiado'].iloc[0],
                                             'resposta_nota_condizente':df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0],
-                                            'elegivel_prep_ismart':df.loc[df['RA'] == ra, 'elegivel_prep_ismart'].iloc[0],
                                             'classificacao_automatica':df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0],
                                             'motivo_classificao_automatica':df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0],
                                             'confirmacao_classificacao_orientadora':df.loc[df['RA'] == ra, 'confirmacao_classificacao_orientadora'].iloc[0],
@@ -482,8 +494,6 @@ if check_password():
                 registro_data_submit = None
                 registro_classificacao = None
                 registro_motivo_classificao_automatica = None
-                registro_periodo = None
-                registro_nomenclatura = None
                 registro_resposta_argumentacao = None
                 registro_resposta_rotina_estudos = None
                 registro_resposta_faltas = None
@@ -508,8 +518,6 @@ if check_password():
                 registro_data_submit = df.loc[df['RA'] == ra, 'data_submit'].iloc[0]
                 registro_classificacao = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
                 registro_motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
-                registro_periodo = df.loc[df['RA'] == ra, 'periodo'].iloc[0]
-                registro_nomenclatura = df.loc[df['RA'] == ra, 'nomenclatura'].iloc[0]
                 registro_resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
                 registro_resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
                 registro_resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
@@ -531,9 +539,6 @@ if check_password():
                 registro_resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
 
             with st.form(key='formulario'):
-                ## LISTAS PARA MULTIPLA ESCOLHA
-                caixa_periodo = ['-', '1°', '2°', '3°', '4°', '5°', '6°', '7°', '8°']
-                caixa_nomenclatura = ['bimestre', 'trimestre', 'simestre', 'ciclo', 'período', 'etapa']
                 # Acadêmico
                 caixa_argumentacao = ['Superficial - apenas reproduz', 
                                     'Argumenta e se posiciona, trazendo sua opinião de forma consistente', 
@@ -554,10 +559,6 @@ if check_password():
                 caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
-                # Período
-                st.subheader('Período')
-                periodo = st.selectbox("Período",caixa_periodo,index=retornar_indice(lista=caixa_periodo,variavel=registro_periodo),placeholder="Período")
-                nomenclatura = st.selectbox("Nomenclatura",caixa_nomenclatura,index=retornar_indice(lista=caixa_nomenclatura,variavel=registro_nomenclatura),placeholder="Nomenclatura")
                 # Acadêmico
                 st.divider()
                 st.subheader('Acadêmico')
@@ -612,7 +613,7 @@ if check_password():
                 #Botão registrar
                 submit_button = st.form_submit_button(label='SALVAR')
                 if submit_button:
-                    if not periodo or not nomenclatura or not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_medalha or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
+                    if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_medalha or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
                         st.warning('Preencha o formuário')
                         st.stop()
                     else:    
@@ -621,8 +622,6 @@ if check_password():
                                                 'RA': ra, 
                                                 'nome': nome, 
                                                 'data_submit': datetime.now(fuso_horario), 
-                                                'periodo': periodo,	
-                                                'nomenclatura': nomenclatura,	
                                                 'resposta_argumentacao': resposta_argumentacao,	
                                                 'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                 'resposta_faltas': resposta_faltas,	
@@ -648,7 +647,6 @@ if check_password():
                         registrar(df, df_insert, 'registro', 'classificacao_automatica')
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
                 #colunas
-                elegivel_prep_ismart = df.loc[df['RA'] == ra, 'elegivel_prep_ismart'].iloc[0]
                 classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
                 motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
                 nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -666,9 +664,7 @@ if check_password():
                 st.metric("Classificação", classificacao_automatica, border=True)
                 st.metric("Motivo", motivo_classificao_automatica, border=True)
 
-                resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=0,placeholder="Confirma classificação?")
-                resposta_elegivel_prep_ismart = st.selectbox("Elegível ao prep ismart?",['-', 'Sim', 'Não'],index=0,placeholder="Elegível ao prep ismart?")
-                
+                resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=0,placeholder="Confirma classificação?")                
 
                 if resposta_confirmar_classificacao == 'Sim':
                     resposta_nova_classificacao_orientadora = '-'
@@ -681,7 +677,7 @@ if check_password():
                 
                 deseja_plano_intervencao = st.radio('Deseja adicionar plano de intervenção?',caixa_sim_nao,index=1, horizontal=True)
                 if deseja_plano_intervencao == 'Sim':
-                    resposta_reversao = st.text_input(placeholder='Reversão', label='Reversão')
+                    resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
                     resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso')
                     resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção')
                 else:
@@ -695,8 +691,6 @@ if check_password():
                                                 'RA': ra, 
                                                 'nome': nome, 
                                                 'data_submit': datetime.now(fuso_horario), 
-                                                'periodo': periodo,	
-                                                'nomenclatura': nomenclatura,	
                                                 'resposta_argumentacao': resposta_argumentacao,	
                                                 'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                 'resposta_faltas': resposta_faltas,	
@@ -718,7 +712,6 @@ if check_password():
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
                                                 'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
                                                 'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
-                                                'elegivel_prep_ismart': resposta_elegivel_prep_ismart,
                                                 'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
                                                 'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
                                                 'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
