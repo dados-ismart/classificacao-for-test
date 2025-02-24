@@ -384,6 +384,7 @@ if check_password():
         #Média das disciplinas
         st.divider()
         st.header('Notas')
+        st.subheader(f'Média calibrada: {media_calibrada}')
         col1, col2, col3 = st.columns(3)
         col1.metric("Matemática", matematica, border=True)
         col2.metric("Português", portugues, border=True)
@@ -672,10 +673,14 @@ if check_password():
                     resposta_nova_justificativa_classificacao_orientadora = '-'
                 else:
                     resposta_nova_classificacao_orientadora = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
-                    resposta_novo_motivo_classificacao_orientadora = st.selectbox("Novo motivo da classificação",caixa_justificativa_classificacao,index=None,placeholder="Novo motivo da classificação")
+                    resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
+                    resposta_novo_motivo_classificacao_orientadora = ''
+                    for i in resposta_novo_motivo_classificacao_orientadora_lista:
+                        resposta_novo_motivo_classificacao_orientadora += f'{i}; '
+                    resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
                     resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
                 
-                deseja_plano_intervencao = st.radio('Deseja adicionar plano de intervenção?',caixa_sim_nao,index=1, horizontal=True)
+                deseja_plano_intervencao = st.radio('Deseja adicionar plano de intervenção?',caixa_sim_nao,index=0, horizontal=True)
                 if deseja_plano_intervencao == 'Sim':
                     resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
                     resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso')
@@ -687,7 +692,10 @@ if check_password():
 
 
                 if st.button(label='REGISTRAR'):
-                    df_insert = pd.DataFrame([{
+                    if not resposta_nova_classificacao_orientadora or not resposta_novo_motivo_classificacao_orientadora or not resposta_nova_justificativa_classificacao_orientadora:
+                        st.warning('Preencha a classificação!')
+                    else:
+                        df_insert = pd.DataFrame([{
                                                 'RA': ra, 
                                                 'nome': nome, 
                                                 'data_submit': datetime.now(fuso_horario), 
@@ -720,4 +728,4 @@ if check_password():
                                                 'descricao_caso': resposta_descricao_caso,
                                                 'plano_intervencao': resposta_plano_intervencao
                                                 }])
-                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')
+                        registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')                
