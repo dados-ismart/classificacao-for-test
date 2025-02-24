@@ -664,68 +664,72 @@ if check_password():
                 st.title('Confirmar classificação')
                 st.metric("Classificação", classificacao_automatica, border=True)
                 st.metric("Motivo", motivo_classificao_automatica, border=True)
+                resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=1,placeholder="Confirma classificação?")
 
-                resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=0,placeholder="Confirma classificação?")                
-
-                if resposta_confirmar_classificacao == 'Sim':
-                    resposta_nova_classificacao_orientadora = '-'
-                    resposta_novo_motivo_classificacao_orientadora = '-'
-                    resposta_nova_justificativa_classificacao_orientadora = '-'
-                else:
-                    resposta_nova_classificacao_orientadora = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
-                    resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
-                    resposta_novo_motivo_classificacao_orientadora = ''
-                    for i in resposta_novo_motivo_classificacao_orientadora_lista:
-                        resposta_novo_motivo_classificacao_orientadora += f'{i}; '
-                    resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
-                    resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
-                
                 deseja_plano_intervencao = st.radio('Deseja adicionar plano de intervenção?',caixa_sim_nao,index=0, horizontal=True)
-                if deseja_plano_intervencao == 'Sim':
-                    resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
-                    resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso')
-                    resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção')
-                else:
-                    resposta_reversao = '-'
-                    resposta_descricao_caso = '-'
-                    resposta_plano_intervencao = '-'
-
-
-                if st.button(label='REGISTRAR'):
-                    if not resposta_nova_classificacao_orientadora or not resposta_novo_motivo_classificacao_orientadora or not resposta_nova_justificativa_classificacao_orientadora:
-                        st.warning('Preencha a classificação!')
+                with st.form(key='formulario_registrar_orientadora'):
+                    if resposta_confirmar_classificacao == 'Sim':
+                        resposta_nova_classificacao_orientadora = '-'
+                        resposta_novo_motivo_classificacao_orientadora = '-'
+                        resposta_nova_justificativa_classificacao_orientadora = '-'
                     else:
-                        df_insert = pd.DataFrame([{
-                                                'RA': ra, 
-                                                'nome': nome, 
-                                                'data_submit': datetime.now(fuso_horario), 
-                                                'resposta_argumentacao': resposta_argumentacao,	
-                                                'resposta_rotina_estudos': resposta_rotina_estudos,	
-                                                'resposta_faltas': resposta_faltas,	
-                                                'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                'resposta_medalha': resposta_medalha,	
-                                                'resposta_respeita_escola': resposta_respeita_escola,	
-                                                'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
-                                                'resposta_colaboracao': resposta_colaboracao,	
-                                                'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
-                                                'resposta_networking': resposta_networking,	
-                                                'resposta_proatividade': resposta_proatividade,	
-                                                'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
-                                                'resposta_questoes_familiares': resposta_questoes_familiares,	
-                                                'resposta_questoes_saude': resposta_questoes_saude,	
-                                                'resposta_ideacao_suicida': resposta_ideacao_suicida,	
-                                                'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
-                                                'resposta_seguranca_profissional': resposta_seguranca_profissional,	
-                                                'resposta_curso_apoiado': resposta_curso_apoiado,	
-                                                'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
-                                                'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
-                                                'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
-                                                'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
-                                                'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
-                                                'reversao': resposta_reversao,
-                                                'descricao_caso': resposta_descricao_caso,
-                                                'plano_intervencao': resposta_plano_intervencao
-                                                }])
-                        registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')                
+                        resposta_nova_classificacao_orientadora = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
+                        resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
+                        resposta_novo_motivo_classificacao_orientadora = ''
+                        for i in resposta_novo_motivo_classificacao_orientadora_lista:
+                            resposta_novo_motivo_classificacao_orientadora += f'{i}; '
+                        resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
+                        resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
+                    
+                    if deseja_plano_intervencao == 'Sim':
+                        resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
+                        resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso')
+                        resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção')
+                    else:
+                        resposta_reversao = '-'
+                        resposta_descricao_caso = '-'
+                        resposta_plano_intervencao = '-'
+
+
+                    submit_button = st.form_submit_button(label='REGISTRAR')
+                    if submit_button:
+                        if not resposta_nova_classificacao_orientadora or not resposta_novo_motivo_classificacao_orientadora or not resposta_nova_justificativa_classificacao_orientadora:
+                            st.warning('Preencha os dados de classificação')
+                            if not resposta_plano_intervencao or not resposta_descricao_caso or not resposta_reversao:    
+                                st.warning('Preencha os dados da reversão ou desabilite essa opção')
+                            else:
+                                df_insert = pd.DataFrame([{
+                                                        'RA': ra, 
+                                                        'nome': nome, 
+                                                        'data_submit': datetime.now(fuso_horario), 
+                                                        'resposta_argumentacao': resposta_argumentacao,	
+                                                        'resposta_rotina_estudos': resposta_rotina_estudos,	
+                                                        'resposta_faltas': resposta_faltas,	
+                                                        'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
+                                                        'resposta_medalha': resposta_medalha,	
+                                                        'resposta_respeita_escola': resposta_respeita_escola,	
+                                                        'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
+                                                        'resposta_colaboracao': resposta_colaboracao,	
+                                                        'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
+                                                        'resposta_networking': resposta_networking,	
+                                                        'resposta_proatividade': resposta_proatividade,	
+                                                        'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
+                                                        'resposta_questoes_familiares': resposta_questoes_familiares,	
+                                                        'resposta_questoes_saude': resposta_questoes_saude,	
+                                                        'resposta_ideacao_suicida': resposta_ideacao_suicida,	
+                                                        'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
+                                                        'resposta_seguranca_profissional': resposta_seguranca_profissional,	
+                                                        'resposta_curso_apoiado': resposta_curso_apoiado,	
+                                                        'resposta_nota_condizente': resposta_nota_condizente,	
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
+                                                        'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
+                                                        'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
+                                                        'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
+                                                        'reversao': resposta_reversao,
+                                                        'descricao_caso': resposta_descricao_caso,
+                                                        'plano_intervencao': resposta_plano_intervencao
+                                                        }])
+                                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')                
+                            
