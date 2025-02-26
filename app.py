@@ -289,7 +289,7 @@ if check_password():
 
     else:
         if 'lista_ra' not in st.session_state:
-            st.session_state['lista_ra'] = bd['RA - NOME']
+            st.session_state['lista_ra'] = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
         bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
 
         ra_nome = st.selectbox(
@@ -336,11 +336,19 @@ if check_password():
         ciencias = bd.loc[bd['RA'] == ra, 'Nota Ciências'].iloc[0]
         geografia = bd.loc[bd['RA'] == ra, 'Nota Geografia'].iloc[0]
         quimica = bd.loc[bd['RA'] == ra, 'Nota Química'].iloc[0]
-        try:
-            media_calibrada = df_escola.loc[df_escola['escola'] == escola, 'media_calibrada'].iloc[0]
-        except:
-            st.error('Escola do aluno não encontrada na planilha')
-            st.stop()
+        if matematica == '-':
+            matematica = 0
+        if fisica == '-':
+            fisica = 0
+        if portugues == '-':
+            portugues = 0
+        if biologia == '-':
+            biologia = 0
+        if ciencias == '-':
+            ciencias = 0
+        if quimica == '':
+            quimica = 0
+        
         qtd_somas_idiomas = 0
         idiomas = 0
         if ingles != '-':
@@ -361,6 +369,12 @@ if check_password():
         if historia != '-':
             humanas += historia
             qtd_somas_humanas += 1
+
+        try:
+            media_calibrada = df_escola.loc[df_escola['escola'] == escola, 'media_calibrada'].iloc[0]
+        except:
+            st.error('Escola do aluno não encontrada na planilha')
+            st.stop()
         
         #extras
         orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
@@ -743,14 +757,21 @@ if check_password():
                             resposta_descricao_caso = '-'
                             resposta_plano_intervencao = '-'
                         
+                        caixa_tier = ['Tier1', 'tier2', 'tier3']
                         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP":
-                            tier = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
+                            resposta_tier = st.multiselect("Tier",caixa_tier,placeholder="Tier")
+                            for i in resposta_tier:
+                                resposta_tier += f'{i}; '
+                            tier = resposta_tier[:-2]
                         else:
                             tier = '-'
                         submit_button = st.form_submit_button(label='REGISTRAR')
                         if submit_button:
                             if not resposta_plano_intervencao or not resposta_descricao_caso or not resposta_reversao:    
                                 st.warning('Preencha os dados da reversão ou desabilite essa opção')
+                                st.stop()
+                            if not resposta_tier:
+                                st.warning('Preencha os dados de Tier')
                                 st.stop()
                             else:
                                 df_insert = pd.DataFrame([{
