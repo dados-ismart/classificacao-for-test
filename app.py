@@ -756,13 +756,31 @@ if check_password():
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
                             resposta_plano_intervencao = '-'
-                        
-                        caixa_tier = ['Tier1', 'tier2', 'tier3']
+                    
                         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP":
+                            if ano == 8:
+                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa']
+                            elif ano == 9:
+                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls']
+                            elif ano == 1:
+                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'Conteúdos TECH', 'Biruta', 'TPV', 'TKS']
+                            elif ano == 2:
+                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'CC50', 'Alura', 'TEP Vestibulares', 'Conexão Profissão', 'UPUP', 'TKS']
+                            elif ano == 3:
+                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Vestibulares']
+
                             resposta_tier = st.multiselect("Tier",caixa_tier,placeholder="Tier")
+                            tier = ''
                             for i in resposta_tier:
-                                resposta_tier += f'{i}; '
-                            tier = resposta_tier[:-2]
+                                tier += f'{i}; '
+                            tier = tier[:-2]
+
+                        # resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
+                        # resposta_novo_motivo_classificacao_orientadora = ''
+                        # for i in resposta_novo_motivo_classificacao_orientadora_lista:
+                        #     resposta_novo_motivo_classificacao_orientadora += f'{i}; '
+                        # resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
+
                         else:
                             tier = '-'
                         submit_button = st.form_submit_button(label='REGISTRAR')
@@ -770,7 +788,7 @@ if check_password():
                             if not resposta_plano_intervencao or not resposta_descricao_caso or not resposta_reversao:    
                                 st.warning('Preencha os dados da reversão ou desabilite essa opção')
                                 st.stop()
-                            if not resposta_tier:
+                            if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP" and not resposta_tier:
                                 st.warning('Preencha os dados de Tier')
                                 st.stop()
                             else:
