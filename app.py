@@ -266,18 +266,19 @@ if check_password():
     ra = None
     bd['apoio_registro'] = bd['apoio_registro'].astype(str)
     bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
+    bd['Ano'] = bd['Ano'].astype(int)
     bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
     df_login = ler_sheets('login')
     df_escola = ler_sheets('media_calibrada')
 
     st.title('Formulário de Classificação')
+
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        if 'lista_ra' not in st.session_state:
-            st.session_state['lista_ra'] = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
+        ra_nome_bd = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
-        st.session_state['lista_ra'],
+        ra_nome_bd,
         index=None,
         placeholder="RA")
 
@@ -288,13 +289,25 @@ if check_password():
         st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
 
     else:
-        if 'lista_ra' not in st.session_state:
-            st.session_state['lista_ra'] = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
-        bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
+        # filtros
+        col1, col2, col3 = st.columns(3)
+        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
+        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
+        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
 
+        # Aplique os filtros
+        if valores_segmento:
+            bd = bd.query(f"Segmento in {valores_segmento}")
+        if valores_escola:
+            bd = bd.query(f"Escola in {valores_escola}")
+        if valores_ano:
+            bd = bd.query(f"Ano in {valores_ano}")
+
+        bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
+        ra_nome_bd = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
-        st.session_state['lista_ra'],
+        ra_nome_bd,
         index=None,
         placeholder="RA")
 
