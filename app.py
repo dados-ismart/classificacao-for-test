@@ -244,7 +244,6 @@ if check_password():
                 conn.update(worksheet="registro", data=updared_df)
             except:
                 continue
-
             #verificar
             df = ler_sheets(tabela)
             if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
@@ -255,7 +254,6 @@ if check_password():
                 st.error('Erro ao registrar')
                 sleep(1)
                 continue
-        del st.session_state['lista_ra']
         st.rerun()
 
     #importar e tratar datasets
@@ -272,9 +270,29 @@ if check_password():
     df_escola = ler_sheets('media_calibrada')
 
     st.title('Formulário de Classificação')
-
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        # filtros bd
+        col1, col2, col3 = st.columns(3)
+        # Aplique os filtros
+        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
+        if valores_segmento:
+            bd = bd.query(f"Segmento in {valores_segmento}")
+        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
+        if valores_escola:
+            bd = bd.query(f"Escola in {valores_escola}")
+        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
+        if valores_ano:
+            bd = bd.query(f"Ano in {valores_ano}")
+        # filtros 2
+        col1, col2 = st.columns(2)
+        confirmacao_classificacao = col1.multiselect("Filtro Classificação Automática", bd.query('apoio_registro != "nan"')['apoio_registro'].unique())
+        if confirmacao_classificacao:
+            bd = bd.query(f"apoio_registro in {confirmacao_classificacao}")
+        selecao_orientadora = col2.multiselect("Filtro Orientadora", bd['Orientadora'].unique())
+        if selecao_orientadora:
+            bd = bd.query(f"Orientadora in {selecao_orientadora}")
+        st.divider()
         ra_nome_bd = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
@@ -285,23 +303,25 @@ if check_password():
         # progresso
         qtd_alunos_registrados_coord = bd.query(f"apoio_registro_final == 'Não' or apoio_registro_final == 'Sim'").shape[0]
         qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
-        st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Orientadoras registraram: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
-        st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
-
+        try:
+            st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Orientadoras registraram: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
+            st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
+        except ZeroDivisionError:
+            st.error('Zero Resultados')
     else:
         # filtros
         col1, col2, col3 = st.columns(3)
-        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
-        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
-        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
-
         # Aplique os filtros
+        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
         if valores_segmento:
             bd = bd.query(f"Segmento in {valores_segmento}")
+        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
         if valores_escola:
             bd = bd.query(f"Escola in {valores_escola}")
+        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
         if valores_ano:
             bd = bd.query(f"Ano in {valores_ano}")
+        st.divider()
 
         bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
         ra_nome_bd = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
@@ -313,8 +333,11 @@ if check_password():
 
         # progresso
         qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
-        st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
-   
+        try:
+            st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
+        except ZeroDivisionError:
+            st.error('Zero Resultados')
+
     if ra_nome is not None:
         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
             try:
@@ -359,7 +382,7 @@ if check_password():
             biologia = 0
         if ciencias == '-':
             ciencias = 0
-        if quimica == '':
+        if quimica == '-':
             quimica = 0
         
         qtd_somas_idiomas = 0
@@ -382,7 +405,6 @@ if check_password():
         if historia != '-':
             humanas += historia
             qtd_somas_humanas += 1
-
         try:
             media_calibrada = df_escola.loc[df_escola['escola'] == escola, 'media_calibrada'].iloc[0]
         except:
@@ -407,18 +429,18 @@ if check_password():
         col1, col2 = st.columns(2)
         col1.metric("Orientadora", orientadora, border=True)
         col2.metric("Segmento", segmento, border=True)
-        st.divider()
-        st.header('Local')
-        col1, col2 = st.columns(2)
-        col1.metric("Escola", escola, border=True)
-        col2.metric("Cidade", cidade, border=True)
+        # st.divider()
+        # st.header('Local')
+        # col1, col2 = st.columns(2)
+        # col1.metric("Escola", escola, border=True)
+        # col2.metric("Cidade", cidade, border=True)
         #Média das disciplinas
         st.divider()
         st.header('Notas')
-        st.subheader(f'Média calibrada: {media_calibrada}')
+        st.subheader(f'Média calibrada: {media_calibrada:.2f}')
         col1, col2, col3 = st.columns(3)
-        col1.metric("Matemática", matematica, border=True)
-        col2.metric("Português", portugues, border=True)
+        col1.metric("Matemática", f'{matematica:.2f}', border=True)
+        col2.metric("Português", f'{portugues:.2f}', border=True)
         try:
             col3.metric("Humanas", f"{humanas/qtd_somas_humanas:.2f}", border=True)
         except:
@@ -428,21 +450,36 @@ if check_password():
             col1.metric("Idiomas", f"{idiomas/qtd_somas_idiomas:.2f}", border=True)
         except:
             col1.metric("Idiomas", f"{0}", border=True)
-        col2.metric("Ciências Naturais", biologia, border=True)
+        col2.metric("Ciências Naturais", f'{biologia:.2f}', border=True)
         with st.expander("Notas detalhadas"):
             st.subheader('Idiomas')
             col1, col2, col3 = st.columns(3)
-            col1.metric('Inglês', ingles, border=True)
-            col2.metric('Francês', frances, border=True)
-            col3.metric('Espanhol', espanhol, border=True)
+            try:
+                col1.metric('Inglês', f'{ingles:.2f}', border=True)
+            except:
+                col1.metric('Inglês', ingles, border=True)
+            try:
+                col2.metric('Francês', f'{frances:.2f}', border=True)
+            except:
+                col2.metric('Francês', frances, border=True)
+            try:
+                col3.metric('Espanhol', f'{espanhol:.2f}', border=True)
+            except:
+                col3.metric('Espanhol', espanhol, border=True)
             st.subheader('Humanas')
             col1, col2 = st.columns(2)
-            col1.metric('Geografia', geografia, border=True)
-            col2.metric('História', historia, border=True)
+            try:
+                col1.metric('Geografia', f'{geografia:.2f}', border=True)
+            except:
+                col1.metric('Geografia', geografia, border=True)
+            try:
+                col2.metric('História', f'{historia:.2f}', border=True)
+            except:
+                col2.metric('História', historia, border=True)
 
         # col1, col2 = st.columns(2)
-        # col1.metric("Período", periodo, border=True)
-        # col2.metric("Nomenclatura", nomenclatura, border=True)
+        # col1.metric("Período", f'{periodo:.2f}, border=True)
+        # col2.metric("Nomenclatura", f'{nomenclatura:.2f}, border=True)
 
 
         #formulario
