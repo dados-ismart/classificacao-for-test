@@ -417,7 +417,7 @@ if check_password():
         ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
         # periodo = bd.loc[bd['RA'] == ra, 'periodo'].iloc[0]
         # nomenclatura = bd.loc[bd['RA'] == ra, 'nomenclatura'].iloc[0]
-
+            
         #Dados pessoais
         st.title('Aluno')
         col1, col2 = st.columns([2, 5])
@@ -877,3 +877,27 @@ if check_password():
                                                     'tier' : tier
                                                     }])
                                 registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')   
+    elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        with st.form(key='tabela_editavel'):
+            colunas_nao_editaveis = df.columns.to_list()
+            colunas_nao_editaveis.remove('confirmacao_classificacao_coordenacao')
+            colunas_nao_editaveis.remove('justificativa_classificacao_coord')
+
+            # Configure o data editor
+            edited_df = st.data_editor(
+                df[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
+                column_config={
+                    "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
+                        "Confirmar?",
+                        help="Selecione Sim ou Não",
+                        options=['Sim', 'Não'],
+                        required=True
+                    )
+                },
+                disabled=colunas_nao_editaveis,
+                hide_index=True,
+            )
+            submit_button = st.form_submit_button(label='SALVAR')
+
+        # Exiba o dataframe editado
+        st.write(edited_df)
