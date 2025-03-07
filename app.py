@@ -740,18 +740,17 @@ if check_password():
                 confirmacao_classificacao_coordenacao = df.loc[df['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
                 classificacao_final = df.loc[df['RA'] == ra, 'classificacao_final'].iloc[0]
                 motivo_final = df.loc[df['RA'] == ra, 'motivo_final'].iloc[0]
-                if 'classificacao_atual' not in st.session_state:
+                if 'confirmacao_alterada' not in st.session_state:
+                    st.session_state['confirmacao_alterada'] = 'Não'
+
+                if st.session_state['confirmacao_alterada'] == 'Não':
                     st.session_state['classificacao_atual'] = classificacao_automatica
-                if 'motivo_atual' not in st.session_state:
                     st.session_state['motivo_atual'] = motivo_classificao_automatica
-                
+
                 #Formulario
                 st.title('Confirmar classificação')
                 st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
                 st.metric("Motivo", st.session_state['motivo_atual'], border=True)
-
-                if 'confirmacao_alterada' not in st.session_state:
-                    st.session_state['confirmacao_alterada'] = 'Não'
                 
                 if st.session_state['confirmacao_alterada'] == 'Sim':
                     resposta_confirmar_classificacao = 'Não'
@@ -948,7 +947,7 @@ if check_password():
 
             # Configure o data editor
             edited_df = st.data_editor(
-                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'confirmacao_classificacao_orientadora','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
+                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
                 column_config={
                     "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
                         "Confirmar?",
