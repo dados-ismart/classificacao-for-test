@@ -330,7 +330,17 @@ if check_password():
         ra_nome_bd,
         index=None,
         placeholder="RA")
-
+        if 'ra_nome' not in st.session_state:
+            st.session_state['ra_nome'] = ra_nome
+        if st.session_state['ra_nome'] != ra_nome:
+            try:
+                del st.session_state['classificacao_atual']
+                del st.session_state['motivo_atual']
+                del st.session_state['confirmacao_alterada']
+            except:
+                pass
+            del st.session_state['ra_nome']
+            
         # progresso
         qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
         try:
@@ -727,15 +737,25 @@ if check_password():
                 confirmacao_classificacao_coordenacao = df.loc[df['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
                 classificacao_final = df.loc[df['RA'] == ra, 'classificacao_final'].iloc[0]
                 motivo_final = df.loc[df['RA'] == ra, 'motivo_final'].iloc[0]
+                if 'classificacao_atual' not in st.session_state:
+                    st.session_state['classificacao_atual'] = classificacao_automatica
+                if 'motivo_atual' not in st.session_state:
+                    st.session_state['motivo_atual'] = motivo_classificao_automatica
                 
                 #Formulario
                 st.title('Confirmar classificação')
-                st.metric("Classificação", classificacao_automatica, border=True)
-                st.metric("Motivo", motivo_classificao_automatica, border=True)
+                st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
+                st.metric("Motivo", st.session_state['motivo_atual'], border=True)
 
-                resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=1,placeholder="Confirma classificação?")
+                if 'confirmacao_alterada' not in st.session_state:
+                    st.session_state['confirmacao_alterada'] = 'Não'
+                
+                if st.session_state['confirmacao_alterada'] == 'Sim':
+                    resposta_confirmar_classificacao = 'Não'
+                else:
+                    resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=1,placeholder="Confirma classificação?")
 
-                if resposta_confirmar_classificacao == 'Não':
+                if resposta_confirmar_classificacao == 'Não' and st.session_state['confirmacao_alterada'] == 'Não':
                     with st.form(key='formulario_registrar_orientadora'):
                         resposta_nova_classificacao_orientadora = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
                         resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
@@ -745,12 +765,15 @@ if check_password():
                         resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
                         resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
 
-                        submit_button = st.form_submit_button(label='SALVAR')
+                        submit_button = st.form_submit_button(label='ALTERAL')
                         if submit_button:  
                             if not resposta_nova_classificacao_orientadora or not resposta_novo_motivo_classificacao_orientadora or not resposta_nova_justificativa_classificacao_orientadora:
                                 st.warning('Preencha os dados de classificação')
                                 st.stop()
                             else:
+                                st.session_state['classificacao_atual'] = resposta_nova_classificacao_orientadora
+                                st.session_state['motivo_atual'] = resposta_novo_motivo_classificacao_orientadora
+                                st.session_state['confirmacao_alterada'] = 'Sim'
                                 df_insert = pd.DataFrame([{
                                                         'RA': ra, 
                                                         'nome': nome, 
@@ -781,24 +804,18 @@ if check_password():
                                                         'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
                                                         'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
                                                         }])
-                                registrar(df, df_insert, 'registro', 'nova_classificacao_orientadora')     
-                
-                if resposta_confirmar_classificacao == 'Sim' or df.loc[df['RA'] == ra, 'confirmacao_classificacao_orientadora'].iloc[0] is not None:
+                                registrar(df, df_insert, 'registro', 'nova_classificacao_orientadora') 
+                else:
                     with st.form(key='formulario_descricao'):
                         resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
                         resposta_novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
                         resposta_nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
                         
-                        if resposta_confirmar_classificacao == 'Sim':
-                            classificacao_temp = classificacao_automatica
-                        else:
-                            classificacao_temp = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
-
-                        if classificacao_temp == 'Crítico':
+                        if st.session_state['classificacao_atual'] == 'Crítico':
                             resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
                             resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso')
                             resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção')
-                        elif classificacao_temp == 'Atenção':
+                        elif st.session_state['classificacao_atual'] == 'Atenção':
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
                             resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção')
@@ -835,48 +852,90 @@ if check_password():
                             tier = '-'
                         submit_button = st.form_submit_button(label='REGISTRAR')
                         if submit_button:
-                            if not resposta_plano_intervencao or not resposta_descricao_caso or not resposta_reversao:    
-                                st.warning('Preencha os dados da reversão ou desabilite essa opção')
+                            if not resposta_reversao:    
+                                st.warning('Preencha os dados da reversão')
                                 st.stop()
-                            if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP" and not resposta_tier:
-                                st.warning('Preencha os dados de Tier')
+                            elif not resposta_plano_intervencao:
+                                st.warning('Preencha os dados da intervenção')
                                 st.stop()
                             else:
-                                df_insert = pd.DataFrame([{
-                                                    'RA': ra, 
-                                                    'nome': nome, 
-                                                    'data_submit': datetime.now(fuso_horario), 
-                                                    'resposta_argumentacao': resposta_argumentacao,	
-                                                    'resposta_rotina_estudos': resposta_rotina_estudos,	
-                                                    'resposta_faltas': resposta_faltas,	
-                                                    'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                    'resposta_medalha': resposta_medalha,	
-                                                    'resposta_respeita_escola': resposta_respeita_escola,	
-                                                    'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
-                                                    'resposta_colaboracao': resposta_colaboracao,	
-                                                    'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
-                                                    'resposta_networking': resposta_networking,	
-                                                    'resposta_proatividade': resposta_proatividade,	
-                                                    'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
-                                                    'resposta_questoes_familiares': resposta_questoes_familiares,	
-                                                    'resposta_questoes_saude': resposta_questoes_saude,	
-                                                    'resposta_ideacao_suicida': resposta_ideacao_suicida,	
-                                                    'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
-                                                    'resposta_seguranca_profissional': resposta_seguranca_profissional,	
-                                                    'resposta_curso_apoiado': resposta_curso_apoiado,	
-                                                    'resposta_nota_condizente': resposta_nota_condizente,	
-                                                    'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                    'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
-                                                    'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
-                                                    'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
-                                                    'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
-                                                    'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
-                                                    'reversao': resposta_reversao,
-                                                    'descricao_caso': resposta_descricao_caso,
-                                                    'plano_intervencao': resposta_plano_intervencao,
-                                                    'tier' : tier
-                                                    }])
-                                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')   
+                                if resposta_confirmar_classificacao == 'Sim':
+                                    df_insert = pd.DataFrame([{
+                                                        'RA': ra, 
+                                                        'nome': nome, 
+                                                        'data_submit': datetime.now(fuso_horario), 
+                                                        'resposta_argumentacao': resposta_argumentacao,	
+                                                        'resposta_rotina_estudos': resposta_rotina_estudos,	
+                                                        'resposta_faltas': resposta_faltas,	
+                                                        'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
+                                                        'resposta_medalha': resposta_medalha,	
+                                                        'resposta_respeita_escola': resposta_respeita_escola,	
+                                                        'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
+                                                        'resposta_colaboracao': resposta_colaboracao,	
+                                                        'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
+                                                        'resposta_networking': resposta_networking,	
+                                                        'resposta_proatividade': resposta_proatividade,	
+                                                        'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
+                                                        'resposta_questoes_familiares': resposta_questoes_familiares,	
+                                                        'resposta_questoes_saude': resposta_questoes_saude,	
+                                                        'resposta_ideacao_suicida': resposta_ideacao_suicida,	
+                                                        'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
+                                                        'resposta_seguranca_profissional': resposta_seguranca_profissional,	
+                                                        'resposta_curso_apoiado': resposta_curso_apoiado,	
+                                                        'resposta_nota_condizente': resposta_nota_condizente,	
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
+                                                        'nova_classificacao_orientadora' : '-',
+                                                        'novo_motivo_classificacao_orientadora': '-',
+                                                        'nova_justificativa_classificacao_orientadora': '-',
+                                                        'reversao': resposta_reversao,
+                                                        'descricao_caso': resposta_descricao_caso,
+                                                        'plano_intervencao': resposta_plano_intervencao,
+                                                        'tier' : tier,
+                                                        'confirmacao_classificacao_coordenacao': '-',
+                                                        'justificativa_classificacao_coord': '-',
+                                                        'classificacao_final': '-',
+                                                        'motivo_final': '-'
+                                                        }])
+                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')   
+                                elif resposta_confirmar_classificacao == 'Não':
+                                    df_insert = pd.DataFrame([{
+                                                        'RA': ra, 
+                                                        'nome': nome, 
+                                                        'data_submit': datetime.now(fuso_horario), 
+                                                        'resposta_argumentacao': resposta_argumentacao,	
+                                                        'resposta_rotina_estudos': resposta_rotina_estudos,	
+                                                        'resposta_faltas': resposta_faltas,	
+                                                        'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
+                                                        'resposta_medalha': resposta_medalha,	
+                                                        'resposta_respeita_escola': resposta_respeita_escola,	
+                                                        'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
+                                                        'resposta_colaboracao': resposta_colaboracao,	
+                                                        'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
+                                                        'resposta_networking': resposta_networking,	
+                                                        'resposta_proatividade': resposta_proatividade,	
+                                                        'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
+                                                        'resposta_questoes_familiares': resposta_questoes_familiares,	
+                                                        'resposta_questoes_saude': resposta_questoes_saude,	
+                                                        'resposta_ideacao_suicida': resposta_ideacao_suicida,	
+                                                        'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
+                                                        'resposta_seguranca_profissional': resposta_seguranca_profissional,	
+                                                        'resposta_curso_apoiado': resposta_curso_apoiado,	
+                                                        'resposta_nota_condizente': resposta_nota_condizente,	
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
+                                                        'nova_classificacao_orientadora' : nova_classificacao_orientadora,
+                                                        'novo_motivo_classificacao_orientadora': novo_motivo_classificacao_orientadora,
+                                                        'nova_justificativa_classificacao_orientadora': nova_justificativa_classificacao_orientadora,
+                                                        'reversao': resposta_reversao,
+                                                        'descricao_caso': resposta_descricao_caso,
+                                                        'plano_intervencao': resposta_plano_intervencao,
+                                                        'tier' : tier
+                                                        }])
+                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora') 
+                                
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         with st.form(key='tabela_editavel'):
             colunas_nao_editaveis = df.columns.to_list()
@@ -885,7 +944,7 @@ if check_password():
 
             # Configure o data editor
             edited_df = st.data_editor(
-                df[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
+                df[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'confirmacao_classificacao_orientadora','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
                 column_config={
                     "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
                         "Confirmar?",
