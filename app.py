@@ -272,28 +272,30 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        df_coord = df.query('confirmacao_classificacao_orientadora == "Não"')
+        bd_segmentado = bd.query('apoio_registro == "Não"')
         # filtros bd
         col1, col2, col3 = st.columns(3)
         # Aplique os filtros
-        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
+        valores_segmento = col1.multiselect("Filtro de Segmento", bd_segmentado['Segmento'].unique())
         if valores_segmento:
-            bd = bd.query(f"Segmento in {valores_segmento}")
-        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
+            bd_segmentado = bd_segmentado.query(f"Segmento in {valores_segmento}")
+        valores_escola = col2.multiselect("Filtro de Escola", bd_segmentado['Escola'].unique())
         if valores_escola:
-            bd = bd.query(f"Escola in {valores_escola}")
-        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
+            bd_segmentado = bd_segmentado.query(f"Escola in {valores_escola}")
+        valores_ano = col3.multiselect("Filtro de Ano", bd_segmentado['Ano'].unique())
         if valores_ano:
-            bd = bd.query(f"Ano in {valores_ano}")
+            bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
         # filtros 2
         col1, col2 = st.columns(2)
-        confirmacao_classificacao = col1.multiselect("Filtro Classificação Automática", bd.query('apoio_registro != "nan"')['apoio_registro'].unique())
+        confirmacao_classificacao = col1.multiselect("Filtro Classificação Automática", bd_segmentado.query('apoio_registro != "nan"')['apoio_registro'].unique())
         if confirmacao_classificacao:
-            bd = bd.query(f"apoio_registro in {confirmacao_classificacao}")
-        selecao_orientadora = col2.multiselect("Filtro Orientadora", bd['Orientadora'].unique())
+            bd_segmentado = bd_segmentado.query(f"apoio_registro in {confirmacao_classificacao}")
+        selecao_orientadora = col2.multiselect("Filtro Orientadora", bd_segmentado['Orientadora'].unique())
         if selecao_orientadora:
-            bd = bd.query(f"Orientadora in {selecao_orientadora}")
+            bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
         st.divider()
-        ra_nome_bd = bd.query('apoio_registro == "Sim" or apoio_registro == "Não"')['RA - NOME - FINAL']
+        ra_nome_bd = bd_segmentado['RA - NOME - FINAL']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
@@ -301,30 +303,31 @@ if check_password():
         placeholder="RA")
 
         # progresso
-        qtd_alunos_registrados_coord = bd.query(f"apoio_registro_final == 'Não' or apoio_registro_final == 'Sim'").shape[0]
+        qtd_alunos_registrados_coord = bd.query(f"apoio_registro == 'Sim'").shape[0]
         qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
         try:
             st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Orientadoras registraram: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
-            st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'você confirmou: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
+            st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'Confirmados: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
         except ZeroDivisionError:
             st.error('Zero Resultados')
     else:
+        bd_segmentado = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
+        bd_segmentado = bd_segmentado.query('apoio_registro != "Sim" and apoio_registro != "Não"')
         # filtros
         col1, col2, col3 = st.columns(3)
         # Aplique os filtros
-        valores_segmento = col1.multiselect("Filtro de Segmento", bd['Segmento'].unique())
+        valores_segmento = col1.multiselect("Filtro de Segmento", bd_segmentado['Segmento'].unique())
         if valores_segmento:
-            bd = bd.query(f"Segmento in {valores_segmento}")
-        valores_escola = col2.multiselect("Filtro de Escola", bd['Escola'].unique())
+            bd_segmentado = bd_segmentado.query(f"Segmento in {valores_segmento}")
+        valores_escola = col2.multiselect("Filtro de Escola", bd_segmentado['Escola'].unique())
         if valores_escola:
-            bd = bd.query(f"Escola in {valores_escola}")
-        valores_ano = col3.multiselect("Filtro de Ano", bd['Ano'].unique())
+            bd_segmentado = bd_segmentado.query(f"Escola in {valores_escola}")
+        valores_ano = col3.multiselect("Filtro de Ano", bd_segmentado['Ano'].unique())
         if valores_ano:
-            bd = bd.query(f"Ano in {valores_ano}")
+            bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
         st.divider()
 
-        bd = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
-        ra_nome_bd = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
+        ra_nome_bd = bd_segmentado.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
@@ -937,6 +940,7 @@ if check_password():
                                     registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora') 
                                 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        
         with st.form(key='tabela_editavel'):
             colunas_nao_editaveis = df.columns.to_list()
             colunas_nao_editaveis.remove('confirmacao_classificacao_coordenacao')
@@ -944,7 +948,7 @@ if check_password():
 
             # Configure o data editor
             edited_df = st.data_editor(
-                df[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'confirmacao_classificacao_orientadora','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
+                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord', 'confirmacao_classificacao_orientadora','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica']],
                 column_config={
                     "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
                         "Confirmar?",
