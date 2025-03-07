@@ -234,9 +234,13 @@ if check_password():
         except:
             return None
         
-    def registrar(df, df_insert, tabela, coluna_apoio):
+    def registrar(df, df_insert, aba, coluna_apoio, ra):
         #Limpar linhas repetidas
-        df = df[df['RA'] != ra]
+        if type(ra) == list:
+            for i in ra:
+                df = df[df['RA'] != ra]
+        else:
+            df = df[df['RA'] != ra]
 
         for a in range(1, 4):
             try:
@@ -245,13 +249,13 @@ if check_password():
             except:
                 continue
             #verificar
-            df = ler_sheets(tabela)
+            df = ler_sheets(aba)
             if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
-                st.success('Registrado com sucesso!')
+                st.success('Sucesso!')
                 sleep(2)
                 break
             else:
-                st.error('Erro ao registrar')
+                st.warning('Erro')
                 sleep(1)
                 continue
         st.rerun()
@@ -569,7 +573,7 @@ if check_password():
                                             'classificacao_final': resposta_classificacao_final,
                                             'motivo_final': resposta_motivo_final
                                             }])
-                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao')
+                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao', ra)
         if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty:
             #Variaveis Registro
             if df.query(f'RA == {ra}').empty:
@@ -726,7 +730,7 @@ if check_password():
                                                 'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
                                                 'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                 }])
-                        registrar(df, df_insert, 'registro', 'classificacao_automatica')
+                        registrar(df, df_insert, 'registro', 'classificacao_automatica', ra)
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
                 #colunas
                 classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
@@ -806,7 +810,7 @@ if check_password():
                                                         'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
                                                         'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
                                                         }])
-                                registrar(df, df_insert, 'registro', 'nova_classificacao_orientadora') 
+                                registrar(df, df_insert, 'registro', 'nova_classificacao_orientadora', ra) 
                 else:
                     with st.form(key='formulario_descricao'):
                         resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -900,7 +904,7 @@ if check_password():
                                                         'classificacao_final': '-',
                                                         'motivo_final': '-'
                                                         }])
-                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora')   
+                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)   
                                 elif resposta_confirmar_classificacao == 'Não':
                                     df_insert = pd.DataFrame([{
                                                         'RA': ra, 
@@ -936,10 +940,9 @@ if check_password():
                                                         'plano_intervencao': resposta_plano_intervencao,
                                                         'tier' : tier
                                                         }])
-                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora') 
+                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra) 
                                 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        
         with st.form(key='tabela_editavel'):
             colunas_nao_editaveis = df.columns.to_list()
             colunas_nao_editaveis.remove('confirmacao_classificacao_coordenacao')
@@ -960,6 +963,9 @@ if check_password():
                 hide_index=True,
             )
             submit_button = st.form_submit_button(label='SALVAR')
-
+        if submit_button:
+            for i in df['RA']:
+                i
+                sleep(1)
         # Exiba o dataframe editado
-        st.write(edited_df)
+        st.write(df)
