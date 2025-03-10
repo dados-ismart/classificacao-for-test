@@ -54,7 +54,6 @@ if check_password():
             st.rerun()
         st.stop()
         
-
     def pontuar(resposta, lista):
         try:
             for index, elemento in enumerate(lista):
@@ -279,7 +278,7 @@ if check_password():
         df_coord = df.query('confirmacao_classificacao_orientadora == "Não"')
         bd_segmentado = bd.query('apoio_registro == "Não"')
         # filtros bd
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         # Aplique os filtros
         valores_segmento = col1.multiselect("Filtro de Segmento", bd_segmentado['Segmento'].unique())
         if valores_segmento:
@@ -290,12 +289,7 @@ if check_password():
         valores_ano = col3.multiselect("Filtro de Ano", bd_segmentado['Ano'].unique())
         if valores_ano:
             bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
-        # filtros 2
-        col1, col2 = st.columns(2)
-        confirmacao_classificacao = col1.multiselect("Filtro Classificação Automática", bd_segmentado.query('apoio_registro != "nan"')['apoio_registro'].unique())
-        if confirmacao_classificacao:
-            bd_segmentado = bd_segmentado.query(f"apoio_registro in {confirmacao_classificacao}")
-        selecao_orientadora = col2.multiselect("Filtro Orientadora", bd_segmentado['Orientadora'].unique())
+        selecao_orientadora = col4.multiselect("Filtro Orientadora", bd_segmentado['Orientadora'].unique())
         if selecao_orientadora:
             bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
         st.divider()
