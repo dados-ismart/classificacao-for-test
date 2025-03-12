@@ -942,12 +942,12 @@ if check_password():
             colunas_nao_editaveis = df.columns.to_list()
             colunas_nao_editaveis.remove('confirmacao_classificacao_coordenacao')
             colunas_nao_editaveis.remove('justificativa_classificacao_coord')
-            df_coord = df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']]
-            df_coord['RA'] = df_coord['RA'].astype(int)
-            
+            df_coord['confirmacao_classificacao_coordenacao'] = df_coord['confirmacao_classificacao_coordenacao'].astype(str)
+            df_coord['justificativa_classificacao_coord'] = df_coord['justificativa_classificacao_coord'].astype(str)
+
             # Configure o data editor
             edited_df = st.data_editor(
-                df_coord,
+                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
                 column_config={
                     "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
                         "Confirmar?",
@@ -960,12 +960,13 @@ if check_password():
                 hide_index=True,
             )
             submit_button = st.form_submit_button(label='SALVAR')
-
+            
         if submit_button:
             #filtrar do df_tabela_editavel aqueles com confirmar 
-            df_tabela_editavel = edited_df.query("confirmacao_classificacao_coordenacao == 'Sim' or confirmacao_classificacao_coordenacao == 'Não'")
+            #df_tabela_editavel = edited_df.query("confirmacao_classificacao_coordenacao == 'Sim' or confirmacao_classificacao_coordenacao == 'Não'")
+            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_coordenacao'].isin(['Sim', 'Não'])]
             df_insert = pd.DataFrame()
-            
+            edited_df
             for ra in df_tabela_editavel['RA']:
                 nome = df.loc[df['RA'] == ra, 'nome'].iloc[0]
                 resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
@@ -997,6 +998,7 @@ if check_password():
                 descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
                 plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
                 tier = df.loc[df['RA'] == ra, 'tier'].iloc[0]
+                
                 
                 confirmacao_classificacao_coordenacao = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
                 justificativa_classificacao_coord = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'justificativa_classificacao_coord'].iloc[0]
@@ -1048,7 +1050,6 @@ if check_password():
                 
                 df_insert = pd.concat([df_insert, nova_linha], ignore_index=True)
             df_insert
-            # lista_ras = df_insert['RA']
-            # lista_ras = lista_ras.to_list()
-            # lista_ras
+            lista_ras = df_insert['RA']
+            lista_ras = lista_ras.to_list()
             #registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
