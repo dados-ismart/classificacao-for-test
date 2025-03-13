@@ -524,7 +524,9 @@ if check_password():
             reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
             descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
             plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
-
+            
+            st.divider()
+          
 
             #Formulario
             st.title('Confirmar classificação')
@@ -535,6 +537,11 @@ if check_password():
             col1, col2 = st.columns(2)
             col1.metric("Classificação", nova_classificacao_orientadora, border=True)
             col2.metric("Motivo Classificação", novo_motivo_classificacao_orientadora, border=True)
+            with st.expander("Justificativa e Detalhes"):
+                st.metric("Justificativa", nova_justificativa_classificacao_orientadora, border=True)
+                st.metric("Reversao", reversao, border=True)
+                st.metric("Descricao do Caso", descricao_caso, border=True)
+                st.metric("Plano de Intervencao", plano_intervencao, border=True)
 
             resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=1,placeholder="Confirma classificação?")            
 
