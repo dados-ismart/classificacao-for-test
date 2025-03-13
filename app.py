@@ -233,12 +233,13 @@ if check_password():
         except:
             return None
         
-    def registrar(df, df_insert, aba, coluna_apoio, ra):
+    def registrar(df_insert, aba, coluna_apoio, ra):
+        df = ler_sheets(aba)
         #Limpar linhas repetidas
         if type(ra) == list:
             for i in ra:
-                nova_linha = df[df['RA'] != i]
-                df = pd.concat([df, nova_linha], ignore_index=True)
+                ra_referencia = i
+                df = df[df['RA'] != i]
         else:
             df = df[df['RA'] != ra]
 
@@ -250,14 +251,24 @@ if check_password():
                 continue
             #verificar
             df = ler_sheets(aba)
-            if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
-                st.success('Sucesso!')
-                sleep(2)
-                break
+            if type(ra) != list:
+                if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
+                    st.success('Sucesso!')
+                    sleep(2)
+                    break
+                else:
+                    st.warning('Erro')
+                    sleep(1)
+                    continue
             else:
-                st.warning('Erro')
-                sleep(1)
-                continue
+                if not df.query(f'RA == {ra_referencia} and {coluna_apoio} == {coluna_apoio}').empty:
+                    st.success('Sucesso!')
+                    sleep(2)
+                    break
+                else:
+                    st.warning('Erro')
+                    sleep(1)
+                    continue
         st.rerun()
 
     #importar e tratar datasets
@@ -270,6 +281,7 @@ if check_password():
     bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
     bd['Ano'] = bd['Ano'].astype(int)
     bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
+    df['RA'] = df['RA'].astype(int)
     df_login = ler_sheets('login')
     df_escola = ler_sheets('media_calibrada')
 
@@ -277,7 +289,7 @@ if check_password():
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         df_coord = df.query('confirmacao_classificacao_orientadora == "Não" and confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não"')
-        bd_segmentado = bd.query('apoio_registro == "Não"')
+        bd_segmentado = bd.query('apoio_registro == "Não" and apoio_registro_final != "Não" and apoio_registro_final != "Sim"')
         # filtros bd
         col1, col2, col3, col4 = st.columns(4)
         # Aplique os filtros
@@ -295,6 +307,8 @@ if check_password():
             bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
         st.divider()
         ra_nome_bd = bd_segmentado['RA - NOME - FINAL']
+        df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
+
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
@@ -502,35 +516,41 @@ if check_password():
         caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
             #colunas
-            novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
-            nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
             classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
             motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
-            def retornar_classificacao_coord(classificacao_orientadora, classificacao_automatica):
-                if classificacao_orientadora == '-':
-                    return classificacao_automatica
-                else:
-                    return classificacao_orientadora
+            nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
+            novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
+            nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
+            reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
+            descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
+            plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
+
 
             #Formulario
             st.title('Confirmar classificação')
-            classificacao_temp = retornar_classificacao_coord(nova_classificacao_orientadora, classificacao_automatica)
-            motivo_temp = retornar_classificacao_coord(novo_motivo_classificacao_orientadora, motivo_classificao_automatica)
-            st.metric("Classificação", classificacao_temp, border=True)
-            st.metric("Motivo", motivo_temp, border=True)
+            col1, col2 = st.columns(2)
+            col1.metric("Classificação\nAutomatica", classificacao_automatica, border=True)
+            col2.metric("Motivo Classificação\nAutomatica", motivo_classificao_automatica, border=True)
+            st.divider()
+            col1, col2 = st.columns(2)
+            col1.metric("Classificação", nova_classificacao_orientadora, border=True)
+            col2.metric("Motivo Classificação", novo_motivo_classificacao_orientadora, border=True)
 
             resposta_confirmar_classificacao = st.selectbox("Confirma classificação?",caixa_sim_nao,index=1,placeholder="Confirma classificação?")            
 
             if resposta_confirmar_classificacao == 'Sim':
-                resposta_classificacao_final = classificacao_temp
-                resposta_motivo_final = motivo_temp
-                resposta_justificativa_classificacao_coord = '-'
+                resposta_classificacao_final = nova_classificacao_orientadora
+                resposta_motivo_final = novo_motivo_classificacao_orientadora
+                resposta_justificativa_classificacao_coord = 'nan'
             else:
-                resposta_classificacao_final = st.selectbox("Nova classificação",caixa_classificacao,index=None,placeholder="Nova classificação")
-                resposta_motivo_final = st.selectbox("Novo motivo da classificação",caixa_justificativa_classificacao,index=None,placeholder="Novo motivo da classificação")
-                resposta_justificativa_classificacao_coord = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
+                resposta_classificacao_final = classificacao_automatica
+                resposta_motivo_final = motivo_classificao_automatica
+                resposta_justificativa_classificacao_coord = st.text_area(placeholder='Justifique', label='Justifique (opcional)')
 
             if st.button(label='REGISTRAR'):
+                if not resposta_justificativa_classificacao_coord:
+                    resposta_justificativa_classificacao_coord = 'nan'
+
                 df_insert = pd.DataFrame([{
                                             'RA': ra, 
                                             'nome': nome, 
@@ -559,7 +579,7 @@ if check_password():
                                             'confirmacao_classificacao_orientadora':df.loc[df['RA'] == ra, 'confirmacao_classificacao_orientadora'].iloc[0],
                                             'nova_classificacao_orientadora':df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0],
                                             'novo_motivo_classificacao_orientadora':df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0],
-                                            'nova_justificativa_classificacao_orientadora':df.loc[df['RA'] == ra, 'nomenclatura'].iloc[0],                                            
+                                            'nova_justificativa_classificacao_orientadora':df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0],                                            
                                             'reversao':	df.loc[df['RA'] == ra, 'reversao'].iloc[0],  
                                             'descricao_caso':df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0],    
                                             'plano_intervencao':df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0],    
@@ -568,7 +588,7 @@ if check_password():
                                             'classificacao_final': resposta_classificacao_final,
                                             'motivo_final': resposta_motivo_final
                                             }])
-                registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao', ra)
+                registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', ra)
         if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty:
             #Variaveis Registro
             if df.query(f'RA == {ra}').empty:
@@ -725,7 +745,7 @@ if check_password():
                                                 'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
                                                 'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                 }])
-                        registrar(df, df_insert, 'registro', 'classificacao_automatica', ra)
+                        registrar(df_insert, 'registro', 'classificacao_automatica', ra)
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
                 #colunas
                 classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
@@ -805,7 +825,7 @@ if check_password():
                                                         'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
                                                         'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
                                                         }])
-                                registrar(df, df_insert, 'registro', 'nova_classificacao_orientadora', ra) 
+                                registrar(df_insert, 'registro', 'nova_classificacao_orientadora', ra) 
                 else:
                     with st.form(key='formulario_descricao'):
                         resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -899,7 +919,7 @@ if check_password():
                                                         'classificacao_final': '-',
                                                         'motivo_final': '-'
                                                         }])
-                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)   
+                                    registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)   
                                 elif resposta_confirmar_classificacao == 'Não':
                                     df_insert = pd.DataFrame([{
                                                         'RA': ra, 
@@ -935,7 +955,7 @@ if check_password():
                                                         'plano_intervencao': resposta_plano_intervencao,
                                                         'tier' : tier
                                                         }])
-                                    registrar(df, df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra) 
+                                    registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra) 
                                 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         with st.form(key='tabela_editavel'):
@@ -954,7 +974,11 @@ if check_password():
                         help="Selecione Sim ou Não",
                         options=['Sim', 'Não'],
                         required=True
-                    )
+                    ),
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
+                        "Justifique",
+                        required=False
+                    ),
                 },
                 disabled=colunas_nao_editaveis,
                 hide_index=True,
@@ -963,93 +987,94 @@ if check_password():
             
         if submit_button:
             #filtrar do df_tabela_editavel aqueles com confirmar 
-            #df_tabela_editavel = edited_df.query("confirmacao_classificacao_coordenacao == 'Sim' or confirmacao_classificacao_coordenacao == 'Não'")
             df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_coordenacao'].isin(['Sim', 'Não'])]
-            df_insert = pd.DataFrame()
-            edited_df
-            for ra in df_tabela_editavel['RA']:
-                nome = df.loc[df['RA'] == ra, 'nome'].iloc[0]
-                resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
-                resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
-                resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
-                resposta_atividades_extracurriculares = df.loc[df['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0]
-                resposta_medalha = df.loc[df['RA'] == ra, 'resposta_medalha'].iloc[0]
-                resposta_respeita_escola = df.loc[df['RA'] == ra, 'resposta_respeita_escola'].iloc[0]
-                resposta_atividades_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0]
-                resposta_colaboracao = df.loc[df['RA'] == ra, 'resposta_colaboracao'].iloc[0]
-                resposta_atividades_nao_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_nao_obrigatorias_ismart'].iloc[0]
-                resposta_networking = df.loc[df['RA'] == ra, 'resposta_networking'].iloc[0]
-                resposta_proatividade = df.loc[df['RA'] == ra, 'resposta_proatividade'].iloc[0]
-                resposta_questoes_psiquicas = df.loc[df['RA'] == ra, 'resposta_questoes_psiquicas'].iloc[0]
-                resposta_questoes_familiares = df.loc[df['RA'] == ra, 'resposta_questoes_familiares'].iloc[0]
-                resposta_questoes_saude = df.loc[df['RA'] == ra, 'resposta_questoes_saude'].iloc[0]
-                resposta_ideacao_suicida = df.loc[df['RA'] == ra, 'resposta_ideacao_suicida'].iloc[0]
-                resposta_adaptacao_projeto = df.loc[df['RA'] == ra, 'resposta_adaptacao_projeto'].iloc[0]
-                resposta_seguranca_profissional = df.loc[df['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
-                resposta_curso_apoiado = df.loc[df['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
-                resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
-                classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
-                motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
-                confirmacao_classificacao_orientadora = df.loc[df['RA'] == ra, 'confirmacao_classificacao_orientadora'].iloc[0]
-                nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
-                novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
-                nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
-                reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
-                descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
-                plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
-                tier = df.loc[df['RA'] == ra, 'tier'].iloc[0]
-                
-                
-                confirmacao_classificacao_coordenacao = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
-                justificativa_classificacao_coord = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'justificativa_classificacao_coord'].iloc[0]
-                if confirmacao_classificacao_coordenacao == 'Sim':
-                    classificacao_final = nova_classificacao_orientadora
-                    motivo_final = novo_motivo_classificacao_orientadora
-                elif confirmacao_classificacao_coordenacao == 'Não':
-                    classificacao_final = classificacao_automatica
-                    motivo_final = motivo_classificao_automatica
+            
+            if df_tabela_editavel.shape[0] == 0:
+                st.warning('Revise ao menos um aluno antes de salvar')
+            else:
+                df_insert = pd.DataFrame()
+                for ra in df_tabela_editavel['RA']:
+                    nome = df.loc[df['RA'] == ra, 'nome'].iloc[0]
+                    resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
+                    resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
+                    resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
+                    resposta_atividades_extracurriculares = df.loc[df['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0]
+                    resposta_medalha = df.loc[df['RA'] == ra, 'resposta_medalha'].iloc[0]
+                    resposta_respeita_escola = df.loc[df['RA'] == ra, 'resposta_respeita_escola'].iloc[0]
+                    resposta_atividades_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0]
+                    resposta_colaboracao = df.loc[df['RA'] == ra, 'resposta_colaboracao'].iloc[0]
+                    resposta_atividades_nao_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_nao_obrigatorias_ismart'].iloc[0]
+                    resposta_networking = df.loc[df['RA'] == ra, 'resposta_networking'].iloc[0]
+                    resposta_proatividade = df.loc[df['RA'] == ra, 'resposta_proatividade'].iloc[0]
+                    resposta_questoes_psiquicas = df.loc[df['RA'] == ra, 'resposta_questoes_psiquicas'].iloc[0]
+                    resposta_questoes_familiares = df.loc[df['RA'] == ra, 'resposta_questoes_familiares'].iloc[0]
+                    resposta_questoes_saude = df.loc[df['RA'] == ra, 'resposta_questoes_saude'].iloc[0]
+                    resposta_ideacao_suicida = df.loc[df['RA'] == ra, 'resposta_ideacao_suicida'].iloc[0]
+                    resposta_adaptacao_projeto = df.loc[df['RA'] == ra, 'resposta_adaptacao_projeto'].iloc[0]
+                    resposta_seguranca_profissional = df.loc[df['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
+                    resposta_curso_apoiado = df.loc[df['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
+                    resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
+                    classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
+                    motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
+                    confirmacao_classificacao_orientadora = df.loc[df['RA'] == ra, 'confirmacao_classificacao_orientadora'].iloc[0]
+                    nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
+                    novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
+                    nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
+                    reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
+                    descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
+                    plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
+                    tier = df.loc[df['RA'] == ra, 'tier'].iloc[0]
+                    
+                    
+                    confirmacao_classificacao_coordenacao = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
+                    justificativa_classificacao_coord = df_tabela_editavel.loc[df_tabela_editavel['RA'] == ra, 'justificativa_classificacao_coord'].iloc[0]
+                    if confirmacao_classificacao_coordenacao == 'Sim':
+                        classificacao_final = nova_classificacao_orientadora
+                        motivo_final = novo_motivo_classificacao_orientadora
+                    elif confirmacao_classificacao_coordenacao == 'Não':
+                        classificacao_final = classificacao_automatica
+                        motivo_final = motivo_classificao_automatica
 
-                nova_linha = pd.DataFrame([{
-                    'RA': ra,
-                    'nome': nome, 
-                    'data_submit': datetime.now(fuso_horario), 
-                    'resposta_argumentacao': resposta_argumentacao,	
-                    'resposta_rotina_estudos': resposta_rotina_estudos,	
-                    'resposta_faltas': resposta_faltas,	
-                    'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                    'resposta_medalha': resposta_medalha,	
-                    'resposta_respeita_escola': resposta_respeita_escola,	
-                    'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
-                    'resposta_colaboracao': resposta_colaboracao,	
-                    'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
-                    'resposta_networking': resposta_networking,	
-                    'resposta_proatividade': resposta_proatividade,	
-                    'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
-                    'resposta_questoes_familiares': resposta_questoes_familiares,	
-                    'resposta_questoes_saude': resposta_questoes_saude,	
-                    'resposta_ideacao_suicida': resposta_ideacao_suicida,	
-                    'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
-                    'resposta_seguranca_profissional': resposta_seguranca_profissional,	
-                    'resposta_curso_apoiado': resposta_curso_apoiado,	
-                    'resposta_nota_condizente': resposta_nota_condizente,	
-                    'classificacao_automatica': classificacao_automatica, 
-                    'motivo_classificao_automatica': motivo_classificao_automatica,
-                    'confirmacao_classificacao_orientadora': confirmacao_classificacao_orientadora,
-                    'nova_classificacao_orientadora' : nova_classificacao_orientadora,
-                    'novo_motivo_classificacao_orientadora': novo_motivo_classificacao_orientadora,
-                    'nova_justificativa_classificacao_orientadora': nova_justificativa_classificacao_orientadora,
-                    'reversao': reversao,
-                    'descricao_caso': descricao_caso,
-                    'plano_intervencao': plano_intervencao,
-                    'tier' : tier,
-                    'confirmacao_classificacao_coordenacao': confirmacao_classificacao_coordenacao,
-                    'justificativa_classificacao_coord': justificativa_classificacao_coord,
-                    'classificacao_final': classificacao_final,
-                    'motivo_final': motivo_final
-                    }])
-                
-                df_insert = pd.concat([df_insert, nova_linha], ignore_index=True)
-            df_insert
-            lista_ras = df_insert['RA']
-            lista_ras = lista_ras.to_list()
-            #registrar(df, df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
+                    nova_linha = pd.DataFrame([{
+                        'RA': ra,
+                        'nome': nome, 
+                        'data_submit': datetime.now(fuso_horario), 
+                        'resposta_argumentacao': resposta_argumentacao,	
+                        'resposta_rotina_estudos': resposta_rotina_estudos,	
+                        'resposta_faltas': resposta_faltas,	
+                        'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
+                        'resposta_medalha': resposta_medalha,	
+                        'resposta_respeita_escola': resposta_respeita_escola,	
+                        'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
+                        'resposta_colaboracao': resposta_colaboracao,	
+                        'resposta_atividades_nao_obrigatorias_ismart': resposta_atividades_nao_obrigatorias_ismart,	
+                        'resposta_networking': resposta_networking,	
+                        'resposta_proatividade': resposta_proatividade,	
+                        'resposta_questoes_psiquicas': resposta_questoes_psiquicas,	
+                        'resposta_questoes_familiares': resposta_questoes_familiares,	
+                        'resposta_questoes_saude': resposta_questoes_saude,	
+                        'resposta_ideacao_suicida': resposta_ideacao_suicida,	
+                        'resposta_adaptacao_projeto': resposta_adaptacao_projeto,	
+                        'resposta_seguranca_profissional': resposta_seguranca_profissional,	
+                        'resposta_curso_apoiado': resposta_curso_apoiado,	
+                        'resposta_nota_condizente': resposta_nota_condizente,	
+                        'classificacao_automatica': classificacao_automatica, 
+                        'motivo_classificao_automatica': motivo_classificao_automatica,
+                        'confirmacao_classificacao_orientadora': confirmacao_classificacao_orientadora,
+                        'nova_classificacao_orientadora' : nova_classificacao_orientadora,
+                        'novo_motivo_classificacao_orientadora': novo_motivo_classificacao_orientadora,
+                        'nova_justificativa_classificacao_orientadora': nova_justificativa_classificacao_orientadora,
+                        'reversao': reversao,
+                        'descricao_caso': descricao_caso,
+                        'plano_intervencao': plano_intervencao,
+                        'tier' : tier,
+                        'confirmacao_classificacao_coordenacao': confirmacao_classificacao_coordenacao,
+                        'justificativa_classificacao_coord': justificativa_classificacao_coord,
+                        'classificacao_final': classificacao_final,
+                        'motivo_final': motivo_final
+                        }])
+                    
+                    df_insert = pd.concat([df_insert, nova_linha], ignore_index=True)
+                lista_ras = df_insert['RA']
+                lista_ras = lista_ras.to_list()
+                registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
