@@ -60,7 +60,7 @@ if check_password():
                 if elemento == resposta:
                     return int(index + 1)    
         except:
-            return -100
+            return st.error('Erro Interno No Formulário')
 
     caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
     caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
@@ -72,55 +72,55 @@ if check_password():
         #Classificação Psicológico/Questões Familiares/Saúde
             #Psicológico - critico
         if resposta_ideacao_suicida == caixa_ideacao_suicida[1] or resposta_ideacao_suicida == caixa_ideacao_suicida[2]:
-            classificacao = caixa_classificacao[4]
-            motivo += caixa_justificativa_classificacao[4]+'; '
+            classificacao = 'Crítico'
+            motivo += 'Psicológico'+'; '
         elif resposta_questoes_psiquicas == caixa_fragilidade[3]:
-            classificacao = caixa_classificacao[4]
-            motivo += caixa_justificativa_classificacao[4]+'; '
+            classificacao = 'Crítico'
+            motivo += 'Psicológico'+'; '
             #Familiares - critico
         if resposta_questoes_familiares == caixa_fragilidade[3]:
-            classificacao = caixa_classificacao[4]
-            motivo += caixa_justificativa_classificacao[2]+'; '
+            classificacao = 'Crítico'
+            motivo += 'Familiar'+'; '
             #Saúde - critico
         if resposta_questoes_saude == caixa_fragilidade[3]:
-            classificacao = caixa_classificacao[4]
-            motivo += caixa_justificativa_classificacao[3]+'; '   
-        if classificacao != caixa_classificacao[4]:
+            classificacao = 'Crítico'
+            motivo += 'Saúde'+'; '   
+        if classificacao != 'Crítico':
                 #Psicológico - Atenção
             if resposta_questoes_psiquicas == caixa_fragilidade[2]:
-                classificacao = caixa_classificacao[3]
-                motivo += caixa_justificativa_classificacao[4]+'; '
+                classificacao = 'Atenção'
+                motivo += 'Psicológico'+'; '
                 #Familiares - Atenção
             if resposta_questoes_familiares == caixa_fragilidade[2]:
-                classificacao = caixa_classificacao[3]
-                motivo += caixa_justificativa_classificacao[2]+'; '
+                classificacao = 'Atenção'
+                motivo += 'Familiar'+'; '
                 #Saúde - Atenção
             if resposta_questoes_saude == caixa_fragilidade[2]:
-                classificacao = caixa_classificacao[3]
-                motivo += caixa_justificativa_classificacao[3]+'; ' 
+                classificacao = 'Atenção'
+                motivo += 'Saúde'+'; ' 
             # opcional 2° ano - Atenção
             if ano == 2: 
-                if resposta_seguranca_profissional == caixa_nao_sim[1]:
-                    classificacao = caixa_classificacao[3]
-                    motivo += caixa_justificativa_classificacao[-1]+'; '
+                if resposta_seguranca_profissional == caixa_nao_sim[0]:
+                    classificacao = 'Atenção'
+                    motivo += 'Escolha frágil'+'; '
         # opcional 3° ano - Critico OP
         if classificacao == '':
             if ano == 3:
-                if resposta_curso_apoiado == caixa_nao_sim[1]:
-                    classificacao = caixa_classificacao[-1]
-                    motivo += caixa_justificativa_classificacao[5]+'; ' 
-                if resposta_seguranca_profissional == caixa_nao_sim[1]:
-                    classificacao = caixa_classificacao[-1]
-                    motivo += caixa_justificativa_classificacao[-1]+'; ' 
-                if resposta_nota_condizente == caixa_nota_condizente[1]:
-                    classificacao = caixa_classificacao[-1]
-                    motivo += caixa_justificativa_classificacao[6]+'; ' 
+                if resposta_curso_apoiado == caixa_nao_sim[0]:
+                    classificacao = 'Crítico OP'
+                    motivo += 'Curso não apoiado'+'; ' 
+                if resposta_seguranca_profissional == caixa_nao_sim[0]:
+                    classificacao = 'Crítico OP'
+                    motivo += 'Escolha frágil'+'; ' 
+                if resposta_nota_condizente == caixa_nota_condizente[0]:
+                    classificacao = 'Crítico OP'
+                    motivo += 'Curso concorrido'+'; ' 
         # Número de faltas
-        if classificacao == caixa_classificacao[3] or classificacao == caixa_classificacao[4] or classificacao == '':
+        if classificacao == 'Atenção' or classificacao == 'Crítico' or classificacao == '':
             if resposta_faltas == caixa_nao_sim[1]:
-                classificacao = caixa_classificacao[4]
-                motivo += caixa_justificativa_classificacao[0]+'; ' 
-                motivo += caixa_justificativa_classificacao[1]+'; ' 
+                classificacao = 'Crítico'
+                motivo += 'Acadêmico'+'; ' 
+                motivo += 'Perfil'+'; ' 
                 motivo = motivo[:-2]
                 return classificacao, motivo
         
@@ -147,7 +147,7 @@ if check_password():
             status_nota_escolar = 0
         elif atencao_escolar == 1 or atencao_escolar == 2:
             status_nota_escolar = 1
-        elif mediano_escolar > 0 and critico_escolar == 0 and atencao_escolar == 0:
+        elif mediano_escolar > 0 and critico_escolar == 0 and atencao_escolar == 0 and destaque_escolar < 3:
             status_nota_escolar = 2
         elif mediano_escolar >= 1 and destaque_escolar > 2:
             status_nota_escolar = 3
@@ -173,55 +173,53 @@ if check_password():
         pontuacao_academico += pontuar(resposta_atividades_extracurriculares , caixa_atividades_extracurriculares)
         pontuacao_academico += pontuar(resposta_medalha , caixa_nao_sim)
         if pontuacao_academico < 7:
-            status_academico = 1
-        else:
             status_academico = 0
+        else:
+            status_academico = 1
 
         #Classificação notas
-        if status_nota_escolar == 0 and (classificacao == caixa_classificacao[4] or classificacao == caixa_classificacao[3]):
-            classificacao = caixa_classificacao[4]
-            motivo += caixa_justificativa_classificacao[0]+'; '
-        elif status_nota_escolar == 1 and classificacao == caixa_classificacao[3]:
-            motivo += caixa_justificativa_classificacao[0]+'; '
+        if status_nota_escolar == 0 and (classificacao == 'Crítico' or classificacao == 'Atenção'):
+            classificacao = 'Crítico'
+            motivo += 'Acadêmico'+'; '
+        elif status_nota_escolar == 1 and classificacao == 'Atenção':
+            motivo += 'Acadêmico'+'; '
         elif classificacao == '':
             if status_nota_escolar == 0 or (status_nota_escolar == 1 and status_perfil == 0 and status_academico == 0):
-                classificacao = caixa_classificacao[4]                                      
-                motivo = caixa_justificativa_classificacao[0]+'; '
+                classificacao = 'Crítico'                                      
+                motivo = 'Acadêmico'+'; '
                 if status_perfil == 0:
-                    motivo += caixa_justificativa_classificacao[1]+'; '
+                    motivo += 'Perfil'+'; '
             elif status_nota_escolar == 1 or (status_nota_escolar == 2 and status_perfil ==0 and status_academico == 0):
-                classificacao = caixa_classificacao[3]
-                motivo = caixa_justificativa_classificacao[0]+'; '
+                classificacao = 'Atenção'
+                motivo = 'Acadêmico'+'; '
                 if status_perfil == 0:
-                    motivo += caixa_justificativa_classificacao[1]+'; '
+                    motivo += 'Perfil'+'; '
             elif status_nota_escolar == 2:
-                classificacao = caixa_classificacao[2]
-                motivo = caixa_justificativa_classificacao[0]+'; '
+                classificacao = 'Mediano'
+                motivo = 'Acadêmico'+'; '
                 if status_perfil == 0:
-                    motivo += caixa_justificativa_classificacao[1]+'; '
+                    motivo += 'Perfil'+'; '
             elif status_nota_escolar == 3:
                 if status_perfil == 1:
-                    classificacao = caixa_classificacao[1]
-                else:
-                    classificacao = caixa_classificacao[3]
-                if status_perfil == 1:
-                    motivo = caixa_justificativa_classificacao[0]+'; '
-                else:
-                    motivo = caixa_justificativa_classificacao[1]+'; '
-                if status_academico == 1:
-                    motivo += caixa_justificativa_classificacao[1]+'; '
+                    classificacao = 'Pré-Destaque'
+                    motivo = 'Acadêmico'+'; '
+                    if status_academico == 1:
+                        motivo += 'Perfil'+'; '
+                else:  
+                    classificacao = 'Atenção'    
+                    motivo = 'Perfil'+'; '
             elif status_nota_escolar == 4:
                 if status_perfil == 1:
-                    classificacao = caixa_classificacao[0]
-                    motivo = caixa_justificativa_classificacao[0]+'; '
+                    classificacao = 'Destaque'
+                    motivo = 'Acadêmico'+'; '
                     if status_academico == 1:
-                        motivo += caixa_justificativa_classificacao[1]+'; '
+                        motivo += 'Perfil'+'; '
                 else:  
-                    classificacao = caixa_classificacao[3]    
-                    motivo = caixa_justificativa_classificacao[1]+'; '
+                    classificacao = 'Atenção'    
+                    motivo = 'Perfil'+'; '
         
         motivo = motivo[:-2]
-        return classificacao, motivo
+        return f'classificacao:{classificacao} - critico_escolar:{critico_escolar} - atencao_escolar:{atencao_escolar}', f'motivo:{motivo}- mediano_escolar:{mediano_escolar} - destaque_escolar:{destaque_escolar} -  status_nota_escolar:{status_nota_escolar}'
 
     def retornar_indice(lista, variavel):
         if variavel == None:
@@ -422,6 +420,11 @@ if check_password():
         if espanhol != '-':
             idiomas += espanhol
             qtd_somas_idiomas += 1
+        
+        try:
+            idiomas = idiomas/qtd_somas_idiomas
+        except:
+            idiomas = 0
 
         qtd_somas_humanas = 0
         humanas = 0
@@ -431,6 +434,12 @@ if check_password():
         if historia != '-':
             humanas += historia
             qtd_somas_humanas += 1
+
+        try:
+            humanas = humanas/qtd_somas_humanas
+        except:
+            humanas = 0
+
         try:
             media_calibrada = df_escola.loc[df_escola['escola'] == escola, 'media_calibrada'].iloc[0]
         except:
@@ -468,12 +477,12 @@ if check_password():
         col1.metric("Matemática", f'{matematica:.2f}', border=True)
         col2.metric("Português", f'{portugues:.2f}', border=True)
         try:
-            col3.metric("Humanas", f"{humanas/qtd_somas_humanas:.2f}", border=True)
+            col3.metric("Humanas", f"{humanas:.2f}", border=True)
         except:
             col3.metric("Humanas", f"{0}", border=True)
         col1, col2, col3 = st.columns(3)
         try:
-            col1.metric("Idiomas", f"{idiomas/qtd_somas_idiomas:.2f}", border=True)
+            col1.metric("Idiomas", f"{idiomas:.2f}", border=True)
         except:
             col1.metric("Idiomas", f"{0}", border=True)
         col2.metric("Ciências Naturais", f'{biologia:.2f}', border=True)
@@ -664,7 +673,7 @@ if check_password():
                 caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
                 # Apenas para alunos do 3º Ano
                 caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
-                caixa_nota_condizente = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
+                caixa_nota_condizente = ['Não', 'Sim', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
                 # Acadêmico
