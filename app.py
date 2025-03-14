@@ -47,7 +47,7 @@ if check_password():
                 df = conn.read(worksheet=pagina, ttl=1)
                 return df
             except:
-                sleep(1)
+                sleep(3)
                 pass
         st.error('Erro ao conectar com o sheets')
         if st.button('Tentar novamente'):
@@ -219,7 +219,7 @@ if check_password():
                     motivo = 'Perfil'+'; '
         
         motivo = motivo[:-2]
-        return f'classificacao:{classificacao} - critico_escolar:{critico_escolar} - atencao_escolar:{atencao_escolar}', f'motivo:{motivo}- mediano_escolar:{mediano_escolar} - destaque_escolar:{destaque_escolar} -  status_nota_escolar:{status_nota_escolar}'
+        return classificacao, motivo
 
     def retornar_indice(lista, variavel):
         if variavel == None:
@@ -863,21 +863,30 @@ if check_password():
                     
                         if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP":
                             if ano == 8:
-                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa']
+                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa']
                             elif ano == 9:
-                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls']
+                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls']
                             elif ano == 1:
-                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'Conteúdos TECH', 'Biruta', 'TPV', 'TKS']
+                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'Conteúdos TECH', 'Biruta', 'TPV', 'TKS']
                             elif ano == 2:
-                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'CC50', 'Alura', 'TEP Vestibulares', 'Conexão Profissão', 'UPUP', 'TKS']
+                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'CC50', 'Alura', 'TEP Vestibulares', 'Conexão Profissão', 'UPUP', 'TKS']
                             elif ano == 3:
-                                caixa_tier = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Vestibulares']
+                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Vestibulares']
 
-                            resposta_tier = st.multiselect("Tier",caixa_tier,placeholder="Tier")
+                            caixa_tier = ['2c', '2i', '3c', '3i', '4']
+
+                            resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
+                            resposta_programas = st.multiselect("Programas",caixa_programas,placeholder="Programas")
+                            programas = ''
                             tier = ''
+
                             for i in resposta_tier:
                                 tier += f'{i}; '
                             tier = tier[:-2]
+
+                            for i in resposta_programas:
+                                programas += f'{i}; '
+                            programas = programas[:-2]
 
                         # resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
                         # resposta_novo_motivo_classificacao_orientadora = ''
@@ -886,6 +895,7 @@ if check_password():
                         # resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
 
                         else:
+                            programas = '-'
                             tier = '-'
                         submit_button = st.form_submit_button(label='REGISTRAR')
                         if submit_button:
@@ -929,7 +939,8 @@ if check_password():
                                                         'reversao': resposta_reversao,
                                                         'descricao_caso': resposta_descricao_caso,
                                                         'plano_intervencao': resposta_plano_intervencao,
-                                                        'tier' : tier,
+                                                        'programas' : programas,
+                                                        'tier': tier,
                                                         'confirmacao_classificacao_coordenacao': '-',
                                                         'justificativa_classificacao_coord': '-',
                                                         'classificacao_final': '-',
@@ -969,7 +980,8 @@ if check_password():
                                                         'reversao': resposta_reversao,
                                                         'descricao_caso': resposta_descricao_caso,
                                                         'plano_intervencao': resposta_plano_intervencao,
-                                                        'tier' : tier
+                                                        'programas' : programas,
+                                                        'tier': tier
                                                         }])
                                     registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra) 
                                 
@@ -1039,6 +1051,7 @@ if check_password():
                     reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
                     descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
                     plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
+                    programas = df.loc[df['RA'] == ra, 'programas'].iloc[0]
                     tier = df.loc[df['RA'] == ra, 'tier'].iloc[0]
                     
                     
@@ -1083,7 +1096,8 @@ if check_password():
                         'reversao': reversao,
                         'descricao_caso': descricao_caso,
                         'plano_intervencao': plano_intervencao,
-                        'tier' : tier,
+                        'programas' : programas,
+                        'tier': tier,
                         'confirmacao_classificacao_coordenacao': confirmacao_classificacao_coordenacao,
                         'justificativa_classificacao_coord': justificativa_classificacao_coord,
                         'classificacao_final': classificacao_final,
