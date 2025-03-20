@@ -1037,6 +1037,38 @@ if check_password():
                         "Justifique",
                         required=False
                     ),
+                    "classificacao_automatica": st.column_config.TextColumn(
+                        "Classificação Automatica",
+                        required=False
+                    ),
+                    "motivo_classificao_automatica": st.column_config.TextColumn(
+                        "Motivo Classificação Automatica",
+                        required=False
+                    ),
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
+                        "Classificação da Orientadora",
+                        required=False
+                    ),
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
+                        "Motivo Classificação da Orientadora",
+                        required=False
+                    ),
+                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
+                        "Justificativa Classificação",
+                        required=False
+                    ),
+                    "reversao": st.column_config.TextColumn(
+                        "Reversão",
+                        required=False
+                    ),
+                    "descricao_caso": st.column_config.TextColumn(
+                        "Descrição do caso",
+                        required=False
+                    ),
+                    "plano_intervencao": st.column_config.TextColumn(
+                        "Plano de intervenção",
+                        required=False
+                    )
                 },
                 disabled=colunas_nao_editaveis,
                 hide_index=True,
