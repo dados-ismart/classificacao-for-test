@@ -397,7 +397,7 @@ if check_password():
         ingles = bd.loc[bd['RA'] == ra, 'Nota Inglês'].iloc[0]
         fisica = bd.loc[bd['RA'] == ra, 'Nota Física'].iloc[0]
         portugues = bd.loc[bd['RA'] == ra, 'Nota Português'].iloc[0]
-        frances = bd.loc[bd['RA'] == ra, 'Nota Francês/Alemão e Outros'].iloc[0]
+        outras_linguas = bd.loc[bd['RA'] == ra, 'Nota Francês/Alemão e Outros'].iloc[0]
         biologia = bd.loc[bd['RA'] == ra, 'Nota Biologia'].iloc[0]
         historia = bd.loc[bd['RA'] == ra, 'Nota História'].iloc[0]
         espanhol = bd.loc[bd['RA'] == ra, 'Nota Espanhol'].iloc[0]
@@ -422,8 +422,8 @@ if check_password():
         if ingles != '-':
             idiomas += ingles
             qtd_somas_idiomas += 1
-        if frances != '-':
-            idiomas += frances
+        if outras_linguas != '-':
+            idiomas += outras_linguas
             qtd_somas_idiomas += 1
         if espanhol != '-':
             idiomas += espanhol
@@ -502,9 +502,9 @@ if check_password():
             except:
                 col1.metric('Inglês', ingles, border=True)
             try:
-                col2.metric('Francês', f'{frances:.2f}', border=True)
+                col2.metric('Outras Línguas', f'{outras_linguas:.2f}', border=True)
             except:
-                col2.metric('Francês', frances, border=True)
+                col2.metric('Outras Línguas', outras_linguas, border=True)
             try:
                 col3.metric('Espanhol', f'{espanhol:.2f}', border=True)
             except:
