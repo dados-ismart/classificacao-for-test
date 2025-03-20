@@ -395,15 +395,16 @@ if check_password():
         #materias
         matematica = bd.loc[bd['RA'] == ra, 'Nota Matemática'].iloc[0]
         ingles = bd.loc[bd['RA'] == ra, 'Nota Inglês'].iloc[0]
-        fisica = bd.loc[bd['RA'] == ra, 'Nota Física'].iloc[0]
         portugues = bd.loc[bd['RA'] == ra, 'Nota Português'].iloc[0]
         outras_linguas = bd.loc[bd['RA'] == ra, 'Nota Francês/Alemão e Outros'].iloc[0]
-        biologia = bd.loc[bd['RA'] == ra, 'Nota Biologia'].iloc[0]
         historia = bd.loc[bd['RA'] == ra, 'Nota História'].iloc[0]
         espanhol = bd.loc[bd['RA'] == ra, 'Nota Espanhol'].iloc[0]
         ciencias = bd.loc[bd['RA'] == ra, 'Nota Ciências'].iloc[0]
         geografia = bd.loc[bd['RA'] == ra, 'Nota Geografia'].iloc[0]
-        quimica = bd.loc[bd['RA'] == ra, 'Nota Química'].iloc[0]
+        biologia = bd.loc[bd['RA'] == ra, 'Nota Biologia'].iloc[0]
+        quimica = bd.loc[bd['RA'] == ra, 'Nota Química'].iloc[0]    
+        fisica = bd.loc[bd['RA'] == ra, 'Nota Física'].iloc[0]
+
         if matematica == '-':
             matematica = 0
         if fisica == '-':
@@ -417,6 +418,22 @@ if check_password():
         if quimica == '-':
             quimica = 0
         
+        qtd_somas_ciencias_naturais = 0
+        ciencias_naturais = 0
+        if fisica != '-':
+            ciencias_naturais += fisica
+            qtd_somas_ciencias_naturais += 1
+        if quimica != '-':
+            ciencias_naturais += quimica
+            qtd_somas_ciencias_naturais += 1
+        if biologia != '-':
+            ciencias_naturais += biologia
+            qtd_somas_ciencias_naturais += 1
+        try:
+            ciencias_naturais = ciencias_naturais/qtd_somas_ciencias_naturais
+        except:
+            ciencias_naturais = 0
+
         qtd_somas_idiomas = 0
         idiomas = 0
         if ingles != '-':
@@ -493,8 +510,13 @@ if check_password():
             col1.metric("Idiomas", f"{idiomas:.2f}", border=True)
         except:
             col1.metric("Idiomas", f"{0}", border=True)
-        col2.metric("Ciências Naturais", f'{biologia:.2f}', border=True)
+        col2.metric("Ciências Naturais", f'{ciencias_naturais:.2f}', border=True)
         with st.expander("Notas detalhadas"):
+            st.subheader('Ciências Naturais')
+            col1, col2, col3 = st.columns(3)
+            col1.metric('Biologia', f'{biologia:.2f}', border=True)
+            col2.metric('Química', f'{quimica:.2f}', border=True)
+            col3.metric('Física', f'{fisica:.2f}', border=True)
             st.subheader('Idiomas')
             col1, col2, col3 = st.columns(3)
             try:
