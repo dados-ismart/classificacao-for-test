@@ -288,6 +288,8 @@ if check_password():
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         df_coord = df.query('confirmacao_classificacao_orientadora == "Não" and confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não"')
         bd_segmentado = bd.query('apoio_registro == "Não" and apoio_registro_final != "Não" and apoio_registro_final != "Sim"')
+        cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
+        bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros bd
         col1, col2, col3, col4 = st.columns(4)
         # Aplique os filtros
@@ -314,16 +316,22 @@ if check_password():
         placeholder="RA")
 
         # progresso
-        qtd_alunos_registrados_coord = bd.query(f"apoio_registro == 'Sim'").shape[0]
-        qtd_alunos_registrados_orientadoras = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+        qtd_praca = bd.query(f"Cidade == '{cidade_login}'").shape[0]
+        qtd_registrados_praca = bd.query(f"Cidade == '{cidade_login}'")
+        qtd_registrados_praca = qtd_registrados_praca.query("apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+
+        qtd_alunos = bd.shape[0]
+        qtd_alunos_registrados = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+
         try:
-            st.progress(qtd_alunos_registrados_orientadoras/bd.shape[0], f'Orientadoras registraram: **{qtd_alunos_registrados_orientadoras}/{bd.shape[0]}**')
-            st.progress(qtd_alunos_registrados_coord/qtd_alunos_registrados_orientadoras, f'Confirmados: **{qtd_alunos_registrados_coord}/{qtd_alunos_registrados_orientadoras}**')
+            st.progress(qtd_alunos_registrados/qtd_alunos, f'Status Preenchimento Geral: **{qtd_alunos_registrados}/{qtd_alunos}**')
+            st.progress(qtd_registrados_praca/qtd_praca, f'Status Preenchimento Praça {cidade_login}: **{qtd_registrados_praca}/{qtd_praca}**')
         except ZeroDivisionError:
             st.error('Zero Resultados')
     else:
-        bd_segmentado = bd[bd['Orientadora'] == st.session_state["authenticated_username"]]
-        bd_segmentado = bd_segmentado.query('apoio_registro != "Sim" and apoio_registro != "Não"')
+        bd_segmentado = bd.query('apoio_registro != "Sim" and apoio_registro != "Não"')
+        cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
+        bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros
         col1, col2, col3 = st.columns(3)
         # Aplique os filtros
@@ -338,7 +346,7 @@ if check_password():
             bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
         st.divider()
 
-        ra_nome_bd = bd_segmentado.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")['RA - NOME']
+        ra_nome_bd = bd_segmentado['RA - NOME']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
@@ -356,11 +364,9 @@ if check_password():
             del st.session_state['ra_nome']
             
         # progresso
-        bd_orientadora = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-        qtd_alunos_registrados_orientadoras = bd_orientadora.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
-
+        qtd_alunos_registrados_orientadoras = bd_segmentado.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
         try:
-            st.progress(qtd_alunos_registrados_orientadoras/bd_orientadora.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd_orientadora.shape[0]}**')
+            st.progress(qtd_alunos_registrados_orientadoras/bd_segmentado.shape[0], f'Você registrou: **{qtd_alunos_registrados_orientadoras}/{bd_segmentado.shape[0]}**')
         except ZeroDivisionError:
             st.error('Zero Resultados')
 
@@ -804,7 +810,7 @@ if check_password():
                         resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
                         resposta_nova_justificativa_classificacao_orientadora = st.text_area(placeholder='Justifique a mudança de classificação', label='Justifique a mudança de classificação')
 
-                        submit_button = st.form_submit_button(label='ALTERAL')
+                        submit_button = st.form_submit_button(label='ALTERAR')
                         if submit_button:  
                             if not resposta_nova_classificacao_orientadora or not resposta_novo_motivo_classificacao_orientadora or not resposta_nova_justificativa_classificacao_orientadora:
                                 st.warning('Preencha os dados de classificação')
@@ -863,7 +869,7 @@ if check_password():
                             resposta_descricao_caso = '-'
                             resposta_plano_intervencao = '-'
                     
-                        if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora - SP":
+                        if cidade_login == 'SP':
                             if ano == 8:
                                 caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa']
                             elif ano == 9:
