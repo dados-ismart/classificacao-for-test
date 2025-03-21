@@ -65,7 +65,7 @@ if check_password():
     caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
     caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
 
-    def classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_nao_sim,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao):
+    def classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_nao_sim,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao):
         classificacao = ''
         motivo = ''
         
@@ -171,8 +171,7 @@ if check_password():
         pontuacao_academico += pontuar(resposta_argumentacao, caixa_argumentacao)
         pontuacao_academico += pontuar(resposta_rotina_estudos , caixa_rotina_estudos)
         pontuacao_academico += pontuar(resposta_atividades_extracurriculares , caixa_atividades_extracurriculares)
-        pontuacao_academico += pontuar(resposta_medalha , caixa_nao_sim)
-        if pontuacao_academico < 7:
+        if pontuacao_academico < 6:
             status_academico = 0
         else:
             status_academico = 1
@@ -605,7 +604,6 @@ if check_password():
                                             'resposta_rotina_estudos':df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0],
                                             'resposta_faltas':	df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0],
                                             'resposta_atividades_extracurriculares':df.loc[df['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0],
-                                            'resposta_medalha':df.loc[df['RA'] == ra, 'resposta_medalha'].iloc[0],
                                             'resposta_respeita_escola':df.loc[df['RA'] == ra, 'resposta_respeita_escola'].iloc[0],
                                             'resposta_atividades_obrigatorias_ismart':df.loc[df['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0],
                                             'resposta_colaboracao':df.loc[df['RA'] == ra, 'resposta_colaboracao'].iloc[0],
@@ -645,7 +643,6 @@ if check_password():
                 registro_resposta_rotina_estudos = None
                 registro_resposta_faltas = None
                 registro_resposta_atividades_extracurriculares = None
-                registro_resposta_medalha = None
                 registro_resposta_respeita_escola = None
                 registro_resposta_atividades_obrigatorias_ismart = None
                 registro_resposta_colaboracao = None
@@ -669,7 +666,6 @@ if check_password():
                 registro_resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
                 registro_resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
                 registro_resposta_atividades_extracurriculares = df.loc[df['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0]
-                registro_resposta_medalha = df.loc[df['RA'] == ra, 'resposta_medalha'].iloc[0]
                 registro_resposta_respeita_escola = df.loc[df['RA'] == ra, 'resposta_respeita_escola'].iloc[0]
                 registro_resposta_atividades_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0]
                 registro_resposta_colaboracao = df.loc[df['RA'] == ra, 'resposta_colaboracao'].iloc[0]
@@ -712,7 +708,6 @@ if check_password():
                 resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
                 resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
                 resposta_atividades_extracurriculares = st.radio('**O aluno faz atividades acadêmicas extracurriculares com vias a desenvolver seu talento acadêmico? (olimpiadas, projetos de iniciação cientifica, programação, Cultura inglesa/Inglês/Prep)**', caixa_atividades_extracurriculares, index=retornar_indice(lista=caixa_atividades_extracurriculares,variavel=registro_resposta_atividades_extracurriculares), horizontal=True)
-                resposta_medalha = st.radio('**O aluno possui medalha em alguma olimpiada do conhecimento (oficial) ou é TOP 3 em competições acadêmicas no ano corrente?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_medalha), horizontal=True)
                 resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
                 # Perfil
                 st.divider()
@@ -760,7 +755,7 @@ if check_password():
                 #Botão registrar
                 submit_button = st.form_submit_button(label='SALVAR')
                 if submit_button:
-                    if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_medalha or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
+                    if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
                         st.warning('Preencha o formuário')
                         st.stop()
                     else:    
@@ -773,7 +768,6 @@ if check_password():
                                                 'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                 'resposta_faltas': resposta_faltas,	
                                                 'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                'resposta_medalha': resposta_medalha,	
                                                 'resposta_respeita_escola': resposta_respeita_escola,	
                                                 'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
                                                 'resposta_colaboracao': resposta_colaboracao,	
@@ -788,8 +782,8 @@ if check_password():
                                                 'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                 'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                 'resposta_nota_condizente': resposta_nota_condizente,	
-                                                'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                 }])
                         registrar(df_insert, 'registro', 'classificacao_automatica', ra)
             if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
@@ -805,6 +799,7 @@ if check_password():
                 confirmacao_classificacao_coordenacao = df.loc[df['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
                 classificacao_final = df.loc[df['RA'] == ra, 'classificacao_final'].iloc[0]
                 motivo_final = df.loc[df['RA'] == ra, 'motivo_final'].iloc[0]
+
                 if 'confirmacao_alterada' not in st.session_state:
                     st.session_state['confirmacao_alterada'] = 'Não'
 
@@ -849,7 +844,6 @@ if check_password():
                                                         'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                         'resposta_faltas': resposta_faltas,	
                                                         'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                        'resposta_medalha': resposta_medalha,	
                                                         'resposta_respeita_escola': resposta_respeita_escola,	
                                                         'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
                                                         'resposta_colaboracao': resposta_colaboracao,	
@@ -864,8 +858,8 @@ if check_password():
                                                         'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                         'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                         'resposta_nota_condizente': resposta_nota_condizente,	
-                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                         'confirmacao_classificacao_orientadora': '',
                                                         'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
                                                         'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
@@ -892,40 +886,16 @@ if check_password():
                             resposta_plano_intervencao = '-'
                     
                         if cidade_login == 'SP':
-                            if ano == 8:
-                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa']
-                            elif ano == 9:
-                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls']
-                            elif ano == 1:
-                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'Conteúdos TECH', 'Biruta', 'TPV', 'TKS']
-                            elif ano == 2:
-                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Technovation Girls', 'Ismart Academy', 'Ismart Robotics', 'CC50', 'Alura', 'TEP Vestibulares', 'Conexão Profissão', 'UPUP', 'TKS']
-                            elif ano == 3:
-                                caixa_programas = ['Programa Aluno Tutor', 'Uma Mão Lava a Outra', 'Rodas de Conversa', 'Vestibulares']
-
                             caixa_tier = ['2c', '2i', '3c', '3i', '4']
 
                             resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
-                            resposta_programas = st.multiselect("Programas",caixa_programas,placeholder="Programas")
-                            programas = ''
                             tier = ''
 
                             for i in resposta_tier:
                                 tier += f'{i}; '
                             tier = tier[:-2]
 
-                            for i in resposta_programas:
-                                programas += f'{i}; '
-                            programas = programas[:-2]
-
-                        # resposta_novo_motivo_classificacao_orientadora_lista = st.multiselect("Novo motivo da classificação",caixa_justificativa_classificacao,placeholder="Novo motivo da classificação")
-                        # resposta_novo_motivo_classificacao_orientadora = ''
-                        # for i in resposta_novo_motivo_classificacao_orientadora_lista:
-                        #     resposta_novo_motivo_classificacao_orientadora += f'{i}; '
-                        # resposta_novo_motivo_classificacao_orientadora = resposta_novo_motivo_classificacao_orientadora[:-2]
-
                         else:
-                            programas = '-'
                             tier = '-'
                         submit_button = st.form_submit_button(label='REGISTRAR')
                         if submit_button:
@@ -945,7 +915,6 @@ if check_password():
                                                         'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                         'resposta_faltas': resposta_faltas,	
                                                         'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                        'resposta_medalha': resposta_medalha,	
                                                         'resposta_respeita_escola': resposta_respeita_escola,	
                                                         'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
                                                         'resposta_colaboracao': resposta_colaboracao,	
@@ -960,8 +929,8 @@ if check_password():
                                                         'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                         'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                         'resposta_nota_condizente': resposta_nota_condizente,	
-                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                         'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
                                                         'nova_classificacao_orientadora' : '-',
                                                         'novo_motivo_classificacao_orientadora': '-',
@@ -969,7 +938,6 @@ if check_password():
                                                         'reversao': resposta_reversao,
                                                         'descricao_caso': resposta_descricao_caso,
                                                         'plano_intervencao': resposta_plano_intervencao,
-                                                        'programas' : programas,
                                                         'tier': tier,
                                                         'confirmacao_classificacao_coordenacao': '-',
                                                         'justificativa_classificacao_coord': '-',
@@ -986,7 +954,6 @@ if check_password():
                                                         'resposta_rotina_estudos': resposta_rotina_estudos,	
                                                         'resposta_faltas': resposta_faltas,	
                                                         'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                                                        'resposta_medalha': resposta_medalha,	
                                                         'resposta_respeita_escola': resposta_respeita_escola,	
                                                         'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
                                                         'resposta_colaboracao': resposta_colaboracao,	
@@ -1001,8 +968,8 @@ if check_password():
                                                         'resposta_seguranca_profissional': resposta_seguranca_profissional,	
                                                         'resposta_curso_apoiado': resposta_curso_apoiado,	
                                                         'resposta_nota_condizente': resposta_nota_condizente,	
-                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
-                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_medalha, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
+                                                        'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0], 
+                                                        'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, biologia, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                                         'confirmacao_classificacao_orientadora': resposta_confirmar_classificacao,
                                                         'nova_classificacao_orientadora' : nova_classificacao_orientadora,
                                                         'novo_motivo_classificacao_orientadora': novo_motivo_classificacao_orientadora,
@@ -1010,7 +977,6 @@ if check_password():
                                                         'reversao': resposta_reversao,
                                                         'descricao_caso': resposta_descricao_caso,
                                                         'plano_intervencao': resposta_plano_intervencao,
-                                                        'programas' : programas,
                                                         'tier': tier
                                                         }])
                                     registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra) 
@@ -1089,7 +1055,6 @@ if check_password():
                     resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
                     resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
                     resposta_atividades_extracurriculares = df.loc[df['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0]
-                    resposta_medalha = df.loc[df['RA'] == ra, 'resposta_medalha'].iloc[0]
                     resposta_respeita_escola = df.loc[df['RA'] == ra, 'resposta_respeita_escola'].iloc[0]
                     resposta_atividades_obrigatorias_ismart = df.loc[df['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0]
                     resposta_colaboracao = df.loc[df['RA'] == ra, 'resposta_colaboracao'].iloc[0]
@@ -1113,7 +1078,6 @@ if check_password():
                     reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
                     descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
                     plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
-                    programas = df.loc[df['RA'] == ra, 'programas'].iloc[0]
                     tier = df.loc[df['RA'] == ra, 'tier'].iloc[0]
                     
                     
@@ -1134,7 +1098,6 @@ if check_password():
                         'resposta_rotina_estudos': resposta_rotina_estudos,	
                         'resposta_faltas': resposta_faltas,	
                         'resposta_atividades_extracurriculares': resposta_atividades_extracurriculares,	
-                        'resposta_medalha': resposta_medalha,	
                         'resposta_respeita_escola': resposta_respeita_escola,	
                         'resposta_atividades_obrigatorias_ismart': resposta_atividades_obrigatorias_ismart,	
                         'resposta_colaboracao': resposta_colaboracao,	
@@ -1158,7 +1121,6 @@ if check_password():
                         'reversao': reversao,
                         'descricao_caso': descricao_caso,
                         'plano_intervencao': plano_intervencao,
-                        'programas' : programas,
                         'tier': tier,
                         'confirmacao_classificacao_coordenacao': confirmacao_classificacao_coordenacao,
                         'justificativa_classificacao_coord': justificativa_classificacao_coord,
