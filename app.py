@@ -755,8 +755,17 @@ if check_password():
                 #Botão registrar
                 submit_button = st.form_submit_button(label='SALVAR')
                 if submit_button:
-                    if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_faltas or not resposta_atividades_extracurriculares or not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade or not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida or not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
-                        st.warning('Preencha o formuário')
+                    if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_atividades_extracurriculares or not resposta_faltas:
+                        st.warning('Questões em **Acadêmico** do formulário não estão preenchidas')
+                        st.stop()
+                    if not resposta_respeita_escola or not resposta_atividades_obrigatorias_ismart or not resposta_colaboracao or not resposta_atividades_nao_obrigatorias_ismart or not resposta_networking or not resposta_proatividade:
+                        st.warning('Questões em **Perfil** do formulário não estão preenchidas')
+                        st.stop()
+                    if not resposta_questoes_psiquicas or not resposta_questoes_familiares or not resposta_questoes_saude or not resposta_ideacao_suicida:
+                        st.warning('Questões em **Psicológico/Questões Familiares/Saúde** do formulário não estão preenchidas')
+                        st.stop()
+                    if not resposta_adaptacao_projeto or not resposta_seguranca_profissional or not resposta_curso_apoiado or not resposta_nota_condizente:
+                        st.warning('**Questões de ano** do formulário não estão preenchidas')
                         st.stop()
                     else:    
                         #inserir classificação
