@@ -1,4 +1,3 @@
-
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
@@ -176,7 +175,7 @@ if check_password():
             status_academico = 0
         else:
             status_academico = 1
-
+        return status_nota_escolar, classificacao
         #Classificação notas
         if status_nota_escolar == 0 and (classificacao == 'Crítico' or classificacao == 'Atenção'):
             classificacao = 'Crítico'
@@ -1150,4 +1149,3 @@ if check_password():
                 lista_ras = df_insert['RA']
                 lista_ras = lista_ras.to_list()
                 registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
-                
