@@ -139,7 +139,7 @@ if check_password():
                 atencao_escolar += 1
             elif media_calibrada <= i and i < (media_calibrada + 2):
                 mediano_escolar += 1
-            elif i > (media_calibrada + 2):
+            elif i >= (media_calibrada + 2):
                 destaque_escolar += 1
 
         
