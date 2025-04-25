@@ -142,7 +142,7 @@ if check_password():
             elif i > (media_calibrada + 2):
                 destaque_escolar += 1
 
-        return critico_escolar, classificacao
+        
         #status_nota
         if critico_escolar > 0 or atencao_escolar > 2:
             status_nota_escolar = 0
@@ -154,7 +154,7 @@ if check_password():
             status_nota_escolar = 3
         elif destaque_escolar == 5:
             status_nota_escolar = 4
-                
+        return status_nota_escolar, [critico_escolar, atencao_escolar, mediano_escolar, destaque_escolar]
         #Pontuacao academica
         pontuacao_perfil = 0
         pontuacao_perfil += pontuar(resposta_respeita_escola , caixa_nunca_eventualmente_sempre)
