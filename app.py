@@ -141,7 +141,8 @@ if check_password():
                 mediano_escolar += 1
             elif i > (media_calibrada + 2):
                 destaque_escolar += 1
-        
+
+        return critico_escolar, classificacao
         #status_nota
         if critico_escolar > 0 or atencao_escolar > 2:
             status_nota_escolar = 0
@@ -175,7 +176,7 @@ if check_password():
             status_academico = 0
         else:
             status_academico = 1
-        return status_nota_escolar, classificacao
+
         #Classificação notas
         if status_nota_escolar == 0 and (classificacao == 'Crítico' or classificacao == 'Atenção'):
             classificacao = 'Crítico'
