@@ -1159,18 +1159,13 @@ if check_password():
         df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")  
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
-        df_historico_filtrado['manter_dados_iguais'] = 'Sim'
-        
-        st.dataframe(df_historico_filtrado)
 
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
         colunas_nao_editaveis.remove('manter_dados_iguais')
-    
-        # with st.form(key='tabela_editavel'):
-            
-        #     df_coord['confirmacao_classificacao_coordenacao'] = df_historico['confirmacao_classificacao_coordenacao'].astype(str)
-        #     df_coord['justificativa_classificacao_coord'] = df_historico['justificativa_classificacao_coord'].astype(str)
 
+        st.text_area(colunas_nao_editaveis)
+
+        # with st.form(key='tabela_editavel2'):
         #     # Configure o data editor
         #     edited_df = st.data_editor(
         #         df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
