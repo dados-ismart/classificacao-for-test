@@ -1172,7 +1172,7 @@ if check_password():
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
                         help="Selecione Sim ou Não",
-                        options=['Sim', 'Não'],
+                        options=['Sim', 'Não', '-'],
                         required=True
                     ),
                     "RA": st.column_config.TextColumn(
