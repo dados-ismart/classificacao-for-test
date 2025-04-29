@@ -285,6 +285,7 @@ if check_password():
     #df['RA'] = df['RA'].astype(int)
     df_login = ler_sheets('login')
     df_escola = ler_sheets('media_calibrada')
+    df_historico = ler_sheets('historico')
 
     st.title('Formulário de Classificação')
     #Seleção do aluno
@@ -1150,3 +1151,6 @@ if check_password():
                 lista_ras = df_insert['RA']
                 lista_ras = lista_ras.to_list()
                 registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
+
+    elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
+        st.white('Não Selecionado')
