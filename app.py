@@ -1174,7 +1174,25 @@ if check_password():
                                        "classificacao_final",
                                        "motivo_final",
                                        "confirmacao_classificacao_coordenacao",
-                                       "justificativa_classificacao_coord","classificacao_automatica","motivo_classificao_automatica","confirmacao_classificacao_orientadora","novo_motivo_classificacao_orientadora","nova_justificativa_classificacao_orientadora","reversao","descricao_caso","plano_intervencao","tier","resposta_argumentacao","resposta_rotina_estudos","resposta_faltas","resposta_atividades_extracurriculares","resposta_respeita_escola","resposta_atividades_obrigatorias_ismart","resposta_colaboracao","resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
+                                       "justificativa_classificacao_coord",
+                                       "classificacao_automatica",
+                                       "motivo_classificao_automatica",
+                                       "confirmacao_classificacao_orientadora",
+                                       "nova_classificacao_orientadora",
+                                       "novo_motivo_classificacao_orientadora",
+                                       "nova_justificativa_classificacao_orientadora",
+                                       "reversao",
+                                       "descricao_caso",
+                                       "plano_intervencao",
+                                       "tier",
+                                       "resposta_argumentacao",
+                                       "resposta_rotina_estudos",
+                                       "resposta_atividades_extracurriculares",
+                                        "resposta_faltas",
+                                       "resposta_respeita_escola",
+                                       "resposta_atividades_obrigatorias_ismart",
+                                       "resposta_colaboracao",
+                                       "resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
@@ -1208,6 +1226,90 @@ if check_password():
                     ),
                     "justificativa_classificacao_coord": st.column_config.TextColumn(
                         "Justificativa da Coordenação",
+                        required=False
+                    ),
+                    "classificacao_automatica": st.column_config.TextColumn(
+                        "Classificação Automatica",
+                        required=False
+                    ),
+                    "motivo_classificao_automatica": st.column_config.TextColumn(
+                        "Motivo Classificação Automatica",
+                        required=False
+                    ),
+                    "confirmacao_classificacao_orientadora": st.column_config.TextColumn(
+                        "Orientadora Confirmou a classificação Automatica?",
+                        required=False
+                    ),
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
+                        "Classificação da Orientadora",
+                        required=False
+                    ),
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
+                        "Motivo da Orientadora",
+                        required=False
+                    ),
+                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
+                        "Justificativa da Orientadora",
+                        required=False
+                    ),
+                    "reversao": st.column_config.TextColumn(
+                        "Reversão",
+                        required=False
+                    ),
+                    "descricao_caso": st.column_config.TextColumn(
+                        "Descrição do Caso",
+                        required=False
+                    ),
+                    "plano_intervencao": st.column_config.TextColumn(
+                        "Plano de Intervenção",
+                        required=False
+                    ),
+                    "tier": st.column_config.TextColumn(
+                        "Tier",
+                        required=False
+                    ),
+                    "resposta_argumentacao": st.column_config.TextColumn(
+                        "Resposta - Nivel de Argumentação/Interações",
+                        required=False
+                    ),
+                    "resposta_rotina_estudos": st.column_config.TextColumn(
+                        "Resposta - Rotina de Estudos Adequada?",
+                        required=False
+                    ),
+                    "resposta_atividades_extracurriculares": st.column_config.TextColumn(
+                        "Resposta - Atividades Extracurriculares",
+                        required=False
+                    ),
+                    "resposta_faltas": st.column_config.TextColumn(
+                        "Resposta - Número de Faltas comprometentes?",
+                        required=False
+                    ),
+                    "resposta_respeita_escola": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "resposta_atividades_obrigatorias_ismart": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "resposta_colaboracao": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "resposta_atividades_nao_obrigatorias_ismart": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "RA": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "RA": st.column_config.TextColumn(
+                        "Resposta - ",
+                        required=False
+                    ),
+                    "RA": st.column_config.TextColumn(
+                        "Resposta - ",
                         required=False
                     ),
                 },
