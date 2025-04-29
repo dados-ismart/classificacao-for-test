@@ -1169,50 +1169,18 @@ if check_password():
         with st.form(key='tabela_editavel2'):
             # Configure o data editor
             edited_df = st.data_editor(
-                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
+                df_historico_filtrado[["manter_dados_iguais","RA","nome","data_submit","classificacao_automatica","motivo_classificao_automatica","confirmacao_classificacao_orientadora","novo_motivo_classificacao_orientadora","nova_justificativa_classificacao_orientadora","reversao","descricao_caso","plano_intervencao","tier","confirmacao_classificacao_coordenacao","justificativa_classificacao_coord","classificacao_final","motivo_final","resposta_argumentacao","resposta_rotina_estudos","resposta_faltas","resposta_atividades_extracurriculares","resposta_respeita_escola","resposta_atividades_obrigatorias_ismart","resposta_colaboracao","resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
                 column_config={
-                    "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
-                        "Confirmar?",
+                    "manter_dados_iguais": st.column_config.SelectboxColumn(
+                        "Manter Dados Iguais?",
                         help="Selecione Sim ou Não",
                         options=['Sim', 'Não'],
                         required=True
                     ),
-                    "justificativa_classificacao_coord": st.column_config.TextColumn(
-                        "Justifique",
+                    "RA": st.column_config.TextColumn(
+                        "RA",
                         required=False
                     ),
-                    "classificacao_automatica": st.column_config.TextColumn(
-                        "Classificação Automatica",
-                        required=False
-                    ),
-                    "motivo_classificao_automatica": st.column_config.TextColumn(
-                        "Motivo Classificação Automatica",
-                        required=False
-                    ),
-                    "nova_classificacao_orientadora": st.column_config.TextColumn(
-                        "Classificação da Orientadora",
-                        required=False
-                    ),
-                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
-                        "Motivo Classificação da Orientadora",
-                        required=False
-                    ),
-                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
-                        "Justificativa Classificação",
-                        required=False
-                    ),
-                    "reversao": st.column_config.TextColumn(
-                        "Reversão",
-                        required=False
-                    ),
-                    "descricao_caso": st.column_config.TextColumn(
-                        "Descrição do caso",
-                        required=False
-                    ),
-                    "plano_intervencao": st.column_config.TextColumn(
-                        "Plano de intervenção",
-                        required=False
-                    )
                 },
                 disabled=colunas_nao_editaveis,
                 hide_index=True,
