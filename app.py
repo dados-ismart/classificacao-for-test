@@ -1163,9 +1163,9 @@ if check_password():
         
         st.dataframe(df_historico_filtrado)
 
-        colunas_nao_editaveis = df_historico.columns.to_list()
+        colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
         colunas_nao_editaveis.remove('manter_dados_iguais')
-
+    
         # with st.form(key='tabela_editavel'):
             
         #     df_coord['confirmacao_classificacao_coordenacao'] = df_historico['confirmacao_classificacao_coordenacao'].astype(str)
