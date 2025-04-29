@@ -1164,7 +1164,7 @@ if check_password():
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
         colunas_nao_editaveis.remove('manter_dados_iguais')
 
-        st.text_area(colunas_nao_editaveis)
+        st.write(colunas_nao_editaveis)
 
         with st.form(key='tabela_editavel2'):
             # Configure o data editor
