@@ -1167,7 +1167,14 @@ if check_password():
         with st.form(key='tabela_editavel2'):
             # Configure o data editor
             edited_df = st.data_editor(
-                df_historico_filtrado[["manter_dados_iguais","RA","nome","data_submit","classificacao_final","motivo_final","confirmacao_classificacao_coordenacao","justificativa_classificacao_coord","classificacao_automatica","motivo_classificao_automatica","confirmacao_classificacao_orientadora","novo_motivo_classificacao_orientadora","nova_justificativa_classificacao_orientadora","reversao","descricao_caso","plano_intervencao","tier","resposta_argumentacao","resposta_rotina_estudos","resposta_faltas","resposta_atividades_extracurriculares","resposta_respeita_escola","resposta_atividades_obrigatorias_ismart","resposta_colaboracao","resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
+                df_historico_filtrado[["manter_dados_iguais",
+                                       "RA",
+                                       "nome",
+                                       "data_submit",
+                                       "classificacao_final",
+                                       "motivo_final",
+                                       "confirmacao_classificacao_coordenacao",
+                                       "justificativa_classificacao_coord","classificacao_automatica","motivo_classificao_automatica","confirmacao_classificacao_orientadora","novo_motivo_classificacao_orientadora","nova_justificativa_classificacao_orientadora","reversao","descricao_caso","plano_intervencao","tier","resposta_argumentacao","resposta_rotina_estudos","resposta_faltas","resposta_atividades_extracurriculares","resposta_respeita_escola","resposta_atividades_obrigatorias_ismart","resposta_colaboracao","resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
@@ -1177,6 +1184,30 @@ if check_password():
                     ),
                     "RA": st.column_config.TextColumn(
                         "RA",
+                        required=False
+                    ),
+                    "nome": st.column_config.TextColumn(
+                        "Nome",
+                        required=False
+                    ),
+                    "data_submit": st.column_config.TextColumn(
+                        "Data de Registro",
+                        required=False
+                    ),
+                    "classificacao_final": st.column_config.TextColumn(
+                        "Classificação Final",
+                        required=False
+                    ),
+                    "motivo_final": st.column_config.TextColumn(
+                        "Motivo Classificação Final",
+                        required=False
+                    ),
+                    "confirmacao_classificacao_coordenacao": st.column_config.TextColumn(
+                        "Coordenação Confirmou a Classificação?",
+                        required=False
+                    ),
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
+                        "Justificativa da Coordenação",
                         required=False
                     ),
                 },
