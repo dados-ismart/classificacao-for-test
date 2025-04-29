@@ -1155,7 +1155,7 @@ if check_password():
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
         df_historico_filtrado = df_historico[df_historico['RA'].isin(bd_segmentado['RA'])]
-        df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")        
+        df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()").reset_index()   
         
         st.dataframe(df_historico_filtrado)
             
