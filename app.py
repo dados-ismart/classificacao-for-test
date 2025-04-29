@@ -1154,7 +1154,8 @@ if check_password():
 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
-        df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty()
+        df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")        
+        
         st.dataframe(df_historico_filtrado)
             
         # with st.form(key='tabela_editavel'):
