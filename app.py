@@ -1159,64 +1159,65 @@ if check_password():
         df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")  
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
+        df_historico_filtrado['manter_dados_iguais'] = 'Sim'
 
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
         colunas_nao_editaveis.remove('manter_dados_iguais')
 
         st.text_area(colunas_nao_editaveis)
 
-        # with st.form(key='tabela_editavel2'):
-        #     # Configure o data editor
-        #     edited_df = st.data_editor(
-        #         df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
-        #         column_config={
-        #             "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
-        #                 "Confirmar?",
-        #                 help="Selecione Sim ou Não",
-        #                 options=['Sim', 'Não'],
-        #                 required=True
-        #             ),
-        #             "justificativa_classificacao_coord": st.column_config.TextColumn(
-        #                 "Justifique",
-        #                 required=False
-        #             ),
-        #             "classificacao_automatica": st.column_config.TextColumn(
-        #                 "Classificação Automatica",
-        #                 required=False
-        #             ),
-        #             "motivo_classificao_automatica": st.column_config.TextColumn(
-        #                 "Motivo Classificação Automatica",
-        #                 required=False
-        #             ),
-        #             "nova_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Classificação da Orientadora",
-        #                 required=False
-        #             ),
-        #             "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Motivo Classificação da Orientadora",
-        #                 required=False
-        #             ),
-        #             "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Justificativa Classificação",
-        #                 required=False
-        #             ),
-        #             "reversao": st.column_config.TextColumn(
-        #                 "Reversão",
-        #                 required=False
-        #             ),
-        #             "descricao_caso": st.column_config.TextColumn(
-        #                 "Descrição do caso",
-        #                 required=False
-        #             ),
-        #             "plano_intervencao": st.column_config.TextColumn(
-        #                 "Plano de intervenção",
-        #                 required=False
-        #             )
-        #         },
-        #         disabled=colunas_nao_editaveis,
-        #         hide_index=True,
-        #     )
-        #     submit_button = st.form_submit_button(label='REGISTRAR')
+        with st.form(key='tabela_editavel2'):
+            # Configure o data editor
+            edited_df = st.data_editor(
+                df_coord[['confirmacao_classificacao_coordenacao', 'justificativa_classificacao_coord','RA', 'nome', 'classificacao_automatica', 'motivo_classificao_automatica', 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao']],
+                column_config={
+                    "confirmacao_classificacao_coordenacao": st.column_config.SelectboxColumn(
+                        "Confirmar?",
+                        help="Selecione Sim ou Não",
+                        options=['Sim', 'Não'],
+                        required=True
+                    ),
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
+                        "Justifique",
+                        required=False
+                    ),
+                    "classificacao_automatica": st.column_config.TextColumn(
+                        "Classificação Automatica",
+                        required=False
+                    ),
+                    "motivo_classificao_automatica": st.column_config.TextColumn(
+                        "Motivo Classificação Automatica",
+                        required=False
+                    ),
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
+                        "Classificação da Orientadora",
+                        required=False
+                    ),
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
+                        "Motivo Classificação da Orientadora",
+                        required=False
+                    ),
+                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
+                        "Justificativa Classificação",
+                        required=False
+                    ),
+                    "reversao": st.column_config.TextColumn(
+                        "Reversão",
+                        required=False
+                    ),
+                    "descricao_caso": st.column_config.TextColumn(
+                        "Descrição do caso",
+                        required=False
+                    ),
+                    "plano_intervencao": st.column_config.TextColumn(
+                        "Plano de intervenção",
+                        required=False
+                    )
+                },
+                disabled=colunas_nao_editaveis,
+                hide_index=True,
+            )
+            submit_button = st.form_submit_button(label='REGISTRAR')
 
         # if submit_button:
         #     #filtrar do df_tabela_editavel aqueles com confirmar
