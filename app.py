@@ -1153,4 +1153,4 @@ if check_password():
                 registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras) 
 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
-        st.white('Não Selecionado')
+        st.success('Não Selecionado')
