@@ -1156,7 +1156,7 @@ if check_password():
         df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
         df_historico_filtrado = df_historico[df_historico['RA'].isin(bd_segmentado['RA'])]
         df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()").reset_index()   
-        df_historico_filtrado.sort_values(by='data_submit', ascending = False)
+        df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         st.dataframe(df_historico_filtrado)
             
         # with st.form(key='tabela_editavel'):
