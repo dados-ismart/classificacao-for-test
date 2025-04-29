@@ -1153,16 +1153,21 @@ if check_password():
                 registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
+        # Filtro personalizado no histórico
         df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
         df_historico_filtrado = df_historico[df_historico['RA'].isin(bd_segmentado['RA'])]
         df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")  
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
-        df_historico_filtrado = df_historico_filtrado.sort_index()
+        df_historico_filtrado['manter_dados_iguais'] = 'Sim'
+
+        colunas_nao_editaveis = df_historico.columns.to_list()
+        colunas_nao_editaveis.remove('manter_dados_iguais')
+        
         st.dataframe(df_historico_filtrado)
-            
+        
         # with st.form(key='tabela_editavel'):
-        #     colunas_nao_editaveis = df_historico.columns.to_list()
+            
         #     df_coord['confirmacao_classificacao_coordenacao'] = df_historico['confirmacao_classificacao_coordenacao'].astype(str)
         #     df_coord['justificativa_classificacao_coord'] = df_historico['justificativa_classificacao_coord'].astype(str)
 
