@@ -1160,7 +1160,6 @@ if check_password():
         df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")  
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
-
         df_historico_filtrado['manter_dados_iguais'] = '-' 
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
@@ -1365,6 +1364,59 @@ if check_password():
                         "Resposta - Nota Condizente Com o Curso Desejado?",
                         required=False
                     ),
+                    "Segmento": st.column_config.TextColumn(
+                        "Segmento",
+                        required=False
+                    ),
+                    "Nota Matemática": st.column_config.NumberColumn(
+                        "Nota Matemática",
+                        required=False
+                    ),
+                    "Nota Português": st.column_config.NumberColumn(
+                        "Nota Português",
+                        required=False
+                    ),
+                    "Nota História": st.column_config.NumberColumn(
+                        "Nota História",
+                        required=False
+                    ),
+                    "Nota Geografia": st.column_config.NumberColumn(
+                        "Nota Geografia",
+                        required=False
+                    ),
+                    "Nota Inglês": st.column_config.NumberColumn(
+                        "Nota Inglês",
+                        required=False
+                    ),
+                    "Nota Francês/Alemão e Outros": st.column_config.NumberColumn(
+                        "Nota Inglês",
+                        required=False
+                    ),
+                    "Nota Espanhol": st.column_config.NumberColumn(
+                        "Nota Inglês",
+                        required=False
+                    ),
+                    "Nota Química": st.column_config.NumberColumn(
+                        "Nota Química",                        required=False
+                    ),        
+                    "Nota Física": st.column_config.NumberColumn(
+                        "Nota Física",
+                        required=False
+                    ),
+                    "Nota Biologia": st.column_config.NumberColumn(
+                        "Nota Biologia",
+                        required=False
+                    ),
+                    "Nota ENEM": st.column_config.NumberColumn(
+                        "Nota ENEM",
+                        required=False
+                    ),
+                    "Nota PU": st.column_config.NumberColumn(
+                        "Nota PU",
+                        required=False
+                    ),
+         
+                                
                 },
                 disabled=colunas_nao_editaveis,
                 hide_index=True,
