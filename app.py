@@ -1379,7 +1379,7 @@ if check_password():
                                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
                                 ]
-                df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
+                df_insert['data_submit'] = datetime.now(fuso_horario)
                 df_insert = pd.concat([df, df_tabela_editavel], ignore_index=True)
                 lista_ras = df_insert['RA']
                 lista_ras = lista_ras.to_list()
