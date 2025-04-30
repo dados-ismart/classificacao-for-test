@@ -1380,7 +1380,7 @@ if check_password():
                                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
                                 ]]
                 df_insert['data_submit'] = datetime.now(fuso_horario)
-                df_insert = pd.concat([df, df_tabela_editavel], ignore_index=True)
+                df_insert = pd.concat([df, df_insert], ignore_index=True)
                 lista_ras = df_insert['RA']
                 lista_ras = lista_ras.to_list()
                 df_insert.drop_duplicates('RA')
