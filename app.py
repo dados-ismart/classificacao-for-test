@@ -1378,10 +1378,10 @@ if check_password():
                                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
-                                ]]
+                                ]]                                                                                                   
                 df_insert['data_submit'] = datetime.now(fuso_horario)
                 df_insert = pd.concat([df, df_insert], ignore_index=True)
                 lista_ras = df_insert['RA']
                 lista_ras = lista_ras.to_list()
                 df_insert.drop_duplicates('RA')
-                registrar(df_insert, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
+                registrar(df_insert, 'registro', 'RA', lista_ras)
