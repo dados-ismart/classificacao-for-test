@@ -275,17 +275,18 @@ if check_password():
 
     #importar e tratar datasets
     df = ler_sheets('registro')
+    df['RA'] = df['RA'].astype(str)
     bd = ler_sheets('bd')
     bd = bd.dropna(subset=['RA - NOME'])
-    bd['RA'] = bd['RA'].astype(int)
+    bd['RA'] = bd['RA'].astype(str)
     ra = None
     bd['apoio_registro'] = bd['apoio_registro'].astype(str)
     bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
     bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
-    #df['RA'] = df['RA'].astype(int)
     df_login = ler_sheets('login')
     df_escola = ler_sheets('media_calibrada')
     df_historico = ler_sheets('historico')
+    df_historico['RA'] = df_historico['RA'].astype(str)
 
     st.title('Formulário de Classificação')
     #Seleção do aluno
