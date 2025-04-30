@@ -1192,7 +1192,17 @@ if check_password():
                                        "resposta_respeita_escola",
                                        "resposta_atividades_obrigatorias_ismart",
                                        "resposta_colaboracao",
-                                       "resposta_atividades_nao_obrigatorias_ismart","resposta_networking","resposta_proatividade","resposta_questoes_psiquicas","resposta_questoes_familiares","resposta_questoes_saude","resposta_ideacao_suicida","resposta_adaptacao_projeto","resposta_seguranca_profissional","resposta_curso_apoiado","resposta_nota_condizente"]],
+                                       "resposta_atividades_nao_obrigatorias_ismart",
+                                       "resposta_networking",
+                                       "resposta_proatividade",
+                                       "resposta_questoes_psiquicas",
+                                       "resposta_questoes_familiares",
+                                       "resposta_questoes_saude",
+                                       "resposta_ideacao_suicida",
+                                       "resposta_adaptacao_projeto",
+                                       "resposta_seguranca_profissional",
+                                       "resposta_curso_apoiado",
+                                       "resposta_nota_condizente"]],
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
@@ -1285,31 +1295,59 @@ if check_password():
                         required=False
                     ),
                     "resposta_respeita_escola": st.column_config.TextColumn(
-                        "Resposta - ",
+                        "Resposta - Respeita Normas Escolares?",
                         required=False
                     ),
                     "resposta_atividades_obrigatorias_ismart": st.column_config.TextColumn(
-                        "Resposta - ",
+                        "Resposta - Participa das Atividades Obrigatórias?",
                         required=False
                     ),
                     "resposta_colaboracao": st.column_config.TextColumn(
-                        "Resposta - ",
+                        "Resposta - É Colaborativo Com Amigos?",
                         required=False
                     ),
                     "resposta_atividades_nao_obrigatorias_ismart": st.column_config.TextColumn(
-                        "Resposta - ",
+                        "Resposta - Participa das Atividades Não Obrigatórias?",
                         required=False
                     ),
-                    "RA": st.column_config.TextColumn(
-                        "Resposta - ",
+                    "resposta_networking": st.column_config.TextColumn(
+                        "Resposta - Cultiva Parcerias?",
                         required=False
                     ),
-                    "RA": st.column_config.TextColumn(
-                        "Resposta - ",
+                    "resposta_proatividade": st.column_config.TextColumn(
+                        "Resposta - É Proativo?",
                         required=False
                     ),
-                    "RA": st.column_config.TextColumn(
-                        "Resposta - ",
+                    "resposta_questoes_psiquicas": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Psíquicas de impacto?",
+                        required=False
+                    ),
+                    "resposta_questoes_familiares": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Familiares de impacto?",
+                        required=False
+                    ),
+                    "resposta_questoes_saude": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Saúde de impacto?",
+                        required=False
+                    ),
+                    "resposta_ideacao_suicida": st.column_config.TextColumn(
+                        "Resposta - Apresenta Ideação Suicida?",
+                        required=False
+                    ),
+                    "resposta_adaptacao_projeto": st.column_config.TextColumn(
+                        "Resposta - Se Adaptou ao Projeto?",
+                        required=False
+                    ),
+                    "resposta_seguranca_profissional": st.column_config.TextColumn(
+                        "Resposta - Tem Segurança Proficional?",
+                        required=False
+                    ),
+                    "resposta_curso_apoiado": st.column_config.TextColumn(
+                        "Resposta - Deseja Curso Apoiado?",
+                        required=False
+                    ),
+                    "resposta_nota_condizente": st.column_config.TextColumn(
+                        "Resposta - Nota Condizente Com o Curso Desejado?",
                         required=False
                     ),
                 },
