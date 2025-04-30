@@ -1366,7 +1366,7 @@ if check_password():
                 st.warning('Revise ao menos um aluno antes de salvar')
             else:
                 df = ler_sheets('registro')
-                df_insert = df_tabela_editavel[
+                df_insert = df_tabela_editavel[[
                                     'RA', 'nome', 'data_submit', 'resposta_argumentacao', 'resposta_rotina_estudos',
                                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
@@ -1378,7 +1378,7 @@ if check_password():
                                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
-                                ]
+                                ]]
                 df_insert['data_submit'] = datetime.now(fuso_horario)
                 df_insert = pd.concat([df, df_tabela_editavel], ignore_index=True)
                 lista_ras = df_insert['RA']
