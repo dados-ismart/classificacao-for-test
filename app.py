@@ -1161,7 +1161,10 @@ if check_password():
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
         df_historico_filtrado['manter_dados_iguais'] = '-' 
-        df_historico_filtrado = df_historico_filtrado.merge(df, how='left', on='RA')
+        # df_historico_filtrado = df_historico_filtrado.merge(df[['RA', 'Nota Matemática','Nota Português','Nota História','Nota Geografia',
+        #                                                         'Nota Inglês','Nota Francês/Alemão e Outros','Nota Espanhol','Nota Química',
+        #                                                         'Nota Física','Nota Biologia','Nota ENEM','Nota PU', 'Segmento']]
+        #                                                         , how='left', on='RA')
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
         colunas_nao_editaveis.remove('manter_dados_iguais')
