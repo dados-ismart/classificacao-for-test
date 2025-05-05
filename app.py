@@ -336,7 +336,7 @@ if check_password():
     else:
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-
+        bd_segmentado = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")['RA - NOME']
         # filtros
         col1, col2, col3 = st.columns(3)
         # Aplique os filtros
@@ -351,7 +351,7 @@ if check_password():
             bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
         st.divider()
 
-        ra_nome_bd = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")['RA - NOME']
+        ra_nome_bd = bd_segmentado['RA - NOME']
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
