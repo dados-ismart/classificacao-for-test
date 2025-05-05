@@ -648,32 +648,46 @@ if check_password():
         if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty:
             #Variaveis Registro
             if df.query(f'RA == {ra}').empty:
-                registro_data_submit = None
-                registro_classificacao = None
-                registro_motivo_classificao_automatica = None
-                registro_resposta_argumentacao = None
-                registro_resposta_rotina_estudos = None
-                registro_resposta_faltas = None
-                registro_resposta_atividades_extracurriculares = None
-                registro_resposta_respeita_escola = None
-                registro_resposta_atividades_obrigatorias_ismart = None
-                registro_resposta_colaboracao = None
-                registro_resposta_atividades_nao_obrigatorias_ismart = None
-                registro_resposta_networking = None
-                registro_resposta_proatividade = None
-                registro_resposta_questoes_psiquicas = None
-                registro_resposta_questoes_familiares = None
-                registro_resposta_questoes_saude = None
-                registro_resposta_ideacao_suicida = None
-                registro_resposta_adaptacao_projeto = None
-                registro_resposta_seguranca_profissional = None
-                registro_resposta_curso_apoiado = None
-                registro_resposta_nota_condizente = None
+                if not df_historico.query(f'RA == {ra}').empty:
+                    registro_resposta_argumentacao = df_historico.loc[df_historico['RA'] == ra, 'resposta_argumentacao'].iloc[0]
+                    registro_resposta_rotina_estudos = df_historico.loc[df_historico['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
+                    registro_resposta_faltas = df_historico.loc[df_historico['RA'] == ra, 'resposta_faltas'].iloc[0]
+                    registro_resposta_atividades_extracurriculares = df_historico.loc[df_historico['RA'] == ra, 'resposta_atividades_extracurriculares'].iloc[0]
+                    registro_resposta_respeita_escola = df_historico.loc[df_historico['RA'] == ra, 'resposta_respeita_escola'].iloc[0]
+                    registro_resposta_atividades_obrigatorias_ismart = df_historico.loc[df_historico['RA'] == ra, 'resposta_atividades_obrigatorias_ismart'].iloc[0]
+                    registro_resposta_colaboracao = df_historico.loc[df_historico['RA'] == ra, 'resposta_colaboracao'].iloc[0]
+                    registro_resposta_atividades_nao_obrigatorias_ismart = df_historico.loc[df_historico['RA'] == ra, 'resposta_atividades_nao_obrigatorias_ismart'].iloc[0]
+                    registro_resposta_networking = df_historico.loc[df_historico['RA'] == ra, 'resposta_networking'].iloc[0]
+                    registro_resposta_proatividade = df_historico.loc[df_historico['RA'] == ra, 'resposta_proatividade'].iloc[0]
+                    registro_resposta_questoes_psiquicas = df_historico.loc[df_historico['RA'] == ra, 'resposta_questoes_psiquicas'].iloc[0]
+                    registro_resposta_questoes_familiares = df_historico.loc[df_historico['RA'] == ra, 'resposta_questoes_familiares'].iloc[0]
+                    registro_resposta_questoes_saude = df_historico.loc[df_historico['RA'] == ra, 'resposta_questoes_saude'].iloc[0]
+                    registro_resposta_ideacao_suicida = df_historico.loc[df_historico['RA'] == ra, 'resposta_ideacao_suicida'].iloc[0]
+                    registro_resposta_adaptacao_projeto = df_historico.loc[df_historico['RA'] == ra, 'resposta_adaptacao_projeto'].iloc[0]
+                    registro_resposta_seguranca_profissional = df_historico.loc[df_historico['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
+                    registro_resposta_curso_apoiado = df_historico.loc[df_historico['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
+                    registro_resposta_nota_condizente = df_historico.loc[df_historico['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
+                else:
+                    registro_resposta_argumentacao = None
+                    registro_resposta_rotina_estudos = None
+                    registro_resposta_faltas = None
+                    registro_resposta_atividades_extracurriculares = None
+                    registro_resposta_respeita_escola = None
+                    registro_resposta_atividades_obrigatorias_ismart = None
+                    registro_resposta_colaboracao = None
+                    registro_resposta_atividades_nao_obrigatorias_ismart = None
+                    registro_resposta_networking = None
+                    registro_resposta_proatividade = None
+                    registro_resposta_questoes_psiquicas = None
+                    registro_resposta_questoes_familiares = None
+                    registro_resposta_questoes_saude = None
+                    registro_resposta_ideacao_suicida = None
+                    registro_resposta_adaptacao_projeto = None
+                    registro_resposta_seguranca_profissional = None
+                    registro_resposta_curso_apoiado = None
+                    registro_resposta_nota_condizente = None
 
             if not df.query(f'RA == {ra}').empty:
-                registro_data_submit = df.loc[df['RA'] == ra, 'data_submit'].iloc[0]
-                registro_classificacao = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
-                registro_motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
                 registro_resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
                 registro_resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
                 registro_resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
@@ -714,12 +728,6 @@ if check_password():
                 caixa_nota_condizente = ['Não', 'Sim', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
-                #Index
-                index = retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao)
-                if index is None:
-                    registro_resposta_argumentacao = df_historico.loc[df_historico['RA'] == ra, 'resposta_argumentacao'].iloc[0]
-
-
                 # Acadêmico
                 st.divider()
                 st.subheader('Acadêmico')
