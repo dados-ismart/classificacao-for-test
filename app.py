@@ -667,7 +667,6 @@ if check_password():
                     registro_resposta_seguranca_profissional = df_historico.loc[df_historico['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
                     registro_resposta_curso_apoiado = df_historico.loc[df_historico['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
                     registro_resposta_nota_condizente = df_historico.loc[df_historico['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
-                    reversao = df_historico.loc[df_historico['RA'] == ra, 'reversao'].iloc[0]
                 else:
                     registro_resposta_argumentacao = None
                     registro_resposta_rotina_estudos = None
@@ -908,6 +907,7 @@ if check_password():
                         resposta_nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
 
                         if st.session_state['classificacao_atual'] == 'Crítico' or st.session_state['classificacao_atual'] == 'Crítico OP':
+                            reversao = df_historico.loc[df_historico['RA'] == ra, 'reversao'].iloc[0]
                             resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
                             try:
                                 historico_descricao_caso = df_historico.loc[df_historico['RA'] == ra, 'descricao_caso'].iloc[0]
