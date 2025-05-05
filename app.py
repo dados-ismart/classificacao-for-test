@@ -1029,7 +1029,10 @@ if check_password():
                                                         'reversao': resposta_reversao,
                                                         'descricao_caso': resposta_descricao_caso,
                                                         'plano_intervencao': resposta_plano_intervencao,
-                                                        'tier': tier
+                                                        'tier': tier,
+                                                        'classificacao_final': nova_classificacao_orientadora,
+                                                        'motivo_final': novo_motivo_classificacao_orientadora
+
                                                         }])
                                     registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)
 
