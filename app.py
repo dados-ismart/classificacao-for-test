@@ -291,9 +291,8 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
-        bd_segmentado = bd.query('apoio_registro_final != "Não" and apoio_registro_final != "Sim"')
-        bd_segmentado = bd.query('apoio_registro == "Não" and apoio_registro == "Sim"')
+        bd_segmentado = bd.query("apoio_registro.notna()") 
+        bd_segmentado = bd.query("apoio_registro_final.na()") 
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros bd
@@ -313,7 +312,6 @@ if check_password():
             bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
         st.divider()
         
-        df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
         ra_nome_bd = bd_segmentado['RA - NOME - FINAL']
         
         ra_nome = st.selectbox(
@@ -1039,6 +1037,9 @@ if check_password():
                                     registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)
 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
+        df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
+
         df_tabela_editavel = df_coord
         df_tabela_editavel['manter_dados_iguais'] = '-' 
         df_tabela_editavel = df_tabela_editavel[['manter_dados_iguais','RA','nome','data_submit',
