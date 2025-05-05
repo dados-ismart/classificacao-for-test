@@ -909,12 +909,12 @@ if check_password():
 
                         if st.session_state['classificacao_atual'] == 'Crítico' or st.session_state['classificacao_atual'] == 'Crítico OP':
                             resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
-                            resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso', value=df_historico.loc[df_historico['RA'] == ra, 'descricao_caso'].iloc[0])
-                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value=df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0])
+                            resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso', value="df_historico.loc[df_historico['RA'] == ra, 'descricao_caso'].iloc[0]")
+                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value="df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0]")
                         elif st.session_state['classificacao_atual'] == 'Atenção':
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
-                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value=df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0])
+                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value="df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0]")
                         else:
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
