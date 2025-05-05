@@ -719,7 +719,7 @@ if check_password():
                 st.subheader('Acadêmico')
                 index = retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao)
                 if index is None:
-                    registro_resposta_argumentacao = df_historico.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
+                    registro_resposta_argumentacao = df_historico.loc[df_historico['RA'] == ra, 'resposta_argumentacao'].iloc[0]
                     index = retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao)
                 resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=index)
                 resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
