@@ -336,7 +336,7 @@ if check_password():
     else:
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-        bd_segmentado = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")['RA - NOME']
+        bd_segmentado = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")
         # filtros
         col1, col2, col3 = st.columns(3)
         # Aplique os filtros
