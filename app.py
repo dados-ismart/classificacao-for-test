@@ -291,8 +291,8 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        df_coord = df.query('confirmacao_classificacao_orientadora == "Não" and confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não"')
-        bd_segmentado = bd.query('apoio_registro == "Não" and apoio_registro_final != "Não" and apoio_registro_final != "Sim"')
+        df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não"')
+        bd_segmentado = bd.query('apoio_registro_final != "Não" and apoio_registro_final != "Sim"')
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros bd
@@ -907,7 +907,10 @@ if check_password():
                         resposta_nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
 
                         if st.session_state['classificacao_atual'] == 'Crítico' or st.session_state['classificacao_atual'] == 'Crítico OP':
-                            reversao = df_historico.loc[df_historico['RA'] == ra, 'reversao'].iloc[0]
+                            try:
+                                reversao = df_historico.loc[df_historico['RA'] == ra, 'reversao'].iloc[0]
+                            except:
+                                reversao = None
                             resposta_reversao = st.radio('**Reversão**', caixa_reversao, index=retornar_indice(lista=caixa_reversao,variavel=reversao), horizontal=True)
                             try:
                                 historico_descricao_caso = df_historico.loc[df_historico['RA'] == ra, 'descricao_caso'].iloc[0]
