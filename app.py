@@ -1182,8 +1182,9 @@ if check_password():
 
         # colunas_faltando = [col for col in colunas_desejadas if col not in df.columns]
         # st.write(f"Colunas faltando: {colunas_faltando}")
+        st.write(df.columns.tolist())
 
-        df_historico_filtrado = df_historico_filtrado.merge(df[['Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
+        df_historico_filtrado = df_historico_filtrado.merge(df[['RA', 'Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
