@@ -1162,7 +1162,7 @@ if check_password():
         df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
         df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
         df_historico_filtrado['manter_dados_iguais'] = '-' 
-        df_historico_filtrado = df_historico_filtrado['manter_dados_iguais','RA','nome','Segmento','data_submit',
+        df_historico_filtrado = df_historico_filtrado[['manter_dados_iguais','RA','nome','Segmento','data_submit',
                                                       'classificacao_final','motivo_final','confirmacao_classificacao_coordenacao',
                                                       'justificativa_classificacao_coord','classificacao_automatica','motivo_classificao_automatica',
                                                       'confirmacao_classificacao_orientadora','nova_classificacao_orientadora',
@@ -1173,7 +1173,7 @@ if check_password():
                                                       'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
                                                       'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
                                                       'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
-                                                      'resposta_curso_apoiado','resposta_nota_condizente']
+                                                      'resposta_curso_apoiado','resposta_nota_condizente']]
         
         df_historico_filtrado = df_historico_filtrado.merge(df[['RA', 'Nota Matemática','Nota Português','Nota História','Nota Geografia',
                                                                 'Nota Inglês','Nota Francês/Alemão e Outros','Nota Espanhol','Nota Química',
@@ -1235,7 +1235,8 @@ if check_password():
                                         'Nota Física',
                                         'Nota Biologia',
                                         'Nota ENEM',
-                                        'Nota PU']],
+                                        'Nota PU',
+                                        'media_calibrada']],
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
@@ -1432,6 +1433,10 @@ if check_password():
                     ),
                     "Nota PU": st.column_config.NumberColumn(
                         "Nota PU",
+                        required=False
+                    ),                          
+                    "media_calibrada": st.column_config.NumberColumn(
+                        "Média Calibrada",
                         required=False
                     ),                          
                 },
