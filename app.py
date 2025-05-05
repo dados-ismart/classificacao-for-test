@@ -292,7 +292,7 @@ if check_password():
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         bd_segmentado = bd.query("apoio_registro.notna()") 
-        bd_segmentado = bd.query("apoio_registro_final.na()") 
+        bd_segmentado = bd.query("apoio_registro_final != 'Não' and apoio_registro_final != 'Sim'") 
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros bd
