@@ -1039,12 +1039,12 @@ if check_password():
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         df_tabela_editavel = df_coord
         df_tabela_editavel['manter_dados_iguais'] = '-' 
-        df_tabela_editavel = df_tabela_editavel[['manter_dados_iguais','RA','nome','Segmento','data_submit',
+        df_tabela_editavel = df_tabela_editavel[['manter_dados_iguais','RA','nome','data_submit',
                                                     'classificacao_final','motivo_final','confirmacao_classificacao_coordenacao',
                                                     'justificativa_classificacao_coord','classificacao_automatica','motivo_classificao_automatica',
                                                     'confirmacao_classificacao_orientadora','nova_classificacao_orientadora',
                                                     'novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
-                                                    'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao','resposta_rotina_estudos',
+                                                    'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
                                                     'resposta_atividades_extracurriculares','resposta_faltas','resposta_respeita_escola',
                                                     'resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
                                                     'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
@@ -1052,7 +1052,7 @@ if check_password():
                                                     'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
                                                     'resposta_curso_apoiado','resposta_nota_condizente']]
 
-        df_tabela_editavel = df_tabela_editavel.merge(bd[['RA', 'Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
+        df_tabela_editavel = df_tabela_editavel.merge(bd[['RA', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
