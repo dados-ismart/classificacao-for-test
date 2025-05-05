@@ -291,8 +291,7 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        bd_segmentado = bd.query("apoio_registro.notna()") 
-        bd_segmentado = bd.query("apoio_registro_final != 'Não' and apoio_registro_final != 'Sim'") 
+        bd_segmentado = bd.query("apoio_registro_final != 'Não' and apoio_registro_final != 'Sim' and apoio_registro == 'Sim' or apoio_registro == 'Não'") 
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
         # filtros bd
@@ -313,7 +312,6 @@ if check_password():
         st.divider()
         
         ra_nome_bd = bd_segmentado['RA - NOME - FINAL']
-        
         ra_nome = st.selectbox(
         "Seleção dos Alunos",
         ra_nome_bd,
