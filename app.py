@@ -913,12 +913,12 @@ if check_password():
                                 historico_descricao_caso = df_historico.loc[df_historico['RA'] == ra, 'descricao_caso'].iloc[0]
                             except:
                                 historico_descricao_caso = None
-                            resposta_descricao_caso = st.text_input(placeholder='Descrição do caso', label='Descrição do caso', value=historico_descricao_caso)
+                            resposta_descricao_caso = st.text_area(placeholder='Descrição do caso', label='Descrição do caso', value=historico_descricao_caso)
                             try:
                                 historico_plano_intervencao = df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0]
                             except:
                                 historico_plano_intervencao = None
-                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value=historico_plano_intervencao)
+                            resposta_plano_intervencao = st.text_area(placeholder='Plano de intervenção', label='Plano de intervenção', value=historico_plano_intervencao)
                         elif st.session_state['classificacao_atual'] == 'Atenção':
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
@@ -926,7 +926,7 @@ if check_password():
                                 historico_plano_intervencao = df_historico.loc[df_historico['RA'] == ra, 'plano_intervencao'].iloc[0]
                             except:
                                 historico_plano_intervencao = None
-                            resposta_plano_intervencao = st.text_input(placeholder='Plano de intervenção', label='Plano de intervenção', value=historico_plano_intervencao)
+                            resposta_plano_intervencao = st.text_area(placeholder='Plano de intervenção', label='Plano de intervenção', value=historico_plano_intervencao)
                         else:
                             resposta_reversao = '-'
                             resposta_descricao_caso = '-'
