@@ -714,14 +714,16 @@ if check_password():
                 caixa_nota_condizente = ['Não', 'Sim', 'Sim para ser recomendado pelo Ismart para cursinho Med']
                 # Preencha
                 st.header('Preencha o formulário')
-                # Acadêmico
-                st.divider()
-                st.subheader('Acadêmico')
+                #Index
                 index = retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao)
                 if index is None:
                     registro_resposta_argumentacao = df_historico.loc[df_historico['RA'] == ra, 'resposta_argumentacao'].iloc[0]
-                    index = retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao)
-                resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=index)
+
+
+                # Acadêmico
+                st.divider()
+                st.subheader('Acadêmico')
+                resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
                 resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
                 resposta_atividades_extracurriculares = st.radio('**O aluno faz atividades acadêmicas extracurriculares com vias a desenvolver seu talento acadêmico? (olimpiadas, projetos de iniciação cientifica, programação, Cultura inglesa/Inglês/Prep)**', caixa_atividades_extracurriculares, index=retornar_indice(lista=caixa_atividades_extracurriculares,variavel=registro_resposta_atividades_extracurriculares), horizontal=True)
                 resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
