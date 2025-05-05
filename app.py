@@ -1174,17 +1174,8 @@ if check_password():
                                                       'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
                                                       'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
                                                       'resposta_curso_apoiado','resposta_nota_condizente']]
-        
 
-        # colunas_desejadas = ['RA', 'Nota Matemática','Nota Português','Nota História','Nota Geografia',
-        #                     'Nota Inglês','Nota Francês/Alemão e Outros','Nota Espanhol','Nota Química',
-        #                     'Nota Física','Nota Biologia','Nota ENEM','Nota PU', 'media_calibrada']
-
-        # colunas_faltando = [col for col in colunas_desejadas if col not in df.columns]
-        # st.write(f"Colunas faltando: {colunas_faltando}")
-        st.write(df.columns.tolist())
-
-        df_historico_filtrado = df_historico_filtrado.merge(df[['RA', 'Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
+        df_historico_filtrado = df_historico_filtrado.merge(bd[['RA', 'Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
