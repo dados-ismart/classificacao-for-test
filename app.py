@@ -369,9 +369,10 @@ if check_password():
             del st.session_state['ra_nome']
 
         # progresso
-        qtd_alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'").shape[0]
+        alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
+        alunos_orientadora_total_registrados = alunos_orientadora_total.query("apoio_registro == 'Não' or apoio_registro == 'Sim'")
         try:
-            st.progress(bd_segmentado.shape[0]/qtd_alunos_orientadora_total, f'Você registrou: **{bd_segmentado.shape[0]}/{qtd_alunos_orientadora_total}**')
+            st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
         except ZeroDivisionError:
             st.error('Zero Resultados')
 
