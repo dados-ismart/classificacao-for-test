@@ -898,6 +898,8 @@ if check_password():
                                                         'nova_classificacao_orientadora' : resposta_nova_classificacao_orientadora,
                                                         'novo_motivo_classificacao_orientadora': resposta_novo_motivo_classificacao_orientadora,
                                                         'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
+                                                        'classificacao_final': resposta_nova_classificacao_orientadora,
+                                                        'motivo_final': resposta_novo_motivo_classificacao_orientadora
                                                         }])
                                 registrar(df_insert, 'registro', 'nova_classificacao_orientadora', ra)
                 else:
