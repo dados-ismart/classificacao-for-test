@@ -667,6 +667,7 @@ if check_password():
                     registro_resposta_seguranca_profissional = df_historico.loc[df_historico['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
                     registro_resposta_curso_apoiado = df_historico.loc[df_historico['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
                     registro_resposta_nota_condizente = df_historico.loc[df_historico['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
+                    reversao = df_historico.loc[df_historico['RA'] == ra, 'reversao'].iloc[0]
                 else:
                     registro_resposta_argumentacao = None
                     registro_resposta_rotina_estudos = None
@@ -828,7 +829,6 @@ if check_password():
                 nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
                 novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
                 nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
-                reversao = df.loc[df['RA'] == ra, 'reversao'].iloc[0]
                 descricao_caso = df.loc[df['RA'] == ra, 'descricao_caso'].iloc[0]
                 plano_intervencao = df.loc[df['RA'] == ra, 'plano_intervencao'].iloc[0]
                 confirmacao_classificacao_coordenacao = df.loc[df['RA'] == ra, 'confirmacao_classificacao_coordenacao'].iloc[0]
