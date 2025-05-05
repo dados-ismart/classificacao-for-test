@@ -1193,6 +1193,7 @@ if check_password():
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
+        df_historico_filtrado.sort_values(by=['Segmento', 'nome'])
 
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_historico_filtrado.columns.to_list()
