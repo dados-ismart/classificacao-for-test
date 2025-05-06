@@ -1377,12 +1377,14 @@ if check_password():
                         "Orientadora",
                         required=False
                     ),
-                    "classificacao_final": st.column_config.TextColumn(
+                    "classificacao_final": st.column_config.SelectboxColumn(
                         "Classificação Final",
+                        options=caixa_classificacao,
                         required=False
                     ),
-                    "motivo_final": st.column_config.TextColumn(
+                    "motivo_final": st.column_config.SelectboxColumn(
                         "Motivo Classificação Final",
+                        options=caixa_justificativa_classificacao,
                         required=False
                     ),
                     "classificacao_automatica": st.column_config.TextColumn(
@@ -1398,12 +1400,14 @@ if check_password():
                         options=['Sim', 'Não'],
                         required=False
                     ),
-                    "nova_classificacao_orientadora": st.column_config.TextColumn(
+                    "nova_classificacao_orientadora": st.column_config.SelectboxColumn(
                         "Classificação da Orientadora",
+                        options=caixa_classificacao,
                         required=False
                     ),
-                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
+                    "novo_motivo_classificacao_orientadora": st.column_config.SelectboxColumn(
                         "Motivo da Orientadora",
+                        options=caixa_justificativa_classificacao,
                         required=False
                     ),
                     "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
