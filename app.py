@@ -275,7 +275,7 @@ if check_password():
 
     #importar e tratar datasets
     df = ler_sheets('registro')
-    df['RA'] = df['RA'].astype(int)
+    #df['RA'] = df['RA'].astype(int)
     bd = ler_sheets('bd')
     bd = bd.dropna(subset=['RA - NOME'])
     bd['RA'] = bd['RA'].astype(int)
