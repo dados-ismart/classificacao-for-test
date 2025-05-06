@@ -1333,10 +1333,8 @@ if check_password():
         colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
         colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 
                                                                                      'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao',
-                                                                                     'descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora',
-                                                                                     'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
-                                                                                     'confirmacao_classificacao_orientadora'
-                                                                                     ]]
+                                                                                     'descricao_caso', 'reversao', 
+                                                                                    ]]
         df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['justificativa_classificacao_coord'].astype(str)
 
         # Data editor
@@ -1395,14 +1393,12 @@ if check_password():
                         "Motivo Classificação Automatica",
                         required=False
                     ),
-                    "confirmacao_classificacao_orientadora": st.column_config.SelectboxColumn(
+                    "confirmacao_classificacao_orientadora": st.column_config.TextColumn(
                         "Orientadora Confirmou a classificação Automatica?",
-                        options=['Sim', 'Não'],
                         required=False
                     ),
-                    "nova_classificacao_orientadora": st.column_config.SelectboxColumn(
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
                         "Classificação da Orientadora",
-                        options=caixa_classificacao,
                         required=False
                     ),
                     "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
