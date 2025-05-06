@@ -1066,7 +1066,7 @@ if check_password():
         with st.form(key='tabela_editavel_cord_confirmacao'):
             # Configure o data editor
             edited_df = st.data_editor(
-                df_tabela_editavel[['manter_dados_iguais','RA','nome','Segmento','data_submit','classificacao_final'
+                df_tabela_editavel[['manter_dados_iguais','RA','nome','Segmento','classificacao_final'
                                     ,'motivo_final','confirmacao_classificacao_coordenacao','justificativa_classificacao_coord',
                                     'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                     'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora',
