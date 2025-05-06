@@ -1310,8 +1310,10 @@ if check_password():
                                                 
         st.title('Tabela de Edição')
         #Preparação do Data editor
-        df_tabela_editavel = df.query("confirmacao_classificacao_final == 'Não'")
-        df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final',
+        df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
+        df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
+        df_tabela_editavel = df_coord.query("confirmacao_classificacao_final == 'Não'")
+        df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord'
                                                 'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                                 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
                                                 'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
@@ -1329,14 +1331,14 @@ if check_password():
         
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
-        colunas_nao_editaveis.remove('confirmacao_classificacao_final')
+        colunas_nao_editaveis.remove('confirmacao_classificacao_final','classificacao_final', 'motivo_final')
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
             # Configure o data editor
             edited_df = st.data_editor(
                 df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
-                                    ,'motivo_final','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
+                                    ,'motivo_final', 'justificativa_classificacao_coord','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                     'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
                                     'reversao','descricao_caso','plano_intervencao','tier',
                                     'resposta_argumentacao','resposta_rotina_estudos','resposta_atividades_extracurriculares','resposta_faltas',
@@ -1359,6 +1361,10 @@ if check_password():
                     ),
                     "nome": st.column_config.TextColumn(
                         "Nome",
+                        required=False
+                    ),
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
+                        "Justificativa da Coordenadora",
                         required=False
                     ),
                     "Orientadora": st.column_config.TextColumn(
