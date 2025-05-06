@@ -1325,7 +1325,7 @@ if check_password():
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
-        df_tabela_editavel.sort_values(by=['Segmento', 'nome'])
+        df_tabela_editavel.sort_values(by=['Segmento'])
         
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
