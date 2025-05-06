@@ -1295,13 +1295,13 @@ if check_password():
                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao', 
-                    'classificacao_final', 'motivo_final', 'manter_dados_iguais'
+                    'classificacao_final', 'motivo_final', 'confirmar_classificacao_final'
                 ]]   
                 
                 df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-                lista_ras = df_tabela_editavel_sim['RA']
+                lista_ras = df_tabela_editavel['RA']
                 lista_ras = lista_ras.to_list()
-                registrar(df_tabela_editavel_sim, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
+                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
                                                   
                 # df_insert['data_submit'] = datetime.now(fuso_horario)
                 # df_insert['confirmacao_classificacao_coordenacao'] = 'Sim'
