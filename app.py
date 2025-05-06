@@ -1274,9 +1274,15 @@ if check_password():
         
         if submit_button:
             #filtro do df_tabela_editavel para os que cofirmaram 
-            df_tabela_editavel_sim = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Sim'])]
-            if df_tabela_editavel_sim.shape[0] > 0:
-                df_tabela_editavel_sim = df_tabela_editavel_sim[[
+            df_tabela_editavel = edited_df.loc[~edited_df['manter_dados_iguais'].isin(['-'])]
+            if df_tabela_editavel.shape[0] == 0:
+                st.warning('Revise ao menos um aluno antes de salvar')
+            else:
+                df_tabela_editavel_sim = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Sim'])]
+                df_tabela_editavel_nao = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Não'])]
+                
+                df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
+                df_tabela_editavel = df_tabela_editavel[[
                     'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
@@ -1287,43 +1293,24 @@ if check_password():
                     'classificacao_automatica', 'motivo_classificao_automatica',
                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
-                    'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'classificacao_final', 'motivo_final'
+                    'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao', 'classificacao_final', 'motivo_final'
                 ]]   
-                df_tabela_editavel_sim['confirmacao_classificacao_coordenacao'] = 'Sim'
-                df_tabela_editavel_sim['data_submit'] = datetime.now(fuso_horario)
+                df_tabela_editavel['confirmar_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
+                df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
                 lista_ras = df_tabela_editavel_sim['RA']
                 lista_ras = lista_ras.to_list()
                 registrar(df_tabela_editavel_sim, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
-
-            if df_tabela_editavel.shape[0] == 0:
-                st.warning('Revise ao menos um aluno antes de salvar')
-            else:
-                pass
-                    # df = ler_sheets('registro')
-                    # df_insert = df_tabela_editavel_sim[[
-                    #                     'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
-                    #                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
-                    #                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
-                    #                     'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
-                    #                     'resposta_proatividade', 'resposta_questoes_psiquicas', 'resposta_questoes_familiares',
-                    #                     'resposta_questoes_saude', 'resposta_ideacao_suicida', 'resposta_adaptacao_projeto',
-                    #                     'resposta_seguranca_profissional', 'resposta_curso_apoiado', 'resposta_nota_condizente',
-                    #                     'classificacao_automatica', 'motivo_classificao_automatica',
-                    #                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
-                    #                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
-                    #                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao',
-                    #                     'classificacao_final', 'motivo_final'
-                    #                 ]]                                                                                                   
-                    # df_insert['data_submit'] = datetime.now(fuso_horario)
-                    # df_insert['confirmacao_classificacao_coordenacao'] = 'Sim'
-                    # df_insert = pd.concat([df, df_insert], ignore_index=True)
-                    # lista_ras = df_insert['RA']
-                    # lista_ras = lista_ras.to_list()
-                    # df_insert.drop_duplicates('RA')
-                    # registrar(df_insert, 'registro', 'RA', lista_ras)
+                                                  
+                # df_insert['data_submit'] = datetime.now(fuso_horario)
+                # df_insert['confirmacao_classificacao_coordenacao'] = 'Sim'
+                # df_insert = pd.concat([df, df_insert], ignore_index=True)
+                # lista_ras = df_insert['RA']
+                # lista_ras = lista_ras.to_list()
+                # df_insert.drop_duplicates('RA')
+                # registrar(df_insert, 'registro', 'RA', lista_ras)
 
 
-                    # df_tabela_editavel_nao = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Não'])]
+                # df_tabela_editavel_nao = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Não'])]
 
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         # Filtro personalizado no histórico
