@@ -1332,7 +1332,7 @@ if check_password():
         colunas_nao_editaveis.remove('manter_dados_iguais')
 
         # Data editor
-        with st.form(key='tabela_editavel_cord_confirmacao'):
+        with st.form(key='tabela_editavel_cord_edicao'):
             # Configure o data editor
             edited_df = st.data_editor(
                 df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
