@@ -1276,7 +1276,7 @@ if check_password():
             #filtro do df_tabela_editavel para os que cofirmaram 
             df_tabela_editavel_sim = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Sim'])]
             if df_tabela_editavel_sim.shape[0] > 0:
-                df_insert = df_tabela_editavel_sim[[
+                df_tabela_editavel_sim = df_tabela_editavel_sim[[
                     'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
