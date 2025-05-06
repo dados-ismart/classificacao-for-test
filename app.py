@@ -1091,24 +1091,12 @@ if check_password():
                         "Nome",
                         required=False
                     ),
-                    "data_submit": st.column_config.TextColumn(
-                        "Data de Registro",
-                        required=False
-                    ),
                     "classificacao_final": st.column_config.TextColumn(
                         "Classificação Final",
                         required=False
                     ),
                     "motivo_final": st.column_config.TextColumn(
                         "Motivo Classificação Final",
-                        required=False
-                    ),
-                    "confirmacao_classificacao_coordenacao": st.column_config.TextColumn(
-                        "Coordenação Confirmou a Classificação?",
-                        required=False
-                    ),
-                    "justificativa_classificacao_coord": st.column_config.TextColumn(
-                        "Justificativa da Coordenação",
                         required=False
                     ),
                     "classificacao_automatica": st.column_config.TextColumn(
@@ -1248,11 +1236,11 @@ if check_password():
                         required=False
                     ),
                     "Nota Francês/Alemão e Outros": st.column_config.NumberColumn(
-                        "Nota Inglês",
+                        "Nota Francês/Alemão e Outros",
                         required=False
                     ),
                     "Nota Espanhol": st.column_config.NumberColumn(
-                        "Nota Inglês",
+                        "Nota Espanhol",
                         required=False
                     ),
                     "Nota Química": st.column_config.NumberColumn(
@@ -1624,11 +1612,11 @@ if check_password():
                         required=False
                     ),
                     "Nota Francês/Alemão e Outros": st.column_config.NumberColumn(
-                        "Nota Inglês",
+                        "Nota Francês/Alemão e Outros",
                         required=False
                     ),
                     "Nota Espanhol": st.column_config.NumberColumn(
-                        "Nota Inglês",
+                        "Nota Espanhol",
                         required=False
                     ),
                     "Nota Química": st.column_config.NumberColumn(
