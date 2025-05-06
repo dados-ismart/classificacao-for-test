@@ -1282,7 +1282,7 @@ if check_password():
                 df_tabela_editavel_nao = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Não'])]
                 
                 df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
-                df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
+                df_tabela_editavel['confirmacao_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
                 df_tabela_editavel = df_tabela_editavel[[
                     'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
@@ -1295,7 +1295,7 @@ if check_password():
                     'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                     'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                     'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao', 
-                    'classificacao_final', 'motivo_final', 'confirmacao_classificacao_coordenacao'
+                    'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
                 ]]   
                 
                 df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
