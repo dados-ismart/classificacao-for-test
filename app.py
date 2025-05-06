@@ -1276,6 +1276,19 @@ if check_password():
             #filtro do df_tabela_editavel para os que cofirmaram 
             df_tabela_editavel_sim = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Sim'])]
             if df_tabela_editavel_sim.shape[0] > 0:
+                df_insert = df_tabela_editavel_sim[[
+                    'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
+                    'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
+                    'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
+                    'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
+                    'resposta_proatividade', 'resposta_questoes_psiquicas', 'resposta_questoes_familiares',
+                    'resposta_questoes_saude', 'resposta_ideacao_suicida', 'resposta_adaptacao_projeto',
+                    'resposta_seguranca_profissional', 'resposta_curso_apoiado', 'resposta_nota_condizente',
+                    'classificacao_automatica', 'motivo_classificao_automatica',
+                    'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
+                    'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
+                    'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'classificacao_final', 'motivo_final'
+                ]]   
                 df_tabela_editavel_sim['confirmacao_classificacao_coordenacao'] = 'Sim'
                 df_tabela_editavel_sim['data_submit'] = datetime.now(fuso_horario)
                 lista_ras = df_tabela_editavel_sim['RA']
