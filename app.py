@@ -1080,7 +1080,7 @@ if check_password():
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
-                        help="Selecione Sim ou Não",
+                        help="Selecione 'Sim' Para Manter e 'Não' Para Alterar",
                         options=['Sim', 'Não', '-'],
                         required=True
                     ),
@@ -1306,13 +1306,12 @@ if check_password():
                 df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
                 lista_ras = df_tabela_editavel['RA']
                 lista_ras = lista_ras.to_list()
-                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
+                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
                                                 
         st.title('Tabela de Edição')
         #Preparação do Data editor
         df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
         df_tabela_editavel = df_tabela_editavel.query("confirmacao_classificacao_final == 'Não'")
-        df_tabela_editavel
         df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
                                                 'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                                 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
@@ -1355,7 +1354,7 @@ if check_password():
                 column_config={
                     "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
                         "Confirmar Classificação Final?",
-                        help="Selecione Sim ou - ",
+                        help="Selecione Para Confirmar as Alterações",
                         options=['Sim', '-'],
                         required=True
                     ),
@@ -1559,7 +1558,26 @@ if check_password():
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
-            pass
+            df_tabela_editavel = df_tabela_editavel.loc[df_tabela_editavel['confirmacao_classificacao_final'].isin(['Sim'])]
+            df_tabela_editavel = df_tabela_editavel[[
+                'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
+                'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
+                'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
+                'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
+                'resposta_proatividade', 'resposta_questoes_psiquicas', 'resposta_questoes_familiares',
+                'resposta_questoes_saude', 'resposta_ideacao_suicida', 'resposta_adaptacao_projeto',
+                'resposta_seguranca_profissional', 'resposta_curso_apoiado', 'resposta_nota_condizente',
+                'classificacao_automatica', 'motivo_classificao_automatica',
+                'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
+                'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
+                'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao', 
+                'justificativa_classificacao_coord','classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
+            ]]   
+            
+            df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
+            lista_ras = df_tabela_editavel['RA']
+            lista_ras = lista_ras.to_list()
+            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         # Filtro personalizado no histórico
@@ -1610,7 +1628,7 @@ if check_password():
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
-                        help="Selecione Sim ou mantenha - ",
+                        help="Selecione Sim Para Confirmar Que Os Dados Estão Corretos ",
                         options=['Sim', '-'],
                         required=True
                     ),
