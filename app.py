@@ -1296,7 +1296,7 @@ if check_password():
             else:
                 df = ler_sheets('registro')
                 df_insert = df_tabela_editavel[[
-                                    'RA', 'nome', 'data_submit', 'resposta_argumentacao', 'resposta_rotina_estudos',
+                                    'resposta_argumentacao', 'RA', 'nome', 'resposta_rotina_estudos',
                                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
                                     'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
