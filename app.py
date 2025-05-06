@@ -1310,9 +1310,10 @@ if check_password():
                                                 
         st.title('Tabela de Edição')
         #Preparação do Data editor
+        bd_segmentado['RA'] = bd_segmentado['RA'].astype(int)
         df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
         df_tabela_editavel = df_tabela_editavel.query("confirmacao_classificacao_final == 'Não'")
-        bd_segmentado
+        df_tabela_editavel
         df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
                                                 'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                                 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
