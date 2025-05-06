@@ -1325,12 +1325,11 @@ if check_password():
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
-        df_tabela_editavel
         df_tabela_editavel.sort_values(by=['Segmento', 'nome'])
         
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
-        colunas_nao_editaveis.remove('manter_dados_iguais')
+        colunas_nao_editaveis.remove('confirmacao_classificacao_final')
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
