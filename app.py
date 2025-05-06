@@ -1360,7 +1360,7 @@ if check_password():
                         options=['Sim', '-'],
                         required=True
                     ),
-                    "justificativa_classificacao_coord": st.column_config.AreaChartColumn(
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
                         "Justificativa da Coordenadora",
                         required=False
                     ),
@@ -1376,11 +1376,11 @@ if check_password():
                         "Orientadora",
                         required=False
                     ),
-                    "classificacao_final": st.column_config.AreaChartColumn(
+                    "classificacao_final": st.column_config.TextColumn(
                         "Classificação Final",
                         required=False
                     ),
-                    "motivo_final": st.column_config.AreaChartColumn(
+                    "motivo_final": st.column_config.TextColumn(
                         "Motivo Classificação Final",
                         required=False
                     ),
@@ -1397,31 +1397,31 @@ if check_password():
                         options=['Sim', 'Não'],
                         required=False
                     ),
-                    "nova_classificacao_orientadora": st.column_config.AreaChartColumn(
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
                         "Classificação da Orientadora",
                         required=False
                     ),
-                    "novo_motivo_classificacao_orientadora": st.column_config.AreaChartColumn(
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
                         "Motivo da Orientadora",
                         required=False
                     ),
-                    "nova_justificativa_classificacao_orientadora": st.column_config.AreaChartColumn(
+                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
                         "Justificativa da Orientadora",
                         required=False
                     ),
-                    "reversao": st.column_config.AreaChartColumn(
+                    "reversao": st.column_config.TextColumn(
                         "Reversão",
                         required=False
                     ),
-                    "descricao_caso": st.column_config.AreaChartColumn(
+                    "descricao_caso": st.column_config.TextColumn(
                         "Descrição do Caso",
                         required=False
                     ),
-                    "plano_intervencao": st.column_config.AreaChartColumn(
+                    "plano_intervencao": st.column_config.TextColumn(
                         "Plano de Intervenção",
                         required=False
                     ),
-                    "tier": st.column_config.AreaChartColumn(
+                    "tier": st.column_config.TextColumn(
                         "Tier",
                         required=False
                     ),
