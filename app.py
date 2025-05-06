@@ -1331,7 +1331,13 @@ if check_password():
         
         #Colunas Não Editaveis
         colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
-        colunas_nao_editaveis.remove(['confirmacao_classificacao_final', 'justificativa_classificacao_coord','classificacao_final', 'motivo_final'])
+        colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 
+                                                                                     'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao',
+                                                                                     'descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora'
+                                                                                     'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
+                                                                                     'confirmacao_classificacao_orientadora'
+                                                                                     ]]
+
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
