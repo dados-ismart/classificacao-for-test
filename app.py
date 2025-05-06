@@ -1360,7 +1360,7 @@ if check_password():
                         options=['Sim', '-'],
                         required=True
                     ),
-                    "justificativa_classificacao_coord": st.column_config.TextColumn(
+                    "justificativa_classificacao_coord": st.column_config.Column(
                         "Justificativa da Coordenadora",
                         required=False
                     ),
