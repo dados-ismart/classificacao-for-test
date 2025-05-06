@@ -291,7 +291,7 @@ if check_password():
     st.title('Formulário de Classificação')
     #Seleção do aluno
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
-        bd_segmentado = bd.query("apoio_registro_final != 'Não' and apoio_registro_final != 'Sim'")
+        bd_segmentado = bd.query("apoio_registro_final != 'Sim'")
         bd_segmentado = bd_segmentado.query("apoio_registro == 'Sim' or apoio_registro == 'Não'")
         cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
         bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
@@ -1311,7 +1311,7 @@ if check_password():
         st.title('Tabela de Edição')
         #Preparação do Data editor
         df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
-       # df_tabela_editavel = df_tabela_editavel.query("confirmacao_classificacao_final == 'Não'")
+        df_tabela_editavel = df_tabela_editavel.query("confirmacao_classificacao_final == 'Não'")
         df_tabela_editavel
         df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
                                                 'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
