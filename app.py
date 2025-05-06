@@ -1308,246 +1308,246 @@ if check_password():
                 lista_ras = lista_ras.to_list()
                 registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_coordenacao', lista_ras)
                                                 
-            st.title('Tabela de Edição')
-            #Preparação do Data editor
-            df_tabela_editavel2 = df.query("confirmacao_classificacao_final == 'Não'")
-            df_tabela_editavel2 = df_tabela_editavel2[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final',
-                                                    'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
-                                                    'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
-                                                    'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
-                                                    'resposta_atividades_extracurriculares','resposta_faltas','resposta_respeita_escola',
-                                                    'resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
-                                                    'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
-                                                    'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
-                                                    'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
-                                                    'resposta_curso_apoiado','resposta_nota_condizente']]
-        df_tabela_editavel2 = df_tabela_editavel2.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
+        st.title('Tabela de Edição')
+        #Preparação do Data editor
+        df_tabela_editavel = df.query("confirmacao_classificacao_final == 'Não'")
+        df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final',
+                                                'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
+                                                'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
+                                                'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
+                                                'resposta_atividades_extracurriculares','resposta_faltas','resposta_respeita_escola',
+                                                'resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
+                                                'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
+                                                'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
+                                                'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
+                                                'resposta_curso_apoiado','resposta_nota_condizente']]
+        df_tabela_editavel = df_tabela_editavel.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
-        df_tabela_editavel2
-        # df_tabela_editavel2.sort_values(by=['Segmento', 'nome'])
+        df_tabela_editavel
+        df_tabela_editavel.sort_values(by=['Segmento', 'nome'])
         
-        # #Colunas Não Editaveis
-        # colunas_nao_editaveis = df_tabela_editavel2.columns.to_list()
-        # colunas_nao_editaveis.remove('manter_dados_iguais')
+        #Colunas Não Editaveis
+        colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
+        colunas_nao_editaveis.remove('manter_dados_iguais')
 
-        # # Data editor
-        # with st.form(key='tabela_editavel_cord_edicao'):
-        #     # Configure o data editor
-        #     edited_df = st.data_editor(
-        #         df_tabela_editavel2[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
-        #                             ,'motivo_final','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
-        #                             'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
-        #                             'reversao','descricao_caso','plano_intervencao','tier',
-        #                             'resposta_argumentacao','resposta_rotina_estudos','resposta_atividades_extracurriculares','resposta_faltas',
-        #                             'resposta_respeita_escola','resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
-        #                             'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
-        #                             'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude','resposta_ideacao_suicida',
-        #                             'resposta_adaptacao_projeto','resposta_seguranca_profissional','resposta_curso_apoiado','resposta_nota_condizente',
-        #                             'Nota Matemática','Nota Português','Nota História','Nota Geografia','Nota Inglês','Nota Francês/Alemão e Outros',
-        #                             'Nota Espanhol','Nota Química','Nota Física','Nota Biologia','Nota ENEM','Nota PU','media_calibrada']],
-        #         column_config={
-        #             "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
-        #                 "Confirmar Classificação Final?",
-        #                 help="Selecione Sim ou - ",
-        #                 options=['Sim', '-'],
-        #                 required=True
-        #             ),
-        #             "RA": st.column_config.TextColumn(
-        #                 "RA",
-        #                 required=False
-        #             ),
-        #             "nome": st.column_config.TextColumn(
-        #                 "Nome",
-        #                 required=False
-        #             ),
-        #             "Orientadora": st.column_config.TextColumn(
-        #                 "Orientadora",
-        #                 required=False
-        #             ),
-        #             "classificacao_final": st.column_config.TextColumn(
-        #                 "Classificação Final",
-        #                 required=False
-        #             ),
-        #             "motivo_final": st.column_config.TextColumn(
-        #                 "Motivo Classificação Final",
-        #                 required=False
-        #             ),
-        #             "classificacao_automatica": st.column_config.TextColumn(
-        #                 "Classificação Automatica",
-        #                 required=False
-        #             ),
-        #             "motivo_classificao_automatica": st.column_config.TextColumn(
-        #                 "Motivo Classificação Automatica",
-        #                 required=False
-        #             ),
-        #             "confirmacao_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Orientadora Confirmou a classificação Automatica?",
-        #                 required=False
-        #             ),
-        #             "nova_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Classificação da Orientadora",
-        #                 required=False
-        #             ),
-        #             "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Motivo da Orientadora",
-        #                 required=False
-        #             ),
-        #             "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
-        #                 "Justificativa da Orientadora",
-        #                 required=False
-        #             ),
-        #             "reversao": st.column_config.TextColumn(
-        #                 "Reversão",
-        #                 required=False
-        #             ),
-        #             "descricao_caso": st.column_config.TextColumn(
-        #                 "Descrição do Caso",
-        #                 required=False
-        #             ),
-        #             "plano_intervencao": st.column_config.TextColumn(
-        #                 "Plano de Intervenção",
-        #                 required=False
-        #             ),
-        #             "tier": st.column_config.TextColumn(
-        #                 "Tier",
-        #                 required=False
-        #             ),
-        #             "resposta_argumentacao": st.column_config.TextColumn(
-        #                 "Resposta - Nivel de Argumentação/Interações",
-        #                 required=False
-        #             ),
-        #             "resposta_rotina_estudos": st.column_config.TextColumn(
-        #                 "Resposta - Rotina de Estudos Adequada?",
-        #                 required=False
-        #             ),
-        #             "resposta_atividades_extracurriculares": st.column_config.TextColumn(
-        #                 "Resposta - Atividades Extracurriculares",
-        #                 required=False
-        #             ),
-        #             "resposta_faltas": st.column_config.TextColumn(
-        #                 "Resposta - Número de Faltas comprometentes?",
-        #                 required=False
-        #             ),
-        #             "resposta_respeita_escola": st.column_config.TextColumn(
-        #                 "Resposta - Respeita Normas Escolares?",
-        #                 required=False
-        #             ),
-        #             "resposta_atividades_obrigatorias_ismart": st.column_config.TextColumn(
-        #                 "Resposta - Participa das Atividades Obrigatórias?",
-        #                 required=False
-        #             ),
-        #             "resposta_colaboracao": st.column_config.TextColumn(
-        #                 "Resposta - É Colaborativo Com Amigos?",
-        #                 required=False
-        #             ),
-        #             "resposta_atividades_nao_obrigatorias_ismart": st.column_config.TextColumn(
-        #                 "Resposta - Participa das Atividades Não Obrigatórias?",
-        #                 required=False
-        #             ),
-        #             "resposta_networking": st.column_config.TextColumn(
-        #                 "Resposta - Cultiva Parcerias?",
-        #                 required=False
-        #             ),
-        #             "resposta_proatividade": st.column_config.TextColumn(
-        #                 "Resposta - É Proativo?",
-        #                 required=False
-        #             ),
-        #             "resposta_questoes_psiquicas": st.column_config.TextColumn(
-        #                 "Resposta - Apresenta Questões Psíquicas de impacto?",
-        #                 required=False
-        #             ),
-        #             "resposta_questoes_familiares": st.column_config.TextColumn(
-        #                 "Resposta - Apresenta Questões Familiares de impacto?",
-        #                 required=False
-        #             ),
-        #             "resposta_questoes_saude": st.column_config.TextColumn(
-        #                 "Resposta - Apresenta Questões Saúde de impacto?",
-        #                 required=False
-        #             ),
-        #             "resposta_ideacao_suicida": st.column_config.TextColumn(
-        #                 "Resposta - Apresenta Ideação Suicida?",
-        #                 required=False
-        #             ),
-        #             "resposta_adaptacao_projeto": st.column_config.TextColumn(
-        #                 "Resposta - Se Adaptou ao Projeto?",
-        #                 required=False
-        #             ),
-        #             "resposta_seguranca_profissional": st.column_config.TextColumn(
-        #                 "Resposta - Tem Segurança Proficional?",
-        #                 required=False
-        #             ),
-        #             "resposta_curso_apoiado": st.column_config.TextColumn(
-        #                 "Resposta - Deseja Curso Apoiado?",
-        #                 required=False
-        #             ),
-        #             "resposta_nota_condizente": st.column_config.TextColumn(
-        #                 "Resposta - Nota Condizente Com o Curso Desejado?",
-        #                 required=False
-        #             ),
-        #             "Segmento": st.column_config.TextColumn(
-        #                 "Segmento",
-        #                 required=False
-        #             ),
-        #             "Nota Matemática": st.column_config.NumberColumn(
-        #                 "Nota Matemática",
-        #                 required=False
-        #             ),
-        #             "Nota Português": st.column_config.NumberColumn(
-        #                 "Nota Português",
-        #                 required=False
-        #             ),
-        #             "Nota História": st.column_config.NumberColumn(
-        #                 "Nota História",
-        #                 required=False
-        #             ),
-        #             "Nota Geografia": st.column_config.NumberColumn(
-        #                 "Nota Geografia",
-        #                 required=False
-        #             ),
-        #             "Nota Inglês": st.column_config.NumberColumn(
-        #                 "Nota Inglês",
-        #                 required=False
-        #             ),
-        #             "Nota Francês/Alemão e Outros": st.column_config.NumberColumn(
-        #                 "Nota Francês/Alemão e Outros",
-        #                 required=False
-        #             ),
-        #             "Nota Espanhol": st.column_config.NumberColumn(
-        #                 "Nota Espanhol",
-        #                 required=False
-        #             ),
-        #             "Nota Química": st.column_config.NumberColumn(
-        #                 "Nota Química",                        required=False
-        #             ),        
-        #             "Nota Física": st.column_config.NumberColumn(
-        #                 "Nota Física",
-        #                 required=False
-        #             ),
-        #             "Nota Biologia": st.column_config.NumberColumn(
-        #                 "Nota Biologia",
-        #                 required=False
-        #             ),
-        #             "Nota ENEM": st.column_config.NumberColumn(
-        #                 "Nota ENEM",
-        #                 required=False
-        #             ),
-        #             "Nota PU": st.column_config.NumberColumn(
-        #                 "Nota PU",
-        #                 required=False
-        #             ),                          
-        #             "media_calibrada": st.column_config.NumberColumn(
-        #                 "Média Calibrada",
-        #                 required=False
-        #             ),                          
-        #         },
-        #         disabled=colunas_nao_editaveis,
-        #         hide_index=True,
-        #     )
-        #     submit_button = st.form_submit_button(label='REGISTRAR')
-        # if submit_button:
-        #     pass
+        # Data editor
+        with st.form(key='tabela_editavel_cord_edicao'):
+            # Configure o data editor
+            edited_df = st.data_editor(
+                df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
+                                    ,'motivo_final','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
+                                    'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
+                                    'reversao','descricao_caso','plano_intervencao','tier',
+                                    'resposta_argumentacao','resposta_rotina_estudos','resposta_atividades_extracurriculares','resposta_faltas',
+                                    'resposta_respeita_escola','resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
+                                    'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
+                                    'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude','resposta_ideacao_suicida',
+                                    'resposta_adaptacao_projeto','resposta_seguranca_profissional','resposta_curso_apoiado','resposta_nota_condizente',
+                                    'Nota Matemática','Nota Português','Nota História','Nota Geografia','Nota Inglês','Nota Francês/Alemão e Outros',
+                                    'Nota Espanhol','Nota Química','Nota Física','Nota Biologia','Nota ENEM','Nota PU','media_calibrada']],
+                column_config={
+                    "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
+                        "Confirmar Classificação Final?",
+                        help="Selecione Sim ou - ",
+                        options=['Sim', '-'],
+                        required=True
+                    ),
+                    "RA": st.column_config.TextColumn(
+                        "RA",
+                        required=False
+                    ),
+                    "nome": st.column_config.TextColumn(
+                        "Nome",
+                        required=False
+                    ),
+                    "Orientadora": st.column_config.TextColumn(
+                        "Orientadora",
+                        required=False
+                    ),
+                    "classificacao_final": st.column_config.TextColumn(
+                        "Classificação Final",
+                        required=False
+                    ),
+                    "motivo_final": st.column_config.TextColumn(
+                        "Motivo Classificação Final",
+                        required=False
+                    ),
+                    "classificacao_automatica": st.column_config.TextColumn(
+                        "Classificação Automatica",
+                        required=False
+                    ),
+                    "motivo_classificao_automatica": st.column_config.TextColumn(
+                        "Motivo Classificação Automatica",
+                        required=False
+                    ),
+                    "confirmacao_classificacao_orientadora": st.column_config.TextColumn(
+                        "Orientadora Confirmou a classificação Automatica?",
+                        required=False
+                    ),
+                    "nova_classificacao_orientadora": st.column_config.TextColumn(
+                        "Classificação da Orientadora",
+                        required=False
+                    ),
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
+                        "Motivo da Orientadora",
+                        required=False
+                    ),
+                    "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
+                        "Justificativa da Orientadora",
+                        required=False
+                    ),
+                    "reversao": st.column_config.TextColumn(
+                        "Reversão",
+                        required=False
+                    ),
+                    "descricao_caso": st.column_config.TextColumn(
+                        "Descrição do Caso",
+                        required=False
+                    ),
+                    "plano_intervencao": st.column_config.TextColumn(
+                        "Plano de Intervenção",
+                        required=False
+                    ),
+                    "tier": st.column_config.TextColumn(
+                        "Tier",
+                        required=False
+                    ),
+                    "resposta_argumentacao": st.column_config.TextColumn(
+                        "Resposta - Nivel de Argumentação/Interações",
+                        required=False
+                    ),
+                    "resposta_rotina_estudos": st.column_config.TextColumn(
+                        "Resposta - Rotina de Estudos Adequada?",
+                        required=False
+                    ),
+                    "resposta_atividades_extracurriculares": st.column_config.TextColumn(
+                        "Resposta - Atividades Extracurriculares",
+                        required=False
+                    ),
+                    "resposta_faltas": st.column_config.TextColumn(
+                        "Resposta - Número de Faltas comprometentes?",
+                        required=False
+                    ),
+                    "resposta_respeita_escola": st.column_config.TextColumn(
+                        "Resposta - Respeita Normas Escolares?",
+                        required=False
+                    ),
+                    "resposta_atividades_obrigatorias_ismart": st.column_config.TextColumn(
+                        "Resposta - Participa das Atividades Obrigatórias?",
+                        required=False
+                    ),
+                    "resposta_colaboracao": st.column_config.TextColumn(
+                        "Resposta - É Colaborativo Com Amigos?",
+                        required=False
+                    ),
+                    "resposta_atividades_nao_obrigatorias_ismart": st.column_config.TextColumn(
+                        "Resposta - Participa das Atividades Não Obrigatórias?",
+                        required=False
+                    ),
+                    "resposta_networking": st.column_config.TextColumn(
+                        "Resposta - Cultiva Parcerias?",
+                        required=False
+                    ),
+                    "resposta_proatividade": st.column_config.TextColumn(
+                        "Resposta - É Proativo?",
+                        required=False
+                    ),
+                    "resposta_questoes_psiquicas": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Psíquicas de impacto?",
+                        required=False
+                    ),
+                    "resposta_questoes_familiares": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Familiares de impacto?",
+                        required=False
+                    ),
+                    "resposta_questoes_saude": st.column_config.TextColumn(
+                        "Resposta - Apresenta Questões Saúde de impacto?",
+                        required=False
+                    ),
+                    "resposta_ideacao_suicida": st.column_config.TextColumn(
+                        "Resposta - Apresenta Ideação Suicida?",
+                        required=False
+                    ),
+                    "resposta_adaptacao_projeto": st.column_config.TextColumn(
+                        "Resposta - Se Adaptou ao Projeto?",
+                        required=False
+                    ),
+                    "resposta_seguranca_profissional": st.column_config.TextColumn(
+                        "Resposta - Tem Segurança Proficional?",
+                        required=False
+                    ),
+                    "resposta_curso_apoiado": st.column_config.TextColumn(
+                        "Resposta - Deseja Curso Apoiado?",
+                        required=False
+                    ),
+                    "resposta_nota_condizente": st.column_config.TextColumn(
+                        "Resposta - Nota Condizente Com o Curso Desejado?",
+                        required=False
+                    ),
+                    "Segmento": st.column_config.TextColumn(
+                        "Segmento",
+                        required=False
+                    ),
+                    "Nota Matemática": st.column_config.NumberColumn(
+                        "Nota Matemática",
+                        required=False
+                    ),
+                    "Nota Português": st.column_config.NumberColumn(
+                        "Nota Português",
+                        required=False
+                    ),
+                    "Nota História": st.column_config.NumberColumn(
+                        "Nota História",
+                        required=False
+                    ),
+                    "Nota Geografia": st.column_config.NumberColumn(
+                        "Nota Geografia",
+                        required=False
+                    ),
+                    "Nota Inglês": st.column_config.NumberColumn(
+                        "Nota Inglês",
+                        required=False
+                    ),
+                    "Nota Francês/Alemão e Outros": st.column_config.NumberColumn(
+                        "Nota Francês/Alemão e Outros",
+                        required=False
+                    ),
+                    "Nota Espanhol": st.column_config.NumberColumn(
+                        "Nota Espanhol",
+                        required=False
+                    ),
+                    "Nota Química": st.column_config.NumberColumn(
+                        "Nota Química",                        required=False
+                    ),        
+                    "Nota Física": st.column_config.NumberColumn(
+                        "Nota Física",
+                        required=False
+                    ),
+                    "Nota Biologia": st.column_config.NumberColumn(
+                        "Nota Biologia",
+                        required=False
+                    ),
+                    "Nota ENEM": st.column_config.NumberColumn(
+                        "Nota ENEM",
+                        required=False
+                    ),
+                    "Nota PU": st.column_config.NumberColumn(
+                        "Nota PU",
+                        required=False
+                    ),                          
+                    "media_calibrada": st.column_config.NumberColumn(
+                        "Média Calibrada",
+                        required=False
+                    ),                          
+                },
+                disabled=colunas_nao_editaveis,
+                hide_index=True,
+            )
+            submit_button = st.form_submit_button(label='REGISTRAR')
+        if submit_button:
+            pass
         
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         # Filtro personalizado no histórico
