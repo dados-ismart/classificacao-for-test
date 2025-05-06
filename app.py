@@ -1041,8 +1041,7 @@ if check_password():
 
         df_tabela_editavel = df_coord
         df_tabela_editavel['manter_dados_iguais'] = '-' 
-        df_tabela_editavel = df_tabela_editavel[['manter_dados_iguais','RA','nome','data_submit',
-                                                    'classificacao_final','motivo_final','confirmacao_classificacao_coordenacao',
+        df_tabela_editavel = df_tabela_editavel[['manter_dados_iguais','classificacao_final','motivo_final','RA','nome','confirmacao_classificacao_coordenacao',
                                                     'justificativa_classificacao_coord','classificacao_automatica','motivo_classificao_automatica',
                                                     'confirmacao_classificacao_orientadora','nova_classificacao_orientadora',
                                                     'novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
@@ -1296,7 +1295,7 @@ if check_password():
             else:
                 df = ler_sheets('registro')
                 df_insert = df_tabela_editavel[[
-                                    'resposta_argumentacao', 'RA', 'nome', 'resposta_rotina_estudos',
+                                    'RA', 'nome', 'data_submit', 'resposta_argumentacao', 'resposta_rotina_estudos',
                                     'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                                     'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
                                     'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
