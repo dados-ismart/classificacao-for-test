@@ -1341,10 +1341,10 @@ if check_password():
         with st.form(key='tabela_editavel_cord_edicao'):
             # Configure o data editor
             edited_df = st.data_editor(
-                df_tabela_editavel[['confirmacao_classificacao_final', 'justificativa_classificacao_coord','RA','nome','Orientadora', 'Segmento','classificacao_final',
-                                    'motivo_final','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
-                                    'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
-                                    'reversao','descricao_caso','plano_intervencao','tier',
+                df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final', 'motivo_final','justificativa_classificacao_coord',
+                                    'reversao','descricao_caso','plano_intervencao','tier', 'Orientadora', 'Segmento',
+                                    'classificacao_automatica','motivo_classificao_automatica', 'confirmacao_classificacao_orientadora','nova_classificacao_orientadora',
+                                    'novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
                                     'resposta_argumentacao','resposta_rotina_estudos','resposta_atividades_extracurriculares','resposta_faltas',
                                     'resposta_respeita_escola','resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
                                     'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
