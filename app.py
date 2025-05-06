@@ -1337,6 +1337,7 @@ if check_password():
                                                                                      'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
                                                                                      'confirmacao_classificacao_orientadora'
                                                                                      ]]
+        df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['justificativa_classificacao_coord'].dtype(str)
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
@@ -1360,7 +1361,7 @@ if check_password():
                         options=['Sim', '-'],
                         required=True
                     ),
-                    "justificativa_classificacao_coord": st.column_config.Column(
+                    "justificativa_classificacao_coord": st.column_config.TextColumn(
                         "Justificativa da Coordenadora",
                         required=False
                     ),
