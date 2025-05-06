@@ -1329,14 +1329,14 @@ if check_password():
                                                                 , how='left', on='RA')
         df_tabela_editavel.sort_values(by=['Segmento', 'nome'])
         
-        # #Colunas Não Editaveis
-        # colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
-        # colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 
-        #                                                                              'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao',
-        #                                                                              'descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora'
-        #                                                                              'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
-        #                                                                              'confirmacao_classificacao_orientadora'
-        #                                                                              ]]
+        #Colunas Não Editaveis
+        colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
+        colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 
+                                                                                     'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao',
+                                                                                     'descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora'
+                                                                                     'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
+                                                                                     'confirmacao_classificacao_orientadora'
+                                                                                     ]]
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
@@ -1360,9 +1360,9 @@ if check_password():
                         options=['Sim', '-'],
                         required=True
                     ),
-                    "justificativa_classificacao_coord": st.column_config.LineChartColumn(
+                    "justificativa_classificacao_coord": st.column_config.AreaChartColumn(
                         "Justificativa da Coordenadora",
-                        required=True
+                        required=False
                     ),
                     "RA": st.column_config.TextColumn(
                         "RA",
@@ -1376,13 +1376,13 @@ if check_password():
                         "Orientadora",
                         required=False
                     ),
-                    "classificacao_final": st.column_config.LineChartColumn(
+                    "classificacao_final": st.column_config.AreaChartColumn(
                         "Classificação Final",
-                        required=True
+                        required=False
                     ),
-                    "motivo_final": st.column_config.LineChartColumn(
+                    "motivo_final": st.column_config.AreaChartColumn(
                         "Motivo Classificação Final",
-                        required=True
+                        required=False
                     ),
                     "classificacao_automatica": st.column_config.TextColumn(
                         "Classificação Automatica",
@@ -1395,35 +1395,35 @@ if check_password():
                     "confirmacao_classificacao_orientadora": st.column_config.SelectboxColumn(
                         "Orientadora Confirmou a classificação Automatica?",
                         options=['Sim', 'Não'],
-                        required=True
+                        required=False
                     ),
-                    "nova_classificacao_orientadora": st.column_config.LineChartColumn(
+                    "nova_classificacao_orientadora": st.column_config.AreaChartColumn(
                         "Classificação da Orientadora",
-                        required=True
+                        required=False
                     ),
-                    "novo_motivo_classificacao_orientadora": st.column_config.LineChartColumn(
+                    "novo_motivo_classificacao_orientadora": st.column_config.AreaChartColumn(
                         "Motivo da Orientadora",
-                        required=True
+                        required=False
                     ),
-                    "nova_justificativa_classificacao_orientadora": st.column_config.LineChartColumn(
+                    "nova_justificativa_classificacao_orientadora": st.column_config.AreaChartColumn(
                         "Justificativa da Orientadora",
-                        required=True
+                        required=False
                     ),
-                    "reversao": st.column_config.LineChartColumn(
+                    "reversao": st.column_config.AreaChartColumn(
                         "Reversão",
-                        required=True
+                        required=False
                     ),
-                    "descricao_caso": st.column_config.LineChartColumn(
+                    "descricao_caso": st.column_config.AreaChartColumn(
                         "Descrição do Caso",
-                        required=True
+                        required=False
                     ),
-                    "plano_intervencao": st.column_config.LineChartColumn(
+                    "plano_intervencao": st.column_config.AreaChartColumn(
                         "Plano de Intervenção",
-                        required=True
+                        required=False
                     ),
-                    "tier": st.column_config.LineChartColumn(
+                    "tier": st.column_config.AreaChartColumn(
                         "Tier",
-                        required=True
+                        required=False
                     ),
                     "resposta_argumentacao": st.column_config.TextColumn(
                         "Resposta - Nivel de Argumentação/Interações",
