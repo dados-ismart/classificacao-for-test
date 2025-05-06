@@ -1321,7 +1321,7 @@ if check_password():
                                                 'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
                                                 'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
                                                 'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
-                                                'resposta_curso_apoiado','resposta_nota_condizente']]
+                                                'resposta_curso_apoiado','resposta_nota_condizente', 'confirmacao_classificacao_coordenacao']]
         df_tabela_editavel = df_tabela_editavel.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
