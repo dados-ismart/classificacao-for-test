@@ -1337,7 +1337,7 @@ if check_password():
                                                                                      'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
                                                                                      'confirmacao_classificacao_orientadora'
                                                                                      ]]
-
+        edited_df['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao','descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora''nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora','confirmacao_classificacao_orientadora'].dtype(str)
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
