@@ -1384,7 +1384,7 @@ if check_password():
                     ),
                     "motivo_final": st.column_config.TextColumn(
                         "Motivo Classificação Final",
-                        help=caixa_justificativa_classificacao,
+                        help='caixa_justificativa_classificacao',
                         required=False
                     ),
                     "classificacao_automatica": st.column_config.TextColumn(
@@ -1407,7 +1407,7 @@ if check_password():
                     ),
                     "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
                         "Motivo da Orientadora",
-                        help=caixa_justificativa_classificacao,
+                        help='caixa_justificativa_classificacao',
                         required=False
                     ),
                     "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
