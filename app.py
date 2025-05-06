@@ -1337,7 +1337,6 @@ if check_password():
                                                                                      'nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora',
                                                                                      'confirmacao_classificacao_orientadora'
                                                                                      ]]
-        edited_df['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao','descricao_caso', 'reversao', 'nova_justificativa_classificacao_orientadora''nova_classificacao_orientadora', 'novo_motivo_classificacao_orientadora','confirmacao_classificacao_orientadora'].dtype(str)
 
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
@@ -1361,16 +1360,16 @@ if check_password():
                         options=['Sim', '-'],
                         required=True
                     ),
+                    "justificativa_classificacao_coord": st.column_config.AreaChartColumn(
+                        "Justificativa da Coordenadora",
+                        required=False
+                    ),
                     "RA": st.column_config.TextColumn(
                         "RA",
                         required=False
                     ),
                     "nome": st.column_config.TextColumn(
                         "Nome",
-                        required=False
-                    ),
-                    "justificativa_classificacao_coord": st.column_config.AreaChartColumn(
-                        "Justificativa da Coordenadora",
                         required=False
                     ),
                     "Orientadora": st.column_config.TextColumn(
