@@ -1286,7 +1286,7 @@ if check_password():
                 hide_index=True,
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
-
+        df_tabela_editavel
         if submit_button:
             #filtrar do df_tabela_editavel aqueles com confirmar
             df_tabela_editavel = edited_df.loc[edited_df['manter_dados_iguais'].isin(['Sim'])]
@@ -1458,7 +1458,7 @@ if check_password():
                 column_config={
                     "manter_dados_iguais": st.column_config.SelectboxColumn(
                         "Manter Dados Iguais?",
-                        help="Selecione Sim ou Não",
+                        help="Selecione Sim ou mantenha - ",
                         options=['Sim', '-'],
                         required=True
                     ),
