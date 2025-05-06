@@ -1313,6 +1313,7 @@ if check_password():
         df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
         df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
         df_tabela_editavel = df_coord.query("confirmacao_classificacao_final == 'Não'")
+        df_tabela_editavel
         df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
                                                 'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                                 'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
