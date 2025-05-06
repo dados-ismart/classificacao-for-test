@@ -1382,9 +1382,9 @@ if check_password():
                         options=caixa_classificacao,
                         required=False
                     ),
-                    "motivo_final": st.column_config.SelectboxColumn(
+                    "motivo_final": st.column_config.TextColumn(
                         "Motivo Classificação Final",
-                        options=caixa_justificativa_classificacao,
+                        help=caixa_justificativa_classificacao,
                         required=False
                     ),
                     "classificacao_automatica": st.column_config.TextColumn(
@@ -1405,9 +1405,9 @@ if check_password():
                         options=caixa_classificacao,
                         required=False
                     ),
-                    "novo_motivo_classificacao_orientadora": st.column_config.SelectboxColumn(
+                    "novo_motivo_classificacao_orientadora": st.column_config.TextColumn(
                         "Motivo da Orientadora",
-                        options=caixa_justificativa_classificacao,
+                        help=caixa_justificativa_classificacao,
                         required=False
                     ),
                     "nova_justificativa_classificacao_orientadora": st.column_config.TextColumn(
