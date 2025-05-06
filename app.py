@@ -1310,8 +1310,8 @@ if check_password():
                                                 
             st.title('Tabela de Edição')
             #Preparação do Data editor
-            df_tabela_editavel = df.query("confirmacao_classificacao_final == 'Não'")
-            df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final',
+            df_tabela_editavel2 = df.query("confirmacao_classificacao_final == 'Não'")
+            df_tabela_editavel2 = df_tabela_editavel2[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final',
                                                     'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                                     'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
                                                     'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
@@ -1321,22 +1321,22 @@ if check_password():
                                                     'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
                                                     'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
                                                     'resposta_curso_apoiado','resposta_nota_condizente']]
-        df_tabela_editavel = df_tabela_editavel.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
+        df_tabela_editavel2 = df_tabela_editavel2.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                                                                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
                                                                 , how='left', on='RA')
-        df_tabela_editavel
-        # df_tabela_editavel.sort_values(by=['Segmento', 'nome'])
+        df_tabela_editavel2
+        # df_tabela_editavel2.sort_values(by=['Segmento', 'nome'])
         
         # #Colunas Não Editaveis
-        # colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
+        # colunas_nao_editaveis = df_tabela_editavel2.columns.to_list()
         # colunas_nao_editaveis.remove('manter_dados_iguais')
 
         # # Data editor
         # with st.form(key='tabela_editavel_cord_edicao'):
         #     # Configure o data editor
         #     edited_df = st.data_editor(
-        #         df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
+        #         df_tabela_editavel2[['confirmacao_classificacao_final','RA','nome','Orientadora', 'Segmento','classificacao_final'
         #                             ,'motivo_final','classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
         #                             'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
         #                             'reversao','descricao_caso','plano_intervencao','tier',
