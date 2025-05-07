@@ -1560,7 +1560,7 @@ if check_password():
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
-            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin([['Sim', 'Não']])]
+            df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim' or confirmacao_classificacao_final == 'Não'")
             df_tabela_editavel = df_tabela_editavel[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
