@@ -1561,27 +1561,29 @@ if check_password():
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
             df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim' or confirmacao_classificacao_final == 'Não'")
-            df_tabela_editavel = df_tabela_editavel[[
-                'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
-                'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
-                'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
-                'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
-                'resposta_proatividade', 'resposta_questoes_psiquicas', 'resposta_questoes_familiares',
-                'resposta_questoes_saude', 'resposta_ideacao_suicida', 'resposta_adaptacao_projeto',
-                'resposta_seguranca_profissional', 'resposta_curso_apoiado', 'resposta_nota_condizente',
-                'classificacao_automatica', 'motivo_classificao_automatica',
-                'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
-                'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
-                'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord',
-                'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
-            ]]   
-            df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
-            df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
-            lista_ras = df_tabela_editavel['RA']
-            lista_ras = lista_ras.to_list()
-            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
-        
+            if df_tabela_editavel.shape[0] > 0:
+                df_tabela_editavel = df_tabela_editavel[[
+                    'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
+                    'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
+                    'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
+                    'resposta_atividades_nao_obrigatorias_ismart', 'resposta_networking',
+                    'resposta_proatividade', 'resposta_questoes_psiquicas', 'resposta_questoes_familiares',
+                    'resposta_questoes_saude', 'resposta_ideacao_suicida', 'resposta_adaptacao_projeto',
+                    'resposta_seguranca_profissional', 'resposta_curso_apoiado', 'resposta_nota_condizente',
+                    'classificacao_automatica', 'motivo_classificao_automatica',
+                    'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
+                    'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
+                    'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord',
+                    'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
+                ]]   
+                df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
+                df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
+                df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
+                lista_ras = df_tabela_editavel['RA']
+                lista_ras = lista_ras.to_list()
+                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
+            else:
+                st.warning('Revise ao menos um aluno antes de registrar')
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
         # Filtro personalizado no histórico
         df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
