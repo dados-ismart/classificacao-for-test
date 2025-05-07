@@ -1559,7 +1559,7 @@ if check_password():
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
-            df_tabela_editavel = df_tabela_editavel.loc[df_tabela_editavel['confirmacao_classificacao_final'].isin(['Sim'])]
+            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin(['Sim'])]
             df_tabela_editavel = df_tabela_editavel[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
@@ -1578,7 +1578,6 @@ if check_password():
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            st.success(df_tabela_editavel)
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
