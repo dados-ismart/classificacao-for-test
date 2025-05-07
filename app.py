@@ -1578,7 +1578,7 @@ if check_password():
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            st.success(lista_ras)
+            st.success(df_tabela_editavel)
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
