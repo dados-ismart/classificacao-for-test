@@ -1559,8 +1559,8 @@ if check_password():
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
-            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin(['Sim'])]
-            df_tabela_editavel = df_tabela_editavel[[
+            edited_df = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin(['Sim'])]
+            df_tabela_editavel = edited_df[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
                 'resposta_atividades_obrigatorias_ismart', 'resposta_colaboracao',
