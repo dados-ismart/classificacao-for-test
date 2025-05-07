@@ -1336,7 +1336,7 @@ if check_password():
                                                                                      'descricao_caso', 'reversao', 
                                                                                     ]]
         df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['justificativa_classificacao_coord'].astype(str)
-
+        df_tabela_editavel['confirmacao_classificacao_final'] = '-'
         # Data editor
         with st.form(key='tabela_editavel_cord_edicao'):
             # Configure o data editor
