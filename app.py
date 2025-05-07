@@ -369,7 +369,7 @@ if check_password():
             st.error('Zero Resultados')
 
     if ra_nome is not None:
-        if df_login.query(f'login != "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+        if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] != "coordenação":
             try:
                 st.session_state["ra"] = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
                 ra = st.session_state["ra"]
