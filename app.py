@@ -1355,7 +1355,8 @@ if check_password():
                 column_config={
                     "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
                         "Confirmar Classificação Final?",
-                        help="Selecione Para Confirmar as Alterações",
+                        help='Selecione "Sim" ou "Não" Para Finalizar As Alterações\n' \
+                        '"Sim" Se você Manteve a Classificação Igual e "Não" no Contrário',
                         options=['Sim', '-'],
                         required=True
                     ),
@@ -1559,7 +1560,7 @@ if check_password():
             )
             submit_button = st.form_submit_button(label='REGISTRAR')
         if submit_button:
-            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin(['Sim'])]
+            df_tabela_editavel = edited_df.loc[edited_df['confirmacao_classificacao_final'].isin([['Sim', 'Não']])]
             df_tabela_editavel = df_tabela_editavel[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
@@ -1575,7 +1576,8 @@ if check_password():
                 'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
             ]]   
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-            df_tabela_editavel.merge(df[['RA','confirmacao_classificacao_coordenacao']], how='left', on='RA')
+            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
+            df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
