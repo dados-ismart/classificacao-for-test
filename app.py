@@ -311,7 +311,7 @@ if check_password():
         if selecao_orientadora:
             bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
         st.divider()
-
+        ra_nome = None
         # progresso
         qtd_praca = bd.query(f"Cidade == '{cidade_login}'").shape[0]
         qtd_registrados_praca = bd.query(f"Cidade == '{cidade_login}'")
