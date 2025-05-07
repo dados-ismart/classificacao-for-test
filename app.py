@@ -1355,9 +1355,9 @@ if check_password():
                 column_config={
                     "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
                         "Confirmar Classificação Final?",
-                        help='Selecione "Sim" ou "Não" Para Finalizar As Alterações\n' \
+                        help='Selecione "Sim" ou "Não" Para Finalizar As Alterações. ' \
                         '"Sim" Se você Manteve a Classificação Igual e "Não" no Contrário',
-                        options=['Sim', '-'],
+                        options=['Sim', 'Não', '-'],
                         required=True
                     ),
                     "justificativa_classificacao_coord": st.column_config.TextColumn(
