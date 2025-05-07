@@ -275,7 +275,7 @@ if check_password():
 
     #importar e tratar datasets
     df = ler_sheets('registro')
-    #df['RA'] = df['RA'].astype(int)
+    df['RA'] = df['RA'].astype(int)
     bd = ler_sheets('bd')
     bd = bd.dropna(subset=['RA - NOME'])
     bd['RA'] = bd['RA'].astype(int)
@@ -1307,7 +1307,8 @@ if check_password():
                 lista_ras = df_tabela_editavel['RA']
                 lista_ras = lista_ras.to_list()
                 registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
-                                                
+
+        #Tabela de Ediçao                        
         st.title('Tabela de Edição')
         #Preparação do Data editor
         df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
@@ -1577,6 +1578,7 @@ if check_password():
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
+            st.success(lista_ras)
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         
     elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
