@@ -290,7 +290,8 @@ try:
     contagem.columns = ['classificacao_automatica', 'classificacao_automatica_contagem']
 
     # Converter a coluna para categoria ordenada
-    contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada].reset_index()
+    ordem_desejada_classificacao_automatica = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
+    contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_automatica].reset_index()
 
     st.subheader('Classificação Automática')
     st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
@@ -303,7 +304,8 @@ try:
     contagem.columns = ['nova_classificacao_orientadora', 'nova_classificacao_orientadora_contagem']
 
     # Converter a coluna para categoria ordenada
-    contagem = contagem.set_index('nova_classificacao_orientadora').loc[ordem_desejada].reset_index()
+    ordem_desejada_nova_classificacao = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
+    contagem = contagem.set_index('nova_classificacao_orientadora').loc[ordem_desejada_nova_classificacao].reset_index()
 
     st.subheader('Classificação Orientadora')
     st.bar_chart(data=contagem, x='nova_classificacao_orientadora',y='nova_classificacao_orientadora_contagem', x_label='Classificações', y_label='Contagem')
@@ -316,7 +318,8 @@ try:
     contagem.columns = ['classificacao_final', 'classificacao_final_contagem']
 
     # Converter a coluna para categoria ordenada
-    contagem = contagem.set_index('classificacao_final').loc[ordem_desejada].reset_index()
+    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
+    contagem = contagem.set_index('classificacao_final').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Final')
     st.bar_chart(data=contagem, x='classificacao_final',y='classificacao_final_contagem', x_label='Classificações', y_label='Contagem')
