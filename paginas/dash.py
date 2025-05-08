@@ -7,6 +7,7 @@ from time import sleep
 import pytz
 from paginas.funcoes import ler_sheets
 from io import BytesIO
+from xlsxwriter import Workbook
 
 
 # Função para converter em Excel
