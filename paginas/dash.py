@@ -201,6 +201,14 @@ st.dataframe(df,
                     "Segmento",
                     required=False
                 ),
+                "confirmacao_classificacao_coordenacao": st.column_config.TextColumn(
+                    "Coordenação Confirmou Classificação da Orientadora?",
+                    required=False
+                ),
+                "confirmacao_classificacao_final": st.column_config.TextColumn(
+                    "Classificação Final do Mês Concluida?",
+                    required=False
+                ),
                 "Nota Matemática": st.column_config.NumberColumn(
                     "Nota Matemática",
                     required=False
