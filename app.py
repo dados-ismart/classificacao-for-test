@@ -232,7 +232,15 @@ if check_password():
             return None
 
     def registrar(df_insert, aba, coluna_apoio, ra):
-        df = ler_sheets(aba)
+        #Leitura do ta aba registro e checa se é nula
+        for i in range(0, 4):
+            df = ler_sheets(aba)
+            if df.shape[0] == 0:
+                sleep(2)
+                continue
+            else: 
+                break
+
         #Limpar linhas repetidas
         if type(ra) == list:
             for i in ra:
