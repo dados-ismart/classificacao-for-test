@@ -6,6 +6,16 @@ from datetime import datetime
 from time import sleep
 import pytz
 from paginas.funcoes import ler_sheets
+from io import BytesIO
+
+
+# Função para converter em Excel
+def to_excel(df):
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Dados')
+    processed_data = output.getvalue()
+    return processed_data
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -258,6 +268,14 @@ st.dataframe(df, hide_index=True,column_config={
                     required=False
                 ),                          
             })
+# Botão de download
+excel_file = to_excel(df)
+st.download_button(
+    label="📥 Baixar Excel",
+    data=excel_file,
+    file_name=f"dados-classificação-{datetime.now(fuso_horario)}.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
 st.divider()
 st.title('Gráficos')
 
