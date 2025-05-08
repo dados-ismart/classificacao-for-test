@@ -290,8 +290,8 @@ try:
     contagem.columns = ['classificacao_automatica', 'classificacao_automatica_contagem']
 
     # Converter a coluna para categoria ordenada
-    ordem_desejada_classificacao_automatica = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
-    contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_automatica].reset_index()
+    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_automatica'].values]
+    contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Automática')
     st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
@@ -318,7 +318,7 @@ try:
     contagem.columns = ['classificacao_final', 'classificacao_final_contagem']
 
     # Converter a coluna para categoria ordenada
-    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
+    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_final'].values]
     contagem = contagem.set_index('classificacao_final').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Final')
