@@ -52,12 +52,13 @@ dash = st.Page(
     icon= "📊"
 )
 
+st.set_page_config(layout="wide")
+
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
     pg = st.navigation({
-        "Projeto": [pagina_inicial],
-        "Visualização": [dash]
-    }, position='hidden')    
+        "Paginas": [pagina_inicial, dash],
+    })    
 else:
     pg = st.navigation([st.Page(login_page, title="Login")])
 # --- RUN NAVIGATION ---

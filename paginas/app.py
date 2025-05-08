@@ -6,7 +6,6 @@ from time import sleep
 import pytz
 
 
-st.set_page_config(layout="wide")
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 
 #ler planilha
