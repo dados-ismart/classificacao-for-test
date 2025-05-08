@@ -263,45 +263,36 @@ st.title('Gráficos')
 
 # Definir a ordem desejada
 ordem_desejada = ['Crítico', 'Crítico OP', 'Mediano', 'Pré-Destaque', 'Destaque']
+
 #GRAFICO CLASSIFICAO AUTOMATICA
 # Contar as ocorrências de cada classificação
 contagem = df['classificacao_automatica'].value_counts().reset_index()
 contagem.columns = ['classificacao_automatica', 'classificacao_automatica_contagem']
 
 # Converter a coluna para categoria ordenada
-contagem['classificacao_automatica'] = pd.Categorical(
-    contagem['classificacao_automatica'],
-    categories=ordem_desejada,
-    ordered=True
-)
+contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada].reset_index()
 
 st.subheader('Classificação Automática')
 st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
+
 #GRAFICO CLASSIFICAO ORIENTADORA
 # Contar as ocorrências de cada classificação
 contagem = df['nova_classificacao_orientadora'].value_counts().reset_index()
 contagem.columns = ['nova_classificacao_orientadora', 'nova_classificacao_orientadora_contagem']
 
 # Converter a coluna para categoria ordenada
-contagem['nova_classificacao_orientadora'] = pd.Categorical(
-    contagem['nova_classificacao_orientadora'],
-    categories=ordem_desejada,
-    ordered=True
-)
+contagem = contagem.set_index('nova_classificacao_orientadora').loc[ordem_desejada].reset_index()
 
 st.subheader('Classificação Orientadora')
 st.bar_chart(data=contagem, x='nova_classificacao_orientadora',y='nova_classificacao_orientadora_contagem', x_label='Classificações', y_label='Contagem')
+
 #GRAFICO CLASSIFICAO FINAL
 # Contar as ocorrências de cada classificação
 contagem = df['classificacao_final'].value_counts().reset_index()
 contagem.columns = ['classificacao_final', 'classificacao_final_contagem']
 
 # Converter a coluna para categoria ordenada
-contagem['classificacao_final'] = pd.Categorical(
-    contagem['classificacao_final'],
-    categories=ordem_desejada,
-    ordered=True
-)
+contagem = contagem.set_index('classificacao_final').loc[ordem_desejada].reset_index()
 
 st.subheader('Classificação Final')
 st.bar_chart(data=contagem, x='classificacao_final',y='classificacao_final_contagem', x_label='Classificações', y_label='Contagem')
