@@ -1,7 +1,5 @@
 import streamlit as st
 
-st.navigation(position='hidden')
-
 def check_password():
     def password_entered():
         if (
@@ -59,7 +57,7 @@ if st.session_state.get("password_correct"):
     pg = st.navigation({
         "Projeto": [pagina_inicial],
         "Visualização": [dash]
-    })    
+    }, position='hidden')    
 else:
     pg = st.navigation([st.Page(login_page, title="Login")])
 # --- RUN NAVIGATION ---
