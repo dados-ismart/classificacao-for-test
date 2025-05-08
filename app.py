@@ -233,10 +233,10 @@ if check_password():
 
     def registrar(df_insert, aba, coluna_apoio, ra):
         #Leitura do ta aba registro e checa se é nula
-        for i in range(0, 4):
+        for i in range(0, 2):
             df = ler_sheets(aba)
             if df.shape[0] == 0:
-                sleep(2)
+                sleep(3)
                 continue
             else: 
                 break
