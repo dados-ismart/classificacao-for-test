@@ -260,5 +260,6 @@ st.dataframe(df, hide_index=True,column_config={
             })
 st.divider
 st.title('Gráficos')
+df['classificacao_automatica_contagem'] = df['classificacao_automatica'].value_counts()
 st.subheader('Classificação Automática')
-st.bar_chart(data=df, x='classificacao_automatica',y='classificacao_automatica', x_label='Classificações', y_label='Contagem')
+st.bar_chart(data=df, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
