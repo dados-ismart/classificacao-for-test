@@ -16,11 +16,8 @@ bd = ler_sheets('bd')
 bd['RA'] = bd['RA'].astype(int)
 
 #filtros
-bd_segmentado = bd.query("apoio_registro_final != 'Sim'")
-bd_segmentado = bd_segmentado.query("apoio_registro == 'Sim' or apoio_registro == 'Não'")
-# filtros bd
+bd_segmentado = bd
 col1, col2, col3, col4 = st.columns(4)
-# Aplique os filtros
 valores_segmento = col1.multiselect("Filtro de Segmento", bd_segmentado['Segmento'].unique())
 if valores_segmento:
     bd_segmentado = bd_segmentado.query(f"Segmento in {valores_segmento}")
@@ -59,8 +56,7 @@ df_completo = df_completo[['RA', 'nome','data_submit','Orientadora', 'Segmento',
 
 #visualização
 st.title('Visualização dos Dados')
-st.dataframe(df, 
-             column_config={
+st.dataframe(df, column_config={
                 "justificativa_classificacao_coord": st.column_config.TextColumn(
                     "Justificativa da Coordenadora",
                     required=False
