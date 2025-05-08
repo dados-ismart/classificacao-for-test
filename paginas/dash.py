@@ -56,7 +56,7 @@ df_completo = df_completo[['RA', 'nome','data_submit','Orientadora', 'Segmento',
 
 #visualização
 st.title('Visualização dos Dados')
-st.dataframe(df, column_config={
+st.dataframe(df, hide_index=True,column_config={
                 "justificativa_classificacao_coord": st.column_config.TextColumn(
                     "Justificativa da Coordenadora",
                     required=False
