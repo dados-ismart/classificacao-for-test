@@ -247,11 +247,12 @@ if check_password():
                 conn.update(worksheet="registro", data=updared_df)
                 st.success('Sucesso!')
                 sleep(1)
-                st.rerun()
+                break
             except:
                 sleep(3)
+                st.warning('Erro')
                 continue
-        st.warning('Erro')
+        st.rerun()
         
 
     #importar e tratar datasets
