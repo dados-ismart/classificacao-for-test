@@ -7,7 +7,7 @@ import pytz
 
 
 st.set_page_config(layout="wide")
-st.page_link(page='paginas/dash',label='Visualização')
+st.button('Visualização').page_link(page='paginas/dash',label='Visualização')
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 
 #ler planilha
