@@ -236,7 +236,6 @@ if check_password():
         #Limpar linhas repetidas
         if type(ra) == list:
             for i in ra:
-                ra_referencia = i
                 df = df[df['RA'] != i]
         else:
             df = df[df['RA'] != ra]
@@ -246,32 +245,14 @@ if check_password():
             try:
                 updared_df = pd.concat([df, df_insert], ignore_index=True)
                 conn.update(worksheet="registro", data=updared_df)
+                st.success('Sucesso!')
+                sleep(1)
+                st.rerun()
             except:
-                sleep(2)
+                sleep(3)
                 continue
-
-        #VERIFICAR
-        sleep(2)
-        for a in range(1, 4):
-            df = ler_sheets(aba)
-            sleep(1)
-            if type(ra) != list:
-                if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
-                    st.success('Sucesso!')
-                    break
-                else:
-                    st.warning('Erro')
-                    sleep(1)
-                    continue
-            else:
-                if not df.query(f'RA == {ra_referencia} and {coluna_apoio} == {coluna_apoio}').empty:
-                    st.success('Sucesso!')
-                    break
-                else:
-                    st.warning('Erro')
-                    sleep(1)
-                    continue
-        st.rerun()
+        st.warning('Erro')
+        
 
     #importar e tratar datasets
     df = ler_sheets('registro')
