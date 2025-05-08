@@ -258,7 +258,7 @@ st.dataframe(df, hide_index=True,column_config={
                     required=False
                 ),                          
             })
-st.divider
+st.divider()
 st.title('Gráficos')
 
 # Definir a ordem desejada
