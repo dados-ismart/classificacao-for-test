@@ -56,6 +56,7 @@ df_completo = df_completo[['RA', 'nome','data_submit','Orientadora', 'Segmento',
 
 #visualização
 st.title('Visualização dos Dados')
+st.subheader('Tabela de Registro Geral')
 st.dataframe(df, hide_index=True,column_config={
                 "justificativa_classificacao_coord": st.column_config.TextColumn(
                     "Justificativa da Coordenadora",
@@ -257,3 +258,7 @@ st.dataframe(df, hide_index=True,column_config={
                     required=False
                 ),                          
             })
+st.divider
+st.title('Gráficos')
+st.subheader('Classificação Automática')
+st.bar_chart(data=df, x='classificacao_automatica',y='classificacao_automatica', x_label='Classificações', y_label='Contagem')
