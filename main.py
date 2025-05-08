@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.navigation(position='hidden')
+
 def check_password():
     def password_entered():
         if (
