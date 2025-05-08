@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 from time import sleep
 import pytz
-from main import ler_sheets
+from paginas.funcoes import ler_sheets
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 
