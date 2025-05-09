@@ -1153,10 +1153,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
         df_tabela_editavel = edited_df.loc[~edited_df['manter_dados_iguais'].isin(['-'])]
         if df_tabela_editavel.shape[0] == 0:
             st.warning('Revise ao menos um aluno antes de salvar')
-        else:
-            df_tabela_editavel_sim = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Sim'])]
-            df_tabela_editavel_nao = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Não'])]
-            
+        else:            
             df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
             df_tabela_editavel['confirmacao_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
             df_tabela_editavel = df_tabela_editavel[[
@@ -1178,6 +1175,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
             st.session_state['step'] = 1
+            st.session_state['df_insert'] = df_tabela_editavel
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
 
     #Tabela de Ediçao                        
