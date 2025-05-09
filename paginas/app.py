@@ -1483,13 +1483,13 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
         df_insert = df_insert[df_insert['RA'].isin(df_session['RA'])]
         df_insert = df_insert.query("confirmacao_classificacao_final == 'Sim'")
         df_insert
-        # df_insert.sort_values(by=['data_submit','Segmento', 'nome'])
+        df_insert.sort_values(by=['data_submit','Segmento', 'nome'])
 
-        # df_historico = pd.concat([df_insert, df_historico], ignore_index=True)
-        # lista_ras = df_tabela_editavel['RA']
-        # lista_ras = lista_ras.to_list()
-        # st.session_state['step'] = 0
-        # registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)    
+        df_historico = pd.concat([df_insert, df_historico], ignore_index=True)
+        lista_ras = df_tabela_editavel['RA']
+        lista_ras = lista_ras.to_list()
+        st.session_state['step'] = 0
+        registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)    
 
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
     # Filtro personalizado no histórico
