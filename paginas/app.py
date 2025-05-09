@@ -1144,7 +1144,10 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             hide_index=True,
         )
         submit_button = st.form_submit_button(label='REGISTRAR')
-    
+
+    if "step" not in st.session_state:
+        st.session_state['stap'] = 0
+
     if submit_button:
         #filtro do df_tabela_editavel para os que cofirmaram 
         df_tabela_editavel = edited_df.loc[~edited_df['manter_dados_iguais'].isin(['-'])]
@@ -1174,6 +1177,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
+            st.session_state['step'] = 1
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
 
     #Tabela de Ediçao                        
@@ -1444,8 +1448,6 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             hide_index=True,
         )
         submit_button = st.form_submit_button(label='REGISTRAR')
-    if "step" not in st.session_state:
-        st.session_state['stap'] = 0
     if submit_button:
         df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim' or confirmacao_classificacao_final == 'Não'")
         if df_tabela_editavel.shape[0] > 0:
@@ -1474,21 +1476,21 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
     st.write(f'step: {st.session_state['step']}')
-    # if st.session_state['step'] == 1:
-    #     df_insert = df.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 
-    #                                                         'Nota Geografia','Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
-    #                                                         'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
-    #                                                         , how='left', on='RA')
-    #     df_session = st.session_state['df_insert']
-    #     df_insert = df_insert[df_insert['RA'].isin(df_session['RA'])]
-    #     df_insert = df_insert.query("confirmacao_classificacao_final == 'Sim'")
-    #     df_insert.sort_values(by=['data_submit','Segmento', 'nome'])
+    if st.session_state['step'] == 1:
+        df_insert = df.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 
+                                                            'Nota Geografia','Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
+                                                            'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
+                                                            , how='left', on='RA')
+        df_session = st.session_state['df_insert']
+        df_insert = df_insert[df_insert['RA'].isin(df_session['RA'])]
+        df_insert = df_insert.query("confirmacao_classificacao_final == 'Sim'")
+        df_insert.sort_values(by=['data_submit','Segmento', 'nome'])
 
-    #     df_historico = pd.concat([df_insert, df_historico], ignore_index=True)
-    #     lista_ras = df_tabela_editavel['RA']
-    #     lista_ras = lista_ras.to_list()
-    #     st.session_state['step'] = 0
-    #     registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)    
+        df_historico = pd.concat([df_insert, df_historico], ignore_index=True)
+        lista_ras = df_tabela_editavel['RA']
+        lista_ras = lista_ras.to_list()
+        st.session_state['step'] = 0
+        registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)    
 
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
     # Filtro personalizado no histórico
