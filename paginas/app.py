@@ -806,11 +806,8 @@ if ra_nome is not None:
                         resposta_plano_intervencao = '-'
 
                     if cidade_login == 'SP':
-                        
-                        # if registro_resposta_tier is not None or registro_resposta_tier != '-':
-                        #     tier = registro_resposta_tier
-                        # else:
-                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=['2c'])
+                        lista_default_tier = [registro_resposta_tier.strip() for registro_resposta_tier in registro_resposta_tier.split(';')]
+                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=lista_default_tier)
                         tier = ''
 
                         for i in resposta_tier:
