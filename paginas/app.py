@@ -1469,12 +1469,13 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            st.session_state.step = 1
+            if 'step' not in st.session_state:
+                st.session_state['step'] = 1
             st.session_state['df_insert'] = df_tabela_editavel
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
-    if st.session_state.step == 1:
+    if st.session_state['step'] == 1:
         df_insert = df.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 
                                                             'Nota Geografia','Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                                                             'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
