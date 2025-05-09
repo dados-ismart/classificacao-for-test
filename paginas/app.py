@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 from time import sleep
 import pytz
-from paginas.funcoes import ler_sheets, registrar, classificar
+from paginas.funcoes import ler_sheets, pontuar, registrar, classificar
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
