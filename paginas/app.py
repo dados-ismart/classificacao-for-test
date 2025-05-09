@@ -534,6 +534,7 @@ if ra_nome is not None:
                 registro_resposta_seguranca_profissional = df_historico.loc[df_historico['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
                 registro_resposta_curso_apoiado = df_historico.loc[df_historico['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
                 registro_resposta_nota_condizente = df_historico.loc[df_historico['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
+                registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
             else:
                 registro_resposta_argumentacao = None
                 registro_resposta_rotina_estudos = None
@@ -806,8 +807,10 @@ if ra_nome is not None:
 
                     if cidade_login == 'SP':
                         
-
-                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
+                        # if registro_resposta_tier is not None or registro_resposta_tier != '-':
+                        #     tier = registro_resposta_tier
+                        # else:
+                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=['c1', 'c2'])
                         tier = ''
 
                         for i in resposta_tier:
@@ -1734,4 +1737,3 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             lista_ras = lista_ras.to_list()
             df_insert.drop_duplicates('RA')
             registrar(df_insert, 'registro', 'RA', lista_ras)
-            
