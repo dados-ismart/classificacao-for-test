@@ -710,8 +710,6 @@ if ra_nome is not None:
 
             #Formulario
             st.title('Confirmar classificação')
-            registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
-            st.warning(registro_resposta_tier)
             st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
             st.metric("Motivo", st.session_state['motivo_atual'], border=True)
 
@@ -807,11 +805,12 @@ if ra_nome is not None:
                         resposta_plano_intervencao = '-'
 
                     if cidade_login == 'SP':
-                    # try:
-                        #lista_default_tier = [item.strip() for item in registro_resposta_tier.split(';')]
-                        #resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=lista_default_tier)
-                    # except:
-                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
+                        try:
+                            registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
+                            lista_default_tier = [item.strip() for item in registro_resposta_tier.split(';')]
+                            resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=lista_default_tier)
+                        except:
+                            resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
                         tier = ''
 
                         for i in resposta_tier:
