@@ -7,7 +7,7 @@ import pytz
 from paginas.funcoes import ler_sheets
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-
+conn = st.connection("gsheets", type=GSheetsConnection)
 #ler planilha
 
 def pontuar(resposta, lista):
