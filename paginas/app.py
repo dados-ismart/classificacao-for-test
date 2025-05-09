@@ -1,10 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
-from threading import currentThread
 import streamlit as st
-from streamlit.runtime.scriptrunner_utils.script_run_context import (
-    add_script_run_ctx,
-    get_script_run_ctx,
-)
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
@@ -1228,6 +1222,9 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                             'Nota História', 'Nota Geografia', 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                             'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU']]
     # Data editor
+    if "step" not in st.session_state:
+                st.session_state.step = 0
+
     with st.form(key='tabela_editavel_cord_edicao'):
         # Configure o data editor
         edited_df = st.data_editor(
@@ -1467,20 +1464,21 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                 'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord',
                 'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
             ]]   
-            with ThreadPoolExecutor(max_workers=2) as executor:
+            df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
+            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
+            df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
+            lista_ras = df_tabela_editavel['RA']
+            lista_ras = lista_ras.to_list()
+            st.session_state.step = 1
+            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
 
-                df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-                df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
-                df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
-                lista_ras = df_tabela_editavel['RA']
-                lista_ras = lista_ras.to_list()
-                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
-
+            if st.session_state.step == 1:
                 df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim'")
                 df_historico = pd.concat([df_tabela_editavel, df_historico], ignore_index=True)
-                lista_ras = df_historico['RA']
+                lista_ras = df_tabela_editavel['RA']
                 lista_ras = lista_ras.to_list()
                 registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)
+                st.session_state.step = 0
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
