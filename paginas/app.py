@@ -1,4 +1,10 @@
+from concurrent.futures import ThreadPoolExecutor
+from threading import currentThread
 import streamlit as st
+from streamlit.runtime.scriptrunner_utils.script_run_context import (
+    add_script_run_ctx,
+    get_script_run_ctx,
+)
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
@@ -233,6 +239,8 @@ def registrar(df_insert, aba, coluna_apoio, ra):
                     st.warning('Erro')
                     sleep(1)
                     continue
+    st.rerun()
+    
 
 #importar e tratar datasets
 df = ler_sheets('registro')
@@ -686,7 +694,6 @@ if ra_nome is not None:
                                             'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                             }])
                     registrar(df_insert, 'registro', 'classificacao_automatica', ra)
-                    st.rerun()
         if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
             #colunas
             classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
@@ -768,7 +775,6 @@ if ra_nome is not None:
                                                     'motivo_final': resposta_novo_motivo_classificacao_orientadora
                                                     }])
                             registrar(df_insert, 'registro', 'nova_classificacao_orientadora', ra)
-                            st.rerun()
             else:
                 with st.form(key='formulario_descricao'):
                     resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -864,7 +870,6 @@ if ra_nome is not None:
                                                     'motivo_final': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1]
                                                     }])
                                 registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)
-                                st.rerun()
                             elif resposta_confirmar_classificacao == 'Não':
                                 df_insert = pd.DataFrame([{
                                                     'RA': ra,
@@ -903,7 +908,6 @@ if ra_nome is not None:
 
                                                     }])
                                 registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)
-                                st.rerun()
 
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
     df_coord = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
@@ -1177,7 +1181,6 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
-            st.rerun()
 
     #Tabela de Ediçao                        
     st.title('Tabela de Edição')
@@ -1464,19 +1467,20 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                 'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord',
                 'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
             ]]   
-            df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
-            df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
-            lista_ras = df_tabela_editavel['RA']
-            lista_ras = lista_ras.to_list()
-            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
+            with ThreadPoolExecutor(max_workers=2) as executor:
 
-            df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim'")
-            df_historico = pd.concat([df_tabela_editavel, df_historico], ignore_index=True)
-            lista_ras = df_historico['RA']
-            lista_ras = lista_ras.to_list()
-            registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)
-            st.rerun()
+                df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
+                df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
+                df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
+                lista_ras = df_tabela_editavel['RA']
+                lista_ras = lista_ras.to_list()
+                registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
+
+                df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim'")
+                df_historico = pd.concat([df_tabela_editavel, df_historico], ignore_index=True)
+                lista_ras = df_historico['RA']
+                lista_ras = lista_ras.to_list()
+                registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
@@ -1760,4 +1764,3 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             lista_ras = lista_ras.to_list()
             df_insert.drop_duplicates('RA')
             registrar(df_insert, 'registro', 'RA', lista_ras)
-            st.rerun()
