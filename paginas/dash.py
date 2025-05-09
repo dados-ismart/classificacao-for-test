@@ -43,9 +43,7 @@ if selecao_orientadora:
     bd_segmentado = bd_segmentado.query(f"Orientadora in {selecao_orientadora}")
 st.divider()
 
-df = df.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não" and confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
 df = df[df['RA'].isin(bd_segmentado['RA'])]
-
 df_completo = df.merge(bd[['RA', 'Orientadora', 'Segmento', 'Escola', 'Cidade', 'media_calibrada','Nota Matemática', 'Nota Português', 'Nota História', 'Nota Geografia', 
                 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                 'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU']]
