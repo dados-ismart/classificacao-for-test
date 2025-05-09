@@ -534,7 +534,6 @@ if ra_nome is not None:
                 registro_resposta_seguranca_profissional = df_historico.loc[df_historico['RA'] == ra, 'resposta_seguranca_profissional'].iloc[0]
                 registro_resposta_curso_apoiado = df_historico.loc[df_historico['RA'] == ra, 'resposta_curso_apoiado'].iloc[0]
                 registro_resposta_nota_condizente = df_historico.loc[df_historico['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
-                registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
             else:
                 registro_resposta_argumentacao = None
                 registro_resposta_rotina_estudos = None
@@ -711,6 +710,7 @@ if ra_nome is not None:
 
             #Formulario
             st.title('Confirmar classificação')
+            registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
             st.warning(registro_resposta_tier)
             st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
             st.metric("Motivo", st.session_state['motivo_atual'], border=True)
