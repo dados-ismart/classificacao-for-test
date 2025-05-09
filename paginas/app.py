@@ -210,12 +210,13 @@ def registrar(df_insert, aba, coluna_apoio, ra):
         try:
             updared_df = pd.concat([df, df_insert], ignore_index=True)
             conn.update(worksheet="registro", data=updared_df)
+            sleep(0.2)
             st.success('Sucesso!')
+            sleep(0.5)
             break
         except:
-            sleep(2)
+            sleep(0.2)
             df = ler_sheets(aba)
-            sleep(1)
             if type(ra) != list:
                 if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
                     st.success('Sucesso!')
