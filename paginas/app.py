@@ -1144,16 +1144,16 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             hide_index=True,
         )
         submit_button = st.form_submit_button(label='REGISTRAR')
-
-    if "step" not in st.session_state:
-        st.session_state['stap'] = 0
-
+    
     if submit_button:
         #filtro do df_tabela_editavel para os que cofirmaram 
         df_tabela_editavel = edited_df.loc[~edited_df['manter_dados_iguais'].isin(['-'])]
         if df_tabela_editavel.shape[0] == 0:
             st.warning('Revise ao menos um aluno antes de salvar')
-        else:            
+        else:
+            df_tabela_editavel_sim = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Sim'])]
+            df_tabela_editavel_nao = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Não'])]
+            
             df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
             df_tabela_editavel['confirmacao_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
             df_tabela_editavel = df_tabela_editavel[[
@@ -1174,8 +1174,6 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            st.session_state['step'] = 1
-            st.session_state['df_insert'] = df_tabela_editavel
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
 
     #Tabela de Ediçao                        
@@ -1207,22 +1205,6 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                                                                                 ]]
     df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['justificativa_classificacao_coord'].astype(str)
     df_tabela_editavel['confirmacao_classificacao_final'] = '-'
-
-    #Tratamento Na Aba de historico
-    df_historico.sort_values(by=['data_submit', 'Orientadora', 'Segmento', 'nome'])
-    df_historico = df_historico[['RA', 'nome','data_submit','Orientadora', 'Segmento', 'Escola', 'Cidade','resposta_argumentacao','resposta_rotina_estudos',
-                            'resposta_faltas','resposta_atividades_extracurriculares','resposta_respeita_escola',
-                            'resposta_atividades_obrigatorias_ismart','resposta_colaboracao',
-                            'resposta_atividades_nao_obrigatorias_ismart','resposta_networking','resposta_proatividade',
-                            'resposta_questoes_psiquicas','resposta_questoes_familiares','resposta_questoes_saude',
-                            'resposta_ideacao_suicida','resposta_adaptacao_projeto','resposta_seguranca_profissional',
-                            'resposta_curso_apoiado','resposta_nota_condizente','classificacao_automatica','motivo_classificao_automatica',
-                            'confirmacao_classificacao_orientadora','nova_classificacao_orientadora','novo_motivo_classificacao_orientadora',
-                            'nova_justificativa_classificacao_orientadora','reversao','descricao_caso','plano_intervencao','tier',
-                            'confirmacao_classificacao_coordenacao','justificativa_classificacao_coord','classificacao_final',
-                            'motivo_final','confirmacao_classificacao_final','media_calibrada','Nota Matemática', 'Nota Português', 
-                            'Nota História', 'Nota Geografia', 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
-                            'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU']]
     # Data editor
     with st.form(key='tabela_editavel_cord_edicao'):
         # Configure o data editor
@@ -1311,7 +1293,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                 ),
                 "tier": st.column_config.TextColumn(
                     "Tier",
-                    help=f'Opções: {caixa_tier}.\n\n Colocar no formato: 2c; 2i; 4\n\nSeperando por ponto e virgula',
+                    help=f'Opções: {caixa_tier}',
                     required=False
                 ),
                 "resposta_argumentacao": st.column_config.TextColumn(
@@ -1468,29 +1450,9 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            st.session_state['step'] = 1
-            st.session_state['df_insert'] = df_tabela_editavel
             registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
-    st.write(f'step: {st.session_state['step']}')
-    if st.session_state['step'] == 1:
-        df_insert = df.merge(bd[['RA', 'Orientadora', 'Segmento','Nota Matemática', 'Nota Português', 'Nota História', 
-                                                            'Nota Geografia','Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
-                                                            'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU', 'media_calibrada']]
-                                                            , how='left', on='RA')
-        df_session = st.session_state['df_insert']
-        df_insert = df_insert[df_insert['RA'].isin(df_session['RA'])]
-        df_insert = df_insert.query("confirmacao_classificacao_final == 'Sim'")
-        df_insert
-        df_insert.sort_values(by=['data_submit','Segmento', 'nome'])
-
-        df_historico = pd.concat([df_insert, df_historico], ignore_index=True)
-        lista_ras = df_tabela_editavel['RA']
-        lista_ras = lista_ras.to_list()
-        st.session_state['step'] = 0
-        registrar(df_historico, 'historico', 'confirmacao_classificacao_final', lista_ras)    
-
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
     # Filtro personalizado no histórico
     df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
