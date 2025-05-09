@@ -66,7 +66,7 @@ df_completo = df_completo[['RA', 'nome','data_submit','Orientadora', 'Segmento',
 #visualização
 st.title('Visualização dos Dados')
 st.subheader('Tabela de Registro Geral')
-st.dataframe(df, hide_index=True,column_config={
+st.dataframe(df_completo, hide_index=True,column_config={
                 "justificativa_classificacao_coord": st.column_config.TextColumn(
                     "Justificativa da Coordenadora",
                     required=False
@@ -268,7 +268,7 @@ st.dataframe(df, hide_index=True,column_config={
                 ),                          
             })
 # Botão de download
-excel_file = to_excel(df)
+excel_file = to_excel(df_completo)
 st.download_button(
     label="📥 Baixar Excel",
     data=excel_file,
