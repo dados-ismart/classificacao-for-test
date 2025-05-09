@@ -711,6 +711,7 @@ if ra_nome is not None:
 
             #Formulario
             st.title('Confirmar classificação')
+            st.warning(registro_resposta_tier)
             st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
             st.metric("Motivo", st.session_state['motivo_atual'], border=True)
 
@@ -807,7 +808,6 @@ if ra_nome is not None:
 
                     if cidade_login == 'SP':
                     # try:
-                        registro_resposta_tier
                         #lista_default_tier = [item.strip() for item in registro_resposta_tier.split(';')]
                         #resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=lista_default_tier)
                     # except:
