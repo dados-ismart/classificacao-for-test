@@ -944,7 +944,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
             df_tabela_editavel_nao = df_tabela_editavel.loc[df_tabela_editavel['manter_dados_iguais'].isin(['Não'])]
             
             df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['manter_dados_iguais']
-            df_tabela_editavel['confirmacao_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
+            df_tabela_editavel['conclusao_classificacao_final'] = df_tabela_editavel['manter_dados_iguais']
             df_tabela_editavel = df_tabela_editavel[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
@@ -957,20 +957,20 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                 'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                 'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                 'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'confirmacao_classificacao_coordenacao', 
-                'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
+                'classificacao_final', 'motivo_final', 'conclusao_classificacao_final'
             ]]   
             
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
+            registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final', lista_ras)
 
     #Tabela de Ediçao                        
     st.title('Tabela de Edição')
     #Preparação do Data editor
     df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
-    df_tabela_editavel = df_tabela_editavel.query("confirmacao_classificacao_final == 'Não'")
-    df_tabela_editavel = df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
+    df_tabela_editavel = df_tabela_editavel.query("conclusao_classificacao_final == 'Não'")
+    df_tabela_editavel = df_tabela_editavel[['conclusao_classificacao_final','RA','nome','classificacao_final','motivo_final', 'justificativa_classificacao_coord',
                                             'classificacao_automatica','motivo_classificao_automatica','confirmacao_classificacao_orientadora',
                                             'nova_classificacao_orientadora','novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
                                             'reversao','descricao_caso','plano_intervencao','tier','resposta_argumentacao', 'resposta_rotina_estudos',
@@ -988,17 +988,17 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
     
     #Colunas Não Editaveis
     colunas_nao_editaveis = df_tabela_editavel.columns.to_list()
-    colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['confirmacao_classificacao_final', 'justificativa_classificacao_coord', 
+    colunas_nao_editaveis = [col for col in colunas_nao_editaveis if col not in ['conclusao_classificacao_final', 'justificativa_classificacao_coord', 
                                                                                     'classificacao_final', 'motivo_final', 'tier', 'plano_intervencao',
                                                                                     'descricao_caso', 'reversao', 
                                                                                 ]]
     df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['justificativa_classificacao_coord'].astype(str)
-    df_tabela_editavel['confirmacao_classificacao_final'] = '-'
+    df_tabela_editavel['conclusao_classificacao_final'] = '-'
     # Data editor
     with st.form(key='tabela_editavel_cord_edicao'):
         # Configure o data editor
         edited_df = st.data_editor(
-            df_tabela_editavel[['confirmacao_classificacao_final','RA','nome','classificacao_final', 'motivo_final','justificativa_classificacao_coord',
+            df_tabela_editavel[['conclusao_classificacao_final','RA','nome','classificacao_final', 'motivo_final','justificativa_classificacao_coord',
                                 'reversao','descricao_caso','plano_intervencao','tier', 'Orientadora', 'Segmento',
                                 'classificacao_automatica','motivo_classificao_automatica', 'confirmacao_classificacao_orientadora','nova_classificacao_orientadora',
                                 'novo_motivo_classificacao_orientadora','nova_justificativa_classificacao_orientadora',
@@ -1010,7 +1010,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                                 'Nota Matemática','Nota Português','Nota História','Nota Geografia','Nota Inglês','Nota Francês/Alemão e Outros',
                                 'Nota Espanhol','Nota Química','Nota Física','Nota Biologia','Nota ENEM','Nota PU','media_calibrada']],
             column_config={
-                "confirmacao_classificacao_final": st.column_config.SelectboxColumn(
+                "conclusao_classificacao_final": st.column_config.SelectboxColumn(
                     "Confirmar Classificação Final?",
                     help='Selecione "Sim" ou "Não" Para Finalizar As Alterações. ' \
                     '"Sim" Se você Manteve a Classificação Igual e "Não" no Contrário',
@@ -1218,7 +1218,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
         )
         submit_button = st.form_submit_button(label='REGISTRAR')
     if submit_button:
-        df_tabela_editavel = edited_df.query("confirmacao_classificacao_final == 'Sim' or confirmacao_classificacao_final == 'Não'")
+        df_tabela_editavel = edited_df.query("conclusao_classificacao_final == 'Sim' or conclusao_classificacao_final == 'Não'")
         if df_tabela_editavel.shape[0] > 0:
             df_tabela_editavel = df_tabela_editavel[[
                 'RA', 'nome', 'resposta_argumentacao', 'resposta_rotina_estudos',
@@ -1232,14 +1232,14 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                 'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                 'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
                 'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord',
-                'classificacao_final', 'motivo_final', 'confirmacao_classificacao_final'
+                'classificacao_final', 'motivo_final', 'conclusao_classificacao_final'
             ]]   
             df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['confirmacao_classificacao_final']
-            df_tabela_editavel['confirmacao_classificacao_final'] = 'Sim'
+            df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['conclusao_classificacao_final']
+            df_tabela_editavel['conclusao_classificacao_final'] = 'Sim'
             lista_ras = df_tabela_editavel['RA']
             lista_ras = lista_ras.to_list()
-            registrar(df_tabela_editavel, 'registro', 'confirmacao_classificacao_final', lista_ras)
+            registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final', lista_ras)
         else:
             st.warning('Revise ao menos um aluno antes de registrar')
 elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "orientadora":
