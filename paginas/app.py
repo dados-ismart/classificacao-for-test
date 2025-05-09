@@ -808,7 +808,7 @@ if ra_nome is not None:
                     if cidade_login == 'SP':
                         lista_default_tier = [registro_resposta_tier.strip() for registro_resposta_tier in registro_resposta_tier.split(';')]
                         st.write(lista_default_tier)
-                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=[''])
+                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers")
                         tier = ''
 
                         for i in resposta_tier:
