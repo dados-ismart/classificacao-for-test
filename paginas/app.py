@@ -1222,9 +1222,6 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
                             'Nota História', 'Nota Geografia', 'Nota Inglês', 'Nota Francês/Alemão e Outros', 'Nota Espanhol', 'Nota Química', 
                             'Nota Física', 'Nota Biologia', 'Nota ENEM', 'Nota PU']]
     # Data editor
-    if "step" not in st.session_state:
-                st.session_state.step = 0
-
     with st.form(key='tabela_editavel_cord_edicao'):
         # Configure o data editor
         edited_df = st.data_editor(
