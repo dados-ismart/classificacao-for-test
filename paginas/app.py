@@ -810,7 +810,7 @@ if ra_nome is not None:
                         # if registro_resposta_tier is not None or registro_resposta_tier != '-':
                         #     tier = registro_resposta_tier
                         # else:
-                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=['c1', 'c2'])
+                        resposta_tier = st.multiselect('Deseja Indicar Tiers?', caixa_tier, placeholder="Tiers", default=['2c'])
                         tier = ''
 
                         for i in resposta_tier:
