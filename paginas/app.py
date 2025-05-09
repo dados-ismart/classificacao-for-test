@@ -1460,7 +1460,7 @@ elif not ra_nome and df_login.query(f'login == "{st.session_state["authenticated
     # Filtro personalizado no histórico
     df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
     df_historico_filtrado = df_historico_filtrado[df_historico_filtrado['RA'].isin(bd_segmentado['RA'])]
-    df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_final == 'Sim'")  
+    df_historico_filtrado = df_historico_filtrado.query("confirmacao_classificacao_orientadora.notna()")    
     df_historico_filtrado.sort_values(by='data_submit', ascending = False, inplace=True)
     df_historico_filtrado = df_historico_filtrado.drop_duplicates('RA')
     df_historico_filtrado['manter_dados_iguais'] = '-' 
