@@ -233,4 +233,13 @@ def registrar(df_insert, aba, coluna_apoio, ra):
                     sleep(1)
                     continue
     st.rerun()
- 
+
+def retornar_indice(lista, variavel):
+    if variavel == None:
+        return None
+    try:
+        for indice, valor in enumerate(lista):
+            if valor == variavel:
+                return indice
+    except:
+        return None
