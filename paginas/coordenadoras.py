@@ -18,14 +18,10 @@ df['RA'] = df['RA'].astype(int)
 bd = ler_sheets('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
-ra = None
 bd['apoio_registro'] = bd['apoio_registro'].astype(str)
 bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df_login = ler_sheets('login')
-df_escola = ler_sheets('media_calibrada')
-df_historico = ler_sheets('historico')
-df_historico['RA'] = df_historico['RA'].astype(int)
 
 st.title('Formulário de Classificação')
 
