@@ -52,7 +52,7 @@ pagina_inicial_orientadora = st.Page(
     "paginas/orientadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    default=False,
+    default=True,
 )
 
 dash = st.Page(
