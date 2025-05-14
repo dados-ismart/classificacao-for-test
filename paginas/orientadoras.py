@@ -13,16 +13,14 @@ caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde
 caixa_tier = ['2c', '2i', '3c', '3i', '4']
 
 #importar e tratar datasets
-df = ler_sheets('registro')
-df['RA'] = df['RA'].astype(int)
-bd = ler_sheets('bd', ttl=7200)
+bd = ler_sheets('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
-ra = None
 bd['apoio_registro'] = bd['apoio_registro'].astype(str)
 bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
-df_escola = ler_sheets('media_calibrada')
+df = ler_sheets('registro')
+df['RA'] = df['RA'].astype(int)
 df_historico = ler_sheets('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
 
@@ -74,6 +72,7 @@ except ZeroDivisionError:
 if ra_nome is not None:
     try:
         st.session_state["ra"] = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
+        ra = None
         ra = st.session_state["ra"]
     except IndexError:
         st.warning('Aluno não encontrado na base.')
@@ -98,9 +97,8 @@ if ra_nome is not None:
     enem = bd.loc[bd['RA'] == ra, 'Nota ENEM'].iloc[0]
     pu = bd.loc[bd['RA'] == ra, 'Nota PU'].iloc[0]
 
-    try:
-        media_calibrada = df_escola.loc[df_escola['escola'] == escola, 'media_calibrada'].iloc[0]
-    except:
+    media_calibrada = bd.loc[bd['RA'] == ra, 'media_calibrada'].iloc[0]
+    if media_calibrada == '#N/D': 
         st.error('Escola do aluno não encontrada na planilha')
         st.stop()
 
@@ -904,7 +902,6 @@ else:
         if df_tabela_editavel.shape[0] == 0:
             st.warning('Revise ao menos um aluno antes de salvar')
         else:
-            df = ler_sheets('registro')
             df_insert = df_tabela_editavel[[
                                 'RA', 'nome', 'data_submit', 'resposta_argumentacao', 'resposta_rotina_estudos',
                                 'resposta_faltas', 'resposta_atividades_extracurriculares', 'resposta_respeita_escola',
