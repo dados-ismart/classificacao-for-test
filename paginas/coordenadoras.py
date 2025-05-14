@@ -6,6 +6,7 @@ from time import sleep
 import pytz
 from paginas.funcoes import ler_sheets, pontuar, registrar, classificar, retornar_indice
 
+st.set_page_config(layout="wide")
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
 
