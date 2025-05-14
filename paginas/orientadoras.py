@@ -2,9 +2,8 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
-from time import sleep
 import pytz
-from paginas.funcoes import ler_sheets, pontuar, registrar, classificar, retornar_indice
+from paginas.funcoes import ler_sheets, registrar, classificar, retornar_indice
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -16,14 +15,13 @@ caixa_tier = ['2c', '2i', '3c', '3i', '4']
 #importar e tratar datasets
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-bd = ler_sheets('bd')
+bd = ler_sheets('bd', ttl=7200)
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
 ra = None
 bd['apoio_registro'] = bd['apoio_registro'].astype(str)
 bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
-df_login = ler_sheets('login')
 df_escola = ler_sheets('media_calibrada')
 df_historico = ler_sheets('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
@@ -31,7 +29,6 @@ df_historico['RA'] = df_historico['RA'].astype(int)
 st.title('Formulário de Classificação')
 
 # filtros
-cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
 bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
 bd_segmentado = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")
 
@@ -542,7 +539,8 @@ if ra_nome is not None:
                         resposta_reversao = '-'
                         resposta_descricao_caso = '-'
                         resposta_plano_intervencao = '-'
-
+                    df_login = ler_sheets('login', ttl=7200)
+                    cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
                     if cidade_login == 'SP':
                         try:
                             registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]
