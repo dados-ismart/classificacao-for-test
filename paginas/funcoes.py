@@ -8,11 +8,11 @@ import pytz
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-def ler_sheets(pagina):
+def ler_sheets(pagina, ttl=1):
     conn = st.connection("gsheets", type=GSheetsConnection)
     for i in range(0, 10):
         try:
-            df = conn.read(worksheet=pagina, ttl=1)
+            df = conn.read(worksheet=pagina, ttl=ttl)
             return df
         except:
             sleep(3)

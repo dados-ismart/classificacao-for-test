@@ -45,14 +45,14 @@ pagina_inicial_coordenadora = st.Page(
     "paginas/coordenadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    default=True,
+    default=False,
 )
 
 pagina_inicial_orientadora = st.Page(
     "paginas/orientadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    default=True,
+    default=False,
 )
 
 dash = st.Page(
@@ -61,11 +61,11 @@ dash = st.Page(
     icon= "📊"
 )
 
-#st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
-    df_login = ler_sheets('login')
+    df_login = ler_sheets('login', 7200)
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
             "Paginas": [pagina_inicial_coordenadora, dash],
