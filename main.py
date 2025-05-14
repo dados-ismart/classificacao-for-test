@@ -45,7 +45,7 @@ pagina_inicial_coordenadora = st.Page(
     "paginas/coordenadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    default=False,
+    default=True,
 )
 
 pagina_inicial_orientadora = st.Page(
