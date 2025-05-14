@@ -61,7 +61,7 @@ dash = st.Page(
     icon= "📊"
 )
 
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
