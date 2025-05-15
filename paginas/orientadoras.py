@@ -43,6 +43,7 @@ if valores_ano:
     bd_segmentado = bd_segmentado.query(f"Ano in {valores_ano}")
 st.divider()
 
+#Seleção dos alunos
 ra_nome_bd = bd_segmentado['RA - NOME']
 ra_nome = st.selectbox(
 "Seleção dos Alunos",
@@ -70,6 +71,7 @@ except ZeroDivisionError:
 
 #Painel Micro
 if ra_nome is not None:
+    #Transformação do RA
     try:
         st.session_state["ra"] = bd.loc[bd['RA - NOME'] == ra_nome, 'RA'].iloc[0]
         ra = None
@@ -78,12 +80,11 @@ if ra_nome is not None:
         st.warning('Aluno não encontrado na base.')
         st.stop()
 
-    #pessoal
+    #Variaveis e calulo de Materias escolares
     nome = bd.loc[bd['RA'] == ra, 'Nome'].iloc[0]
-    escola = bd.loc[bd['RA'] == ra, 'Escola'].iloc[0]
-    cidade = bd.loc[bd['RA'] == ra, 'Cidade'].iloc[0]
+    segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
+    ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
 
-    #materias
     matematica = bd.loc[bd['RA'] == ra, 'Nota Matemática'].iloc[0]
     ingles = bd.loc[bd['RA'] == ra, 'Nota Inglês'].iloc[0]
     portugues = bd.loc[bd['RA'] == ra, 'Nota Português'].iloc[0]
@@ -156,25 +157,12 @@ if ra_nome is not None:
     except:
         humanas = media_calibrada
 
-    #extras
-    orientadora = bd.loc[bd['RA'] == ra, 'Orientadora'].iloc[0]
-    segmento = bd.loc[bd['RA'] == ra, 'Segmento'].iloc[0]
-    ano = bd.loc[bd['RA'] == ra, 'Ano'].iloc[0]
-    # periodo = bd.loc[bd['RA'] == ra, 'periodo'].iloc[0]
-    # nomenclatura = bd.loc[bd['RA'] == ra, 'nomenclatura'].iloc[0]
-
-    #Dados pessoais
+    #Painel
     st.title('Aluno')
     col1, col2 = st.columns([2, 5])
     col1.metric("RA", ra, border=True)
     col2.metric("Nome", nome, border=True)
     st.metric("Segmento", segmento, border=True)
-    # st.divider()
-    # st.header('Local')
-    # col1, col2 = st.columns(2)
-    # col1.metric("Escola", escola, border=True)
-    # col2.metric("Cidade", cidade, border=True)
-    #Média das disciplinas
     st.divider()
     st.header('Notas')
     st.subheader(f'Média calibrada: {media_calibrada:.2f}')
@@ -309,34 +297,31 @@ if ra_nome is not None:
             registro_resposta_nota_condizente = df.loc[df['RA'] == ra, 'resposta_nota_condizente'].iloc[0]
 
         with st.form(key='formulario'):
-            # Acadêmico
+            #listas do formulario
             caixa_argumentacao = ['Superficial - apenas reproduz',
                                 'Argumenta e se posiciona, trazendo sua opinião de forma consistente',
                                 'Sempre traz elementos além dos solicitados']
             caixa_rotina_estudos = ['Não', 'Precisa melhorar', 'Sim']
             caixa_atividades_extracurriculares = ['Nenhuma', 'Uma', 'Mais de uma']
-            #Perfil
             caixa_nunca_eventualmente_sempre = ['Nunca', 'Eventualmente', 'Sempre']
             caixa_networking = ['Tem dificuldade', 'Sim (dentro da escola)', 'Sim, (além da escola)']
-            # Psicológico
             caixa_fragilidade = ['Não',
                                 'Sim, com baixa probabilidade de impacto',
                                 'Sim, com média probabilidade de impacto',
                                 'Sim, com alta probabilidade de impacto']
             caixa_ideacao_suicida = ['Não', 'Sim, estável', 'Sim, em risco']
-            # Apenas para alunos do 3º Ano
             caixa_coerencia_enem = ['Sim', 'Não', 'Sim para ser recomendado pelo Ismart para cursinho Med']
             caixa_nota_condizente = ['Não', 'Sim', 'Sim para ser recomendado pelo Ismart para cursinho Med']
-            # Preencha
+            #Preenchimento
             st.header('Preencha o formulário')
-            # Acadêmico
+        
             st.divider()
             st.subheader('Acadêmico')
             resposta_argumentacao = st.radio('**O aluno traz conteúdos consistentes nas suas argumentações/interações (com orientadoras, escola parceira, outros)?**', caixa_argumentacao, index=retornar_indice(lista=caixa_argumentacao,variavel=registro_resposta_argumentacao))
             resposta_rotina_estudos = st.radio('**O aluno tem uma rotina de estudos adequada as suas necessidades?**', caixa_rotina_estudos, index=retornar_indice(lista=caixa_rotina_estudos,variavel=registro_resposta_rotina_estudos), horizontal=True)
             resposta_atividades_extracurriculares = st.radio('**O aluno faz atividades acadêmicas extracurriculares com vias a desenvolver seu talento acadêmico? (olimpiadas, projetos de iniciação cientifica, programação, Cultura inglesa/Inglês/Prep)**', caixa_atividades_extracurriculares, index=retornar_indice(lista=caixa_atividades_extracurriculares,variavel=registro_resposta_atividades_extracurriculares), horizontal=True)
             resposta_faltas = st.radio('**O aluno está com número de faltas e/ou atrasos que compromete o seu desempenho acadêmico?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_faltas), horizontal=True)
-            # Perfil
+           
             st.divider()
             st.subheader('Perfil')
             resposta_respeita_escola = st.radio('**O aluno respeita as normas da escola parceira?**', caixa_nunca_eventualmente_sempre, index=retornar_indice(lista=caixa_nunca_eventualmente_sempre,variavel=registro_resposta_respeita_escola), horizontal=True)
@@ -345,28 +330,28 @@ if ra_nome is not None:
             resposta_atividades_nao_obrigatorias_ismart = st.radio('**O aluno aproveita e participa das atividades não obrigatórias do Ismart?**', caixa_nunca_eventualmente_sempre, index=retornar_indice(lista=caixa_nunca_eventualmente_sempre,variavel=registro_resposta_atividades_nao_obrigatorias_ismart), horizontal=True)
             resposta_networking = st.radio('**O aluno cultiva relação na escola parceira e em outros contextos que a escola possibilita?**', caixa_networking, index=retornar_indice(lista=caixa_networking,variavel=registro_resposta_networking), horizontal=True)
             resposta_proatividade = st.radio('**O aluno é pró-ativo, ou seja, traz questionamentos críticos, sugestões, problemas, soluções, dúvidas?**', caixa_nunca_eventualmente_sempre, index=retornar_indice(lista=caixa_nunca_eventualmente_sempre,variavel=registro_resposta_proatividade), horizontal=True)
-            # Psicológico
+          
             st.divider()
             st.subheader('Psicológico/Questões Familiares/Saúde')
             resposta_questoes_psiquicas = st.radio('**O aluno apresenta questões psíquicas que podem vir a impactar seu desenvolvimento no projeto?**', caixa_fragilidade, index=retornar_indice(lista=caixa_fragilidade,variavel=registro_resposta_questoes_psiquicas))
             resposta_questoes_familiares = st.radio('**O aluno apresenta questões familiares que podem vir a impactar seu desenvolvimento no projeto?**', caixa_fragilidade, index=retornar_indice(lista=caixa_fragilidade,variavel=registro_resposta_questoes_familiares))
             resposta_questoes_saude = st.radio('**O aluno apresenta questões de saúde que podem vir a impactar seu desenvolvimento no projeto?**', caixa_fragilidade, index=retornar_indice(lista=caixa_fragilidade,variavel=registro_resposta_questoes_saude))
             resposta_ideacao_suicida = st.radio('**O aluno apresenta ideação suicida?**', caixa_ideacao_suicida, index=retornar_indice(lista=caixa_ideacao_suicida,variavel=registro_resposta_ideacao_suicida), horizontal=True)
-            #questão apenas para 8 e 1 anos
+      
             if ano == '8º EF' or ano == '1º EM':
                 st.divider()
                 st.subheader('Questão de 8°/1° ano')
                 resposta_adaptacao_projeto = st.radio('**O aluno conseguiu se adaptar bem ao projeto?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_adaptacao_projeto))
             else:
                 resposta_adaptacao_projeto = '-'
-            #questão apenas para 2 ano
+    
             if ano == '2º EM':
                 st.divider()
                 st.subheader('Questão de 2° ano')
                 resposta_seguranca_profissional = st.radio('**O aluno está seguro em seu processo de escolha profissional?**', caixa_sim_nao, index=retornar_indice(lista=caixa_sim_nao,variavel=registro_resposta_seguranca_profissional))
             else:
                 resposta_seguranca_profissional = '-'
-            #questão apenas para 3 ano
+
             if ano == '3º EM':
                 st.divider()
                 st.subheader('Questões de 3° ano')
@@ -379,9 +364,9 @@ if ra_nome is not None:
                 if ano != '2º EM':
                     resposta_seguranca_profissional = '-'
 
-            #Botão registrar
             submit_button = st.form_submit_button(label='SALVAR')
             if submit_button:
+                # ação de input no sheets
                 if not resposta_argumentacao or not resposta_rotina_estudos or not resposta_atividades_extracurriculares or not resposta_faltas:
                     st.warning('Questões em **Acadêmico** do formulário não estão preenchidas')
                     st.stop()
@@ -395,7 +380,6 @@ if ra_nome is not None:
                     st.warning('**Questões de ano** do formulário não estão preenchidas')
                     st.stop()
                 else:
-                    #inserir classificação
                     df_insert = pd.DataFrame([{
                                             'RA': ra,
                                             'nome': nome,
@@ -423,7 +407,7 @@ if ra_nome is not None:
                                             }])
                     registrar(df_insert, 'registro', 'classificacao_automatica', ra)
         if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
-            #colunas
+            #Variaveis do sheets
             classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
             motivo_classificao_automatica = df.loc[df['RA'] == ra, 'motivo_classificao_automatica'].iloc[0]
             nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -435,6 +419,7 @@ if ra_nome is not None:
             classificacao_final = df.loc[df['RA'] == ra, 'classificacao_final'].iloc[0]
             motivo_final = df.loc[df['RA'] == ra, 'motivo_final'].iloc[0]
 
+            #
             if 'confirmacao_alterada' not in st.session_state:
                 st.session_state['confirmacao_alterada'] = 'Não'
 
@@ -442,7 +427,6 @@ if ra_nome is not None:
                 st.session_state['classificacao_atual'] = classificacao_automatica
                 st.session_state['motivo_atual'] = motivo_classificao_automatica
 
-            #Formulario
             st.title('Confirmar classificação')
             st.metric("Classificação", st.session_state['classificacao_atual'], border=True)
             st.metric("Motivo", st.session_state['motivo_atual'], border=True)
@@ -640,8 +624,9 @@ if ra_nome is not None:
 
                                                     }])
                                 registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora', ra)
+
 else:
-    #Tabela De Confirmação
+#Tabela De Confirmação
     # Filtro personalizado no histórico
     df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
     df_historico_filtrado = df_historico_filtrado[df_historico_filtrado['RA'].isin(bd_segmentado['RA'])]
