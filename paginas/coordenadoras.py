@@ -355,7 +355,6 @@ df_tabela_editavel['justificativa_classificacao_coord'] = df_tabela_editavel['ju
 df_tabela_editavel['conclusao_classificacao_final'] = '-'
 
 st.title('Tabela de Edição')
-
 with st.form(key='tabela_editavel_cord_edicao'):
     edited_df = st.data_editor(
         df_tabela_editavel[['conclusao_classificacao_final','RA','nome','classificacao_final', 'motivo_final','justificativa_classificacao_coord',
@@ -395,7 +394,7 @@ with st.form(key='tabela_editavel_cord_edicao'):
             ),
             "classificacao_final": st.column_config.SelectboxColumn(
                 "Classificação Final",
-                options="Destaque; Pré-Destaque; Mediano; Atenção; Crítico; Crítico OP",
+                options=['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP'],
                 required=False
             ),
             "motivo_final": st.column_config.TextColumn(
