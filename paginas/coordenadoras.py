@@ -3,7 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets, registrar
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
@@ -12,13 +12,13 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 #importar e tratar datasets
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-bd = ler_sheets('bd')
+bd = ler_sheets_cache('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
 bd['apoio_registro'] = bd['apoio_registro'].astype(str)
 bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
-df_login = ler_sheets('login')
+df_login = ler_sheets_cache('login')
 
 st.title('Formulário de Classificação')
 
