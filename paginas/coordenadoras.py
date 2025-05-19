@@ -17,12 +17,12 @@ bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df_login = ler_sheets_cache('login')
-bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora', 'conclusao_classificacao_final']], how='left', on='RA')
+bd = bd.merge(df[['RA', 'classificacao_final', 'conclusao_classificacao_final']], how='left', on='RA')
 
 st.title('Formulário de Classificação')
 
 # filtros bd
-bd_segmentado = bd.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'")
+bd_segmentado = bd[bd['classificacao_final'].notna()]
 bd_segmentado = bd_segmentado.query("conclusao_classificacao_final != 'Sim'")
 cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
 bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
@@ -46,9 +46,9 @@ ra_nome = None
 # progresso
 qtd_praca = bd.query(f"Cidade == '{cidade_login}'").shape[0]
 qtd_registrados_praca = bd.query(f"Cidade == '{cidade_login}'")
-qtd_registrados_praca = qtd_registrados_praca.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'").shape[0]
+qtd_registrados_praca = qtd_registrados_praca[bd_segmentado['classificacao_final'].notna()].shape[0]
 qtd_alunos = bd.shape[0]
-qtd_alunos_registrados = bd.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'").shape[0]
+qtd_alunos_registrados = bd_segmentado[bd_segmentado['classificacao_final'].notna()]
 try:
     st.progress(qtd_alunos_registrados/qtd_alunos, f'Status de Preenchimento das Orientadoras de ***Todas as Praças***: **{qtd_alunos_registrados}/{qtd_alunos}**')
     st.progress(qtd_registrados_praca/qtd_praca, f'Status de Preenchimento das Orientadoras da Praça ***{cidade_login}***: **{qtd_registrados_praca}/{qtd_praca}**')
@@ -56,7 +56,7 @@ except ZeroDivisionError:
     st.error('Zero Resultados')
 
 #Primeira Tabela - Confirmação
-df_coord = df.query('confirmacao_classificacao_orientadora == "Sim" or confirmacao_classificacao_orientadora == "Não"')
+df_coord = df.query('classificacao_final == "Sim" or classificacao_final == "Não"')
 df_coord = df_coord[df_coord['RA'].isin(bd_segmentado['RA'])]
 
 df_tabela_editavel = df_coord.query('confirmacao_classificacao_coordenacao != "Sim" and confirmacao_classificacao_coordenacao != "Não"')

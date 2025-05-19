@@ -21,13 +21,14 @@ df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
 df_historico = ler_sheets_cache('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
-bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora']], how='left', on='RA')
+bd = bd.merge(df[['RA', 'classificacao_final']], how='left', on='RA')
 
 st.title('Formulário de Classificação')
 
 # filtros
 bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'")
+
+bd_segmentado = bd_segmentado[bd_segmentado['classificacao_final'].notna()]
 
 col1, col2, col3 = st.columns(3)
 # Aplique os filtros
@@ -62,7 +63,7 @@ if st.session_state['ra_nome'] != ra_nome:
 
 # progresso
 alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'")
+alunos_orientadora_total_registrados = bd_segmentado[bd_segmentado['classificacao_final'].notna()]
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
 except ZeroDivisionError:
