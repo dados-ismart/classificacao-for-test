@@ -15,16 +15,15 @@ df['RA'] = df['RA'].astype(int)
 bd = ler_sheets_cache('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
-bd['apoio_registro'] = bd['apoio_registro'].astype(str)
-bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df_login = ler_sheets_cache('login')
+bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora', 'conclusao_classificacao_final']], how='left', on='RA')
 
 st.title('Formulário de Classificação')
 
 # filtros bd
-bd_segmentado = bd.query("apoio_registro_final != 'Sim'")
-bd_segmentado = bd_segmentado.query("apoio_registro == 'Sim' or apoio_registro == 'Não'")
+bd_segmentado = bd.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'")
+bd_segmentado = bd_segmentado.query("conclusao_classificacao_final != 'Sim'")
 cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
 bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
 
@@ -47,9 +46,9 @@ ra_nome = None
 # progresso
 qtd_praca = bd.query(f"Cidade == '{cidade_login}'").shape[0]
 qtd_registrados_praca = bd.query(f"Cidade == '{cidade_login}'")
-qtd_registrados_praca = qtd_registrados_praca.query("apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+qtd_registrados_praca = qtd_registrados_praca.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'").shape[0]
 qtd_alunos = bd.shape[0]
-qtd_alunos_registrados = bd.query(f"apoio_registro == 'Não' or apoio_registro == 'Sim'").shape[0]
+qtd_alunos_registrados = bd.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'").shape[0]
 try:
     st.progress(qtd_alunos_registrados/qtd_alunos, f'Status de Preenchimento das Orientadoras de ***Todas as Praças***: **{qtd_alunos_registrados}/{qtd_alunos}**')
     st.progress(qtd_registrados_praca/qtd_praca, f'Status de Preenchimento das Orientadoras da Praça ***{cidade_login}***: **{qtd_registrados_praca}/{qtd_praca}**')
