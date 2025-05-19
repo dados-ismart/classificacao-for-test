@@ -21,7 +21,7 @@ bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-df_historico = ler_sheets_cache('historico')
+df_historico = ler_sheets('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
 
 st.title('Formulário de Classificação')
