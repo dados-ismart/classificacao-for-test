@@ -8,9 +8,7 @@ import pytz
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-@st.cache_data(show_spinner=False, ttl=7200) 
-def ler_sheets_cache(pagina):
-    conn = st.connection("gsheets", type=GSheetsConnection)
+def ler_sheets(pagina):
     for i in range(0, 10):
         try:
             return conn.read(worksheet=pagina)
@@ -22,8 +20,8 @@ def ler_sheets_cache(pagina):
         st.rerun()
     st.stop()
 
-def ler_sheets(pagina):
-    conn = st.connection("gsheets", type=GSheetsConnection)
+@st.cache_data(show_spinner=False, ttl=7200) 
+def ler_sheets_cache(pagina):
     for i in range(0, 10):
         try:
             return conn.read(worksheet=pagina)
