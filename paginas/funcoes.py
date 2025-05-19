@@ -8,25 +8,14 @@ import pytz
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-def ler_sheets(pagina):
+def ler_sheets(pagina, ttl=1):
+    conn = st.connection("gsheets", type=GSheetsConnection)
     for i in range(0, 10):
         try:
-            return conn.read(worksheet=pagina)
+            df = conn.read(worksheet=pagina, ttl=ttl)
+            return df
         except:
-            sleep(1)
-            pass
-    st.error('Erro ao conectar com o sheets')
-    if st.button('Tentar novamente'):
-        st.rerun()
-    st.stop()
-
-@st.cache_data(show_spinner=False, ttl=7200) 
-def ler_sheets_cache(pagina):
-    for i in range(0, 10):
-        try:
-            return conn.read(worksheet=pagina)
-        except:
-            sleep(1)
+            sleep(3)
             pass
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):

@@ -1,10 +1,12 @@
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, classificar, retornar_indice
+from paginas.funcoes import ler_sheets, registrar, classificar, retornar_indice
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
 caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
@@ -19,7 +21,7 @@ bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
 bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-df_historico = ler_sheets_cache('historico')
+df_historico = ler_sheets('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
 
 st.title('Formulário de Classificação')
@@ -519,7 +521,7 @@ if ra_nome is not None:
                         resposta_reversao = '-'
                         resposta_descricao_caso = '-'
                         resposta_plano_intervencao = '-'
-                    df_login = ler_sheets_cache('login')
+                    df_login = ler_sheets('login', ttl=7200)
                     cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
                     if cidade_login == 'SP':
                         try:
@@ -904,3 +906,4 @@ else:
             lista_ras = lista_ras.to_list()
             df_insert.drop_duplicates('RA')
             registrar(df_insert, 'registro', 'RA', lista_ras)
+            
