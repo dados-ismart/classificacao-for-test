@@ -13,7 +13,7 @@ caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde
 caixa_tier = ['2c', '2i', '3c', '3i', '4']
 
 #importar e tratar datasets
-bd = ler_sheets_cache('bd')
+bd = ler_sheets('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
 df = ler_sheets('registro')
@@ -63,7 +63,7 @@ if st.session_state['ra_nome'] != ra_nome:
 
 # progresso
 alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' and confirmacao_classificacao_orientadora == 'Sim'")
+alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
 except ZeroDivisionError:
