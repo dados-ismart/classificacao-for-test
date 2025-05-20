@@ -22,6 +22,21 @@ def ler_sheets(pagina, ttl=1):
         st.rerun()
     st.stop()
 
+@st.cache_data(show_spinner=False, ttl=7200) 
+def ler_sheets_cache(pagina):
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    for i in range(0, 10):
+        try:
+            df = conn.read(worksheet=pagina)
+            return df
+        except:
+            sleep(3)
+            pass
+    st.error('Erro ao conectar com o sheets')
+    if st.button('Tentar novamente'):
+        st.rerun()
+    st.stop()
+
 def pontuar(resposta, lista):
     try:
         for index, elemento in enumerate(lista):

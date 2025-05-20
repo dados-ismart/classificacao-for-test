@@ -3,9 +3,8 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
-from time import sleep
 import pytz
-from paginas.funcoes import ler_sheets
+from paginas.funcoes import ler_sheets, ler_sheets_cache
 from io import BytesIO
 from xlsxwriter import Workbook
 
@@ -25,7 +24,7 @@ df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
 bd = ler_sheets('bd')
 bd['RA'] = bd['RA'].astype(int)
-df_historico = ler_sheets('historico')
+df_historico = ler_sheets_cache('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
 
 

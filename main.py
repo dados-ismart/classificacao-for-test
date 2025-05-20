@@ -1,5 +1,5 @@
 import streamlit as st
-from paginas.funcoes import ler_sheets
+from paginas.funcoes import ler_sheets_cache
 
 
 def check_password():
@@ -65,7 +65,7 @@ st.set_page_config(layout="wide")
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
-    df_login = ler_sheets('login')
+    df_login = ler_sheets_cache('login')
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
             "Paginas": [pagina_inicial_coordenadora, dash],
