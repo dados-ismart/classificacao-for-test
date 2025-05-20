@@ -13,7 +13,7 @@ caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde
 caixa_tier = ['2c', '2i', '3c', '3i', '4']
 
 #importar e tratar datasets
-bd = ler_sheets('bd')
+bd = ler_sheets_cache('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
 df = ler_sheets('registro')
