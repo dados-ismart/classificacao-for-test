@@ -427,8 +427,9 @@ with st.form(key='tabela_editavel_cord_edicao'):
                 "Justificativa da Orientadora",
                 required=False
             ),
-            "reversao": st.column_config.TextColumn(
+            "reversao": st.column_config.SelectboxColumn(
                 "Reversão",
+                options=["Alta", "Média", "Baixa", '-'],
                 required=False
             ),
             "descricao_caso": st.column_config.TextColumn(
