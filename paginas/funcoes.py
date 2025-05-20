@@ -1,11 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
-from datetime import datetime
 from time import sleep
-import pytz
-
-fuso_horario = pytz.timezone('America/Sao_Paulo')
 
 @st.cache_resource()
 def conn():
@@ -270,3 +266,4 @@ def retornar_indice(lista, variavel):
                 return indice
     except:
         return None
+    
