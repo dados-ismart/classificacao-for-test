@@ -13,22 +13,22 @@ caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde
 caixa_tier = ['2c', '2i', '3c', '3i', '4']
 
 #importar e tratar datasets
-bd = ler_sheets('bd')
+bd = ler_sheets_cache('bd')
 bd = bd.dropna(subset=['RA - NOME'])
 bd['RA'] = bd['RA'].astype(int)
-bd['apoio_registro'] = bd['apoio_registro'].astype(str)
-bd['apoio_registro_final'] = bd['apoio_registro_final'].astype(str)
-bd = bd.sort_values(by=['apoio_registro_final','apoio_registro'], ascending = False)
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
 df_historico = ler_sheets_cache('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
+bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
+bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificacao_orientadora'], ascending = False)
+
 
 st.title('Formulário de Classificação')
 
 # filtros
 bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-bd_segmentado = bd_segmentado.query("apoio_registro != 'Não' and apoio_registro != 'Sim'")
+bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora != 'Não' and confirmacao_classificacao_orientadora != 'Sim'")
 
 col1, col2, col3 = st.columns(3)
 # Aplique os filtros
@@ -63,7 +63,7 @@ if st.session_state['ra_nome'] != ra_nome:
 
 # progresso
 alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
-alunos_orientadora_total_registrados = alunos_orientadora_total.query("apoio_registro == 'Não' or apoio_registro == 'Sim'")
+alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' and confirmacao_classificacao_orientadora == 'Sim'")
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
 except ZeroDivisionError:
