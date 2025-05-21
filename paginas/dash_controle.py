@@ -19,7 +19,7 @@ with st.expander("Controle por Orientadora"):
         st.header(f'{cidade}')
         for orientadora in orientadoras:
             st.subheader(f'{orientadora}')
-            alunos_orientadora_total = bd.query(f"Orientadora == '{i}'")
+            alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
             try:
                 st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
