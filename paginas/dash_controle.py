@@ -22,5 +22,3 @@ for i in lista_orientadoras:
         st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
     except ZeroDivisionError:
         st.error('Zero Resultados')
-for i in range(0 , 3):
-    st.title(f'teste: {i}')
