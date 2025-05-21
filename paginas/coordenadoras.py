@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 import pytz
@@ -7,7 +6,6 @@ from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-conn = st.connection("gsheets", type=GSheetsConnection)
 
 #importar e tratar datasets
 df = ler_sheets('registro')
