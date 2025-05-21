@@ -16,6 +16,7 @@ orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
 #visualização
 with st.expander("Controle por Orientadora"):
     for cidade, orientadoras in orientadoras_por_cidade.items():
+        st.divider()
         st.header(f'{cidade}')
         for orientadora in orientadoras:
             st.subheader(f'{orientadora}')
