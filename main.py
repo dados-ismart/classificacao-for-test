@@ -61,6 +61,12 @@ dash = st.Page(
     icon= "📊"
 )
 
+dash_controle = st.Page(
+    "paginas/dash_controle.py",
+    title= "Controle de Preenchimento",
+    icon= "🕔"
+)
+
 st.set_page_config(layout="wide")
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
@@ -68,11 +74,11 @@ if st.session_state.get("password_correct"):
     df_login = ler_sheets_cache('login')
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
-            "Paginas": [pagina_inicial_coordenadora, dash],
+            "Paginas": [pagina_inicial_coordenadora, dash, dash_controle],
         })    
     else:
         pg = st.navigation({
-            "Paginas": [pagina_inicial_orientadora, dash],
+            "Paginas": [pagina_inicial_orientadora, dash, dash_controle],
         })  
 else:
     pg = st.navigation([st.Page(login_page, title="Login")])

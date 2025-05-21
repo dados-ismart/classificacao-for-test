@@ -1,6 +1,4 @@
 import streamlit as st
-import streamlit as st
-from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 import pytz
@@ -18,7 +16,6 @@ def to_excel(df):
     return processed_data
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-conn = st.connection("gsheets", type=GSheetsConnection)
 
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
