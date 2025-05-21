@@ -14,7 +14,7 @@ lista_orientadoras = bd['Orientadora'].unique().tolist()
 
 #visualização
 st.title('Controle por Orientadora')
-for i in lista_orientadoras:
+for i in lista_orientadoras():
     st.subheader(f'{i}')
     alunos_orientadora_total = bd.query(f"Orientadora == '{i}'")
     alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
