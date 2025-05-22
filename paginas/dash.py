@@ -509,6 +509,7 @@ st.title('Gráficos')
 
 # Definir a ordem desejada
 ordem_desejada = ['Crítico', 'Crítico OP', 'Mediano', 'Pré-Destaque', 'Destaque']
+ordem_cores = ['#EE2D67', '#F266E', '#002561', '#00BDF2', '#8EC6B2']
 
 #GRAFICO CLASSIFICAO AUTOMATICA
 # Contar as ocorrências de cada classificação
@@ -521,7 +522,7 @@ try:
     contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Automática')
-    st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
+    st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem', color=ordem_cores)
 except:
     pass
 #GRAFICO CLASSIFICAO ORIENTADORA
@@ -535,7 +536,7 @@ try:
     contagem = contagem.set_index('nova_classificacao_orientadora').loc[ordem_desejada_nova_classificacao].reset_index()
 
     st.subheader('Classificações Colocadas pela Orientadora')
-    st.bar_chart(data=contagem, x='nova_classificacao_orientadora',y='nova_classificacao_orientadora_contagem', x_label='Classificações', y_label='Contagem')
+    st.bar_chart(data=contagem, x='nova_classificacao_orientadora',y='nova_classificacao_orientadora_contagem', x_label='Classificações', y_label='Contagem', color=ordem_cores)
 except:
     pass
 #GRAFICO CLASSIFICAO FINAL
@@ -549,6 +550,6 @@ try:
     contagem = contagem.set_index('classificacao_final').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Final')
-    st.bar_chart(data=contagem, x='classificacao_final',y='classificacao_final_contagem', x_label='Classificações', y_label='Contagem')
+    st.bar_chart(data=contagem, x='classificacao_final',y='classificacao_final_contagem', x_label='Classificações', y_label='Contagem', color=ordem_cores)
 except:
     pass
