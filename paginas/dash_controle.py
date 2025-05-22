@@ -10,22 +10,29 @@ bd = df_login = ler_sheets_cache('bd')
 bd['RA'] = bd['RA'].astype(int)
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
-#tratar dados
-orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
 
-#visualização
 st.title('Geral')
 st.header('Alunos Registrados por Orientadoras')
-# progresso
 qtd_alunos = bd.shape[0]
 qtd_alunos_registrados = bd.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'").shape[0]
 try:
     st.progress(qtd_alunos_registrados/qtd_alunos, f'Status de Preenchimento das Orientadoras de ***Todas as Praças***: **{qtd_alunos_registrados}/{qtd_alunos}**')
 except ZeroDivisionError:
     st.error('Zero Resultados')
+st.divider()
+
+st.header('Alunos Confirmados por Coordenadoras')
+qtd_alunos = bd.shape[0]
+qtd_alunos_registrados = bd.query("conclusao_classificacao_final == 'Sim'").shape[0]
+try:
+    st.progress(qtd_alunos_registrados/qtd_alunos, f'Status de Preenchimento das Coordenadoras de ***Todas as Praças***: **{qtd_alunos_registrados}/{qtd_alunos}**')
+except ZeroDivisionError:
+    st.error('Zero Resultados')
+
 
 st.title('Controle por Orientadora')
 with st.expander("Controle por Orientadora"):
+    orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
     for cidade, orientadoras in orientadoras_por_cidade.items():
         st.divider()
         st.header(f'{cidade}')
