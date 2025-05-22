@@ -32,12 +32,11 @@ try:
 except ZeroDivisionError:
     st.error('Zero Resultados')
 
-cidades = bd['Cidade'].unique().to_dict()
+cidades = bd['Cidade'].dropna().unique().tolist()
 st.title('Geral por Praça')
 for cidade in cidades.items():
     st.divider()
     st.header(f'{cidade}')
-
     total_alunos = bd.query(f"Cidade == '{cidade}'")
     qtd_alunos_registrados = total_alunos.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'").shape[0]
     try:
