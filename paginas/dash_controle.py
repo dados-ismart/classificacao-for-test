@@ -43,7 +43,7 @@ with st.expander("Orientadoras"):
         except ZeroDivisionError:
             st.error('Zero Resultados')
         st.divider()
-        
+
 with st.expander("Coordenadoras"):   
     for cidade in cidades:
         total_alunos = bd.query(f"Cidade == '{cidade}'")
@@ -54,8 +54,8 @@ with st.expander("Coordenadoras"):
             st.error('Zero Resultados')
         st.divider()
 
-st.title('Controle por Orientadora')
-with st.expander("Barras de Progresso"):
+st.title('Micro')
+with st.expander("Orientadoras"):
     orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
     for cidade, orientadoras in orientadoras_por_cidade.items():
         st.divider()
@@ -69,8 +69,7 @@ with st.expander("Barras de Progresso"):
             except ZeroDivisionError:
                 st.error('Zero Resultados')
 
-st.title('Controle por Coordenadora')
-with st.expander("Barras de Progresso"):
+with st.expander("Coordenadoras"):
     coordenadoras_por_cidade = bd.groupby('Cidade')['login'].unique().to_dict()
     for cidade, coordenadoras in coordenadoras_por_cidade.items():
         st.divider()
