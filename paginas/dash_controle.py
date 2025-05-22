@@ -34,24 +34,26 @@ except ZeroDivisionError:
 
 cidades = bd['Cidade'].dropna().unique().tolist()
 st.title('Geral por Praça')
-for cidade in cidades:
-    total_alunos = bd.query(f"Cidade == '{cidade}'")
-    qtd_alunos_registrados = total_alunos.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'").shape[0]
-    try:
-        st.progress(qtd_alunos_registrados/total_alunos.shape[0], f'Status de Preenchimento das Orientadoras de ***{cidade}***: **{qtd_alunos_registrados}/{total_alunos.shape[0]}**')
-    except ZeroDivisionError:
-        st.error('Zero Resultados')
-    st.divider()
+with st.expander("Orientadoras"):
+    for cidade in cidades:
+        total_alunos = bd.query(f"Cidade == '{cidade}'")
+        qtd_alunos_registrados = total_alunos.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'").shape[0]
+        try:
+            st.progress(qtd_alunos_registrados/total_alunos.shape[0], f'Status de Preenchimento das Orientadoras de ***{cidade}***: **{qtd_alunos_registrados}/{total_alunos.shape[0]}**')
+        except ZeroDivisionError:
+            st.error('Zero Resultados')
+        st.divider()
+        
+with st.expander("Coordenadoras"):   
+    for cidade in cidades:
+        total_alunos = bd.query(f"Cidade == '{cidade}'")
+        qtd_alunos_registrados = total_alunos.query("conclusao_classificacao_final == 'Sim'").shape[0]
+        try:
+            st.progress(qtd_alunos_registrados/total_alunos.shape[0], f'Status de Preenchimento das Orientadoras de ***{cidade}***: **{qtd_alunos_registrados}/{total_alunos.shape[0]}**')
+        except ZeroDivisionError:
+            st.error('Zero Resultados')
+        st.divider()
 
-    # st.header('Alunos Confirmados por Coordenadoras')
-    # qtd_alunos = bd.shape[0]
-    # qtd_alunos_registrados = bd.query("conclusao_classificacao_final == 'Sim'").shape[0]
-    # try:
-    #     st.progress(qtd_alunos_registrados/qtd_alunos, f'Status de Preenchimento das Coordenadoras de ***Todas as Praças***: **{qtd_alunos_registrados}/{qtd_alunos}**')
-    # except ZeroDivisionError:
-    #     st.error('Zero Resultados')
-    # st.divider()
-##
 st.title('Controle por Orientadora')
 with st.expander("Barras de Progresso"):
     orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
