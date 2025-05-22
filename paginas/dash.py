@@ -561,3 +561,4 @@ try:
     st.bar_chart(data=contagem, x='classificacao_final',y='classificacao_final_contagem', x_label='Classificações', y_label='Contagem', )
 except:
     pass
+st.write(ordem_cores)
