@@ -8,7 +8,10 @@ df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
 bd = df_login = ler_sheets_cache('bd')
 bd['RA'] = bd['RA'].astype(int)
+df_login = ler_sheets_cache('login')
+df_login = df_login.query("cargo == 'coordenação'")
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
+bd = bd.merge(df_login[['cidade', 'login']], how='left', on='RA')
 
 
 st.title('Geral')
@@ -31,7 +34,7 @@ except ZeroDivisionError:
 
 
 st.title('Controle por Orientadora')
-with st.expander("Controle por Orientadora"):
+with st.expander("Barras de Progresso"):
     orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
     for cidade, orientadoras in orientadoras_por_cidade.items():
         st.divider()
@@ -40,6 +43,21 @@ with st.expander("Controle por Orientadora"):
             st.subheader(f'{orientadora}')
             alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
+            try:
+                st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
+            except ZeroDivisionError:
+                st.error('Zero Resultados')
+
+st.title('Controle por Coordenadora')
+with st.expander("Barras de Progresso"):
+    coordenadoras_por_cidade = bd.groupby('Cidade')['login'].unique().to_dict()
+    for cidade, coordenadoras in coordenadoras_por_cidade.items():
+        st.divider()
+        st.header(f'{cidade}')
+        for coordenadora in coordenadoras:
+            st.subheader(f'{coordenadora}')
+            alunos_orientadora_total = bd.query(f"login == '{coordenadora}'")
+            alunos_orientadora_total_registrados = alunos_orientadora_total.query("conclusao_classificacao_final == 'Sim'")
             try:
                 st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
             except ZeroDivisionError:
