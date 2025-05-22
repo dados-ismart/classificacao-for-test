@@ -509,7 +509,12 @@ st.title('Gráficos')
 
 # Definir a ordem desejada
 ordem_desejada = ['Crítico', 'Crítico OP', 'Mediano', 'Pré-Destaque', 'Destaque']
-ordem_cores = ['#EE2D67', '#F266E', '#002561', '#00BDF2', '#8EC6B2']
+dicionario_cores = {
+    'Crítico':'#EE2D67', 
+    'Crítico OP':'#F266E', 
+    'Mediano':'#002561', 
+    'Pré-Destaque':'#00BDF2', 
+    'Destaque':'#8EC6B2'}
 
 #GRAFICO CLASSIFICAO AUTOMATICA
 # Contar as ocorrências de cada classificação
@@ -519,6 +524,7 @@ try:
 
     # Converter a coluna para categoria ordenada
     ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_automatica'].values]
+    ordem_cores = [dicionario_cores[x] for x in ordem_desejada_classificacao_final]
     contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Automática')
@@ -533,6 +539,7 @@ try:
 
     # Converter a coluna para categoria ordenada
     ordem_desejada_nova_classificacao = [x for x in ordem_desejada if x in contagem['nova_classificacao_orientadora'].values]
+    ordem_cores = [dicionario_cores[x] for x in ordem_desejada_nova_classificacao]
     contagem = contagem.set_index('nova_classificacao_orientadora').loc[ordem_desejada_nova_classificacao].reset_index()
 
     st.subheader('Classificações Colocadas pela Orientadora')
@@ -547,6 +554,7 @@ try:
 
     # Converter a coluna para categoria ordenada
     ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_final'].values]
+    ordem_cores = [dicionario_cores[x] for x in ordem_desejada_classificacao_final]
     contagem = contagem.set_index('classificacao_final').loc[ordem_desejada_classificacao_final].reset_index()
 
     st.subheader('Classificação Final')
