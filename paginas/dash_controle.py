@@ -11,7 +11,7 @@ bd['RA'] = bd['RA'].astype(int)
 df_login = ler_sheets_cache('login')
 df_login = df_login.query("cargo == 'coordenação'")
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
-bd = bd.merge(df_login[['Cidade', 'login']], how='left', on='RA')
+bd = bd.merge(df_login[['Cidade', 'login']], how='left', on='Cidade')
 
 
 st.title('Geral')
