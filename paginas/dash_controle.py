@@ -34,7 +34,7 @@ except ZeroDivisionError:
 
 cidades = bd['Cidade'].dropna().unique().tolist()
 st.title('Geral por Praça')
-for cidade in cidades.items():
+for cidade in cidades:
     st.divider()
     st.header(f'{cidade}')
     total_alunos = bd.query(f"Cidade == '{cidade}'")
