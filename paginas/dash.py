@@ -519,7 +519,8 @@ dicionario_cores = {
 #GRAFICO CLASSIFICAO AUTOMATICA
 # Contar as ocorrências de cada classificação
 try:
-    contagem = df['classificacao_automatica'].value_counts().reset_index()
+    df_classificacao_automatica = df['classificacao_automatica'].query("classificacao_automatica != '-'")
+    contagem = df_classificacao_automatica['classificacao_automatica'].value_counts().reset_index()
     contagem.columns = ['classificacao_automatica', 'classificacao_automatica_contagem']
 
     # Converter a coluna para categoria ordenada
