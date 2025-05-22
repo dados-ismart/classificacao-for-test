@@ -520,7 +520,7 @@ if ra_nome is not None:
                         resposta_descricao_caso = '-'
                         resposta_plano_intervencao = '-'
                     df_login = ler_sheets_cache('login')
-                    cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
+                    cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["Cidade"].iloc[0]
                     if cidade_login == 'SP':
                         try:
                             registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]

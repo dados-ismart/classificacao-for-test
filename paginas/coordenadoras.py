@@ -22,7 +22,7 @@ st.title('Formulário de Classificação')
 # filtros bd
 bd_segmentado = bd.query("conclusao_classificacao_final != 'Sim'")
 bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
-cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cidade"].iloc[0]
+cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["Cidade"].iloc[0]
 bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
 
 col1, col2, col3, col4 = st.columns(4)
