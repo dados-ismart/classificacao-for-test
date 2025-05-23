@@ -30,11 +30,12 @@ def check_password():
 
 
 def login_page():
-    st.image("imagens/logo_ismart.png")
-    st.title("Login")
+    col1, col2, col3 = st.columns([1, 5, 1])
+    col1.image("imagens/logo_ismart.png")
+    col2.title("Login")
     if check_password():
-        st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
-        st.rerun()  # Força a atualização para mostrar as páginas após login
+        col2.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
+        col2.rerun()  # Força a atualização para mostrar as páginas após login
 
 def logout():
     st.session_state["password_correct"] = False
