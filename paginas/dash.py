@@ -517,6 +517,49 @@ dicionario_cores = {
     'Destaque': '#8EC6B2'
 }
 
+#GRAFICO CLASSIFICAO GERAL
+try:
+    # Filtrar valores válidos
+    df_filtrado = df[df['classificacao_final'] != '-']
+
+    # Contagem das classificações
+    contagem = df_filtrado['classificacao_final'].value_counts().reset_index()
+    contagem.columns = ['classificacao_final', 'classificacao_final_contagem']
+
+    # Manter e ordenar apenas as classificações presentes na ordem desejada
+    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_final'].values]
+
+    # Filtra apenas as classificações desejadas
+    contagem = contagem[contagem['classificacao_final'].isin(ordem_desejada_classificacao_final)]
+
+    # Transformar a coluna em CATEGORIA ORDENADA
+    contagem['classificacao_final'] = pd.Categorical(
+        contagem['classificacao_final'],
+        categories=ordem_desejada,
+        ordered=True
+    )
+
+    # Ordenar efetivamente
+    contagem = contagem.sort_values('classificacao_final')
+
+    # Criar coluna de cor com base no dicionário
+    contagem['cor'] = contagem['classificacao_final'].map(dicionario_cores)
+
+    st.subheader('Classificação Geral')
+    # Plot
+    st.bar_chart(
+        data=contagem,
+        x='classificacao_final',
+        y='classificacao_final_contagem',
+        color='cor',
+        x_label='Classificações',
+        y_label='Contagem'
+    )
+except Exception as e:
+    st.warning(f"Erro ao gerar gráfico: {e}")
+
+#GRAFICO CLASSIFICAO AUTOMATICA
+
 try:
     # Filtrar valores válidos
     df_filtrado = df[df['classificacao_automatica'] != '-']
@@ -600,44 +643,3 @@ try:
 except Exception as e:
     st.warning(f"Erro ao gerar gráfico: {e}")
 
-#   CLASSIFICAÇÃO GERAL
-
-try:
-    # Filtrar valores válidos
-    df_filtrado = df[df['classificacao_final'] != '-']
-
-    # Contagem das classificações
-    contagem = df_filtrado['classificacao_final'].value_counts().reset_index()
-    contagem.columns = ['classificacao_final', 'classificacao_final_contagem']
-
-    # Manter e ordenar apenas as classificações presentes na ordem desejada
-    ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_final'].values]
-
-    # Filtra apenas as classificações desejadas
-    contagem = contagem[contagem['classificacao_final'].isin(ordem_desejada_classificacao_final)]
-
-    # Transformar a coluna em CATEGORIA ORDENADA
-    contagem['classificacao_final'] = pd.Categorical(
-        contagem['classificacao_final'],
-        categories=ordem_desejada,
-        ordered=True
-    )
-
-    # Ordenar efetivamente
-    contagem = contagem.sort_values('classificacao_final')
-
-    # Criar coluna de cor com base no dicionário
-    contagem['cor'] = contagem['classificacao_final'].map(dicionario_cores)
-
-    st.subheader('Classificação Geral')
-    # Plot
-    st.bar_chart(
-        data=contagem,
-        x='classificacao_final',
-        y='classificacao_final_contagem',
-        color='cor',
-        x_label='Classificações',
-        y_label='Contagem'
-    )
-except Exception as e:
-    st.warning(f"Erro ao gerar gráfico: {e}")
