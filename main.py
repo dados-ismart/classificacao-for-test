@@ -1,7 +1,7 @@
 import streamlit as st
 from paginas.funcoes import ler_sheets_cache
 
-st.image("imagens\\faixa_tela_inicial.png", caption="Minha imagem")
+st.image("imagens/faixa_tela_inicial.png", caption="Minha imagem")
 
 def check_password():
     def password_entered():
