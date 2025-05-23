@@ -6,7 +6,6 @@ st.set_page_config(layout="wide")
 
 def check_password():
     def password_entered():
-        st.image("imagens/faixa_tela_inicial.png")
         if (
             st.session_state["username"] in st.secrets["passwords"]
             and st.session_state["password"] == st.secrets["passwords"][st.session_state["username"]]
@@ -18,10 +17,12 @@ def check_password():
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
+        st.image("imagens/faixa_tela_inicial.png")
         st.text_input("Usuário", key="username")
         st.text_input("Senha", type="password", key="password", on_change=password_entered)
         return False
     elif not st.session_state["password_correct"]:
+        st.image("imagens/faixa_tela_inicial.png")
         st.text_input("Usuário", key="username")
         st.text_input("Senha", type="password", key="password", on_change=password_entered)
         st.error("😕 Usuário desconhecido ou senha incorreta.")
