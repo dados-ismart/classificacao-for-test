@@ -30,7 +30,7 @@ def check_password():
 
 
 def login_page():
-    st.image("imagens/faixa_tela_inicial.png")
+    st.image("imagens/logo_ismart.png")
     st.title("Login")
     if check_password():
         st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
@@ -75,11 +75,11 @@ if st.session_state.get("password_correct"):
     df_login = ler_sheets_cache('login')
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
-            f"Páginas {st.image("imagens/logo_ismart.png")}": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
+            "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
         })    
     else:
         pg = st.navigation({
-            f"Páginas {st.image("imagens/logo_ismart.png")}": [pagina_inicial_orientadora, dash, dash_status_preenchimento],
+            "Páginas": [pagina_inicial_orientadora, dash, dash_status_preenchimento],
         })  
 else:
     pg = st.navigation([st.Page(login_page, title="Login")])
