@@ -510,28 +510,44 @@ st.title('Gráficos')
 # Definir a ordem desejada
 ordem_desejada = ['Crítico', 'Crítico OP', 'Mediano', 'Pré-Destaque', 'Destaque']
 dicionario_cores = {
-    'Crítico':'#EE2D67', 
-    'Crítico OP':'#F266E', 
-    'Mediano':'#002561', 
-    'Pré-Destaque':'#00BDF2', 
-    'Destaque':'#8EC6B2'}
+    'Crítico': '#EE2D67',
+    'Crítico OP': '#F2665E',
+    'Mediano': '#002561',
+    'Pré-Destaque': '#00BDF2',
+    'Destaque': '#8EC6B2'
+}
 
-#GRAFICO CLASSIFICAO AUTOMATICA
-# Contar as ocorrências de cada classificação
 try:
-    df_classificacao_automatica = df['classificacao_automatica'].query("classificacao_automatica != '-'")
-    contagem = df_classificacao_automatica['classificacao_automatica'].value_counts().reset_index()
+    # Filtrar valores válidos
+    df_filtrado = df[df['classificacao_automatica'] != '-']
+
+    # Contagem das classificações
+    contagem = df_filtrado['classificacao_automatica'].value_counts().reset_index()
     contagem.columns = ['classificacao_automatica', 'classificacao_automatica_contagem']
 
-    # Converter a coluna para categoria ordenada
+    # Manter e ordenar apenas as classificações presentes na ordem desejada
     ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_automatica'].values]
-    ordem_cores = [dicionario_cores[x] for x in ordem_desejada_classificacao_final]
+
+    # Reordenar DataFrame
     contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_final].reset_index()
 
+    # Criar coluna de cor com base no dicionário
+    contagem['cor'] = contagem['classificacao_automatica'].map(dicionario_cores)
+
     st.subheader('Classificação Automática')
-    st.bar_chart(data=contagem, x='classificacao_automatica',y='classificacao_automatica_contagem', x_label='Classificações', y_label='Contagem')
-except:
-    pass
+
+    # Plot
+    st.bar_chart(
+        data=contagem,
+        x='classificacao_automatica',
+        y='classificacao_automatica_contagem',
+        color='cor',
+        x_label='Classificações',
+        y_label='Contagem'
+    )
+
+except Exception as e:
+    st.warning(f"Erro ao gerar gráfico: {e}")
 #GRAFICO CLASSIFICAO ORIENTADORA
 # Contar as ocorrências de cada classificação
 try:
