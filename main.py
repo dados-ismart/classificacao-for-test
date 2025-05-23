@@ -35,14 +35,14 @@ def login_page():
         st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
         st.rerun()  # Força a atualização para mostrar as páginas após login
 
-st.set_page_config(layout="wide")
-
 def logout():
     st.session_state["password_correct"] = False
     st.session_state["authenticated_username"] = None
     st.rerun()
 
 logout_page = st.Page(logout, title="Sair")
+
+st.set_page_config(layout="wide")
 
 # --- PAGE SETUP ---
 pagina_inicial_coordenadora = st.Page(
