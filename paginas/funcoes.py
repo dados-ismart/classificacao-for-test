@@ -3,7 +3,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from time import sleep
 
-@st.cache_resource()
+@st.cache_resource(ttl=7200)
 def conn():
     for i in range(0, 10):
         try:
