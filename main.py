@@ -1,8 +1,6 @@
 import streamlit as st
 from paginas.funcoes import ler_sheets_cache
 
-st.set_page_config(layout="wide")
-
 
 def check_password():
     def password_entered():
@@ -30,12 +28,14 @@ def check_password():
 
 
 def login_page():
-    col1, col2, col3 = st.columns([1, 5, 1])
+    col1, col2 = st.columns([1, 6])
     col1.image("imagens/logo_ismart.png")
-    col2.title("Login")
+    st.title("Login")
     if check_password():
-        col2.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
-        col2.rerun()  # Força a atualização para mostrar as páginas após login
+        st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
+        st.rerun()  # Força a atualização para mostrar as páginas após login
+
+st.set_page_config(layout="wide")
 
 def logout():
     st.session_state["password_correct"] = False
