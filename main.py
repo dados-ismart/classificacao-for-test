@@ -44,27 +44,27 @@ logout_page = st.Page(logout, title="Sair")
 pagina_inicial_coordenadora = st.Page(
     "paginas/coordenadoras.py",
     title= "Classificação",
-    icon= "⚖️",
+    icon= "🦉",
     default=True,
 )
 
 pagina_inicial_orientadora = st.Page(
     "paginas/orientadoras.py",
     title= "Classificação",
-    icon= "⚖️",
+    icon= "🦉",
     default=True,
 )
 
 dash = st.Page(
     "paginas/dash.py",
     title= "Visualização",
-    icon= "📊"
+    icon= "🦉"
 )
 
 dash_status_preenchimento = st.Page(
     "paginas/dash_status_preenchimento.py",
     title= "Status de Preenchimento",
-    icon= "🕔"
+    icon= "🦉"
 )
 
 st.set_page_config(layout="wide")
