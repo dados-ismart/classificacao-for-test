@@ -528,14 +528,23 @@ try:
     # Manter e ordenar apenas as classificações presentes na ordem desejada
     ordem_desejada_classificacao_final = [x for x in ordem_desejada if x in contagem['classificacao_automatica'].values]
 
-    # Reordenar DataFrame
-    contagem = contagem.set_index('classificacao_automatica').loc[ordem_desejada_classificacao_final].reset_index()
+    # Filtra apenas as classificações desejadas
+    contagem = contagem[contagem['classificacao_automatica'].isin(ordem_desejada_classificacao_final)]
+
+    # Transformar a coluna em CATEGORIA ORDENADA
+    contagem['classificacao_automatica'] = pd.Categorical(
+        contagem['classificacao_automatica'],
+        categories=ordem_desejada,
+        ordered=True
+    )
+
+    # Ordenar efetivamente
+    contagem = contagem.sort_values('classificacao_automatica')
 
     # Criar coluna de cor com base no dicionário
     contagem['cor'] = contagem['classificacao_automatica'].map(dicionario_cores)
 
     st.subheader('Classificação Automática')
-
     # Plot
     st.bar_chart(
         data=contagem,
@@ -545,9 +554,10 @@ try:
         x_label='Classificações',
         y_label='Contagem'
     )
-
 except Exception as e:
     st.warning(f"Erro ao gerar gráfico: {e}")
+
+
 #GRAFICO CLASSIFICAO ORIENTADORA
 # Contar as ocorrências de cada classificação
 try:
