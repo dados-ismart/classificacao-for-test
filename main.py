@@ -2,7 +2,7 @@ import streamlit as st
 from paginas.funcoes import ler_sheets_cache
 
 st.set_page_config(layout="wide")
-st.image("imagens/faixa_tela_inicial.png", caption="Minha imagem")
+st.image("imagens/faixa_tela_inicial.png")
 
 def check_password():
     def password_entered():
