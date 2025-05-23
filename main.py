@@ -42,8 +42,6 @@ def logout():
 
 logout_page = st.Page(logout, title="Sair")
 
-st.set_page_config(layout="wide")
-
 # --- PAGE SETUP ---
 pagina_inicial_coordenadora = st.Page(
     "paginas/coordenadoras.py",
@@ -73,6 +71,7 @@ dash_status_preenchimento = st.Page(
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
+    st.set_page_config(layout="wide")
     df_login = ler_sheets_cache('login')
     if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
