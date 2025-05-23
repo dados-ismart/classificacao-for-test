@@ -28,8 +28,8 @@ def check_password():
 
 
 def login_page():
-    col1, col2 = st.columns([1, 6])
-    col1.image("imagens/logo_ismart.png")
+    col1, col2 = st.columns([6, 1])
+    col2.image("imagens/logo_ismart.png")
     st.title("Login")
     if check_password():
         st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
