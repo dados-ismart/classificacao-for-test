@@ -1,6 +1,7 @@
 import streamlit as st
 from paginas.funcoes import ler_sheets_cache
 
+st.set_page_config(layout="wide")
 st.image("imagens/faixa_tela_inicial.png", caption="Minha imagem")
 
 def check_password():
@@ -67,8 +68,6 @@ dash_status_preenchimento = st.Page(
     title= "Status de Preenchimento",
     icon= "🕔"
 )
-
-st.set_page_config(layout="wide")
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if st.session_state.get("password_correct"):
