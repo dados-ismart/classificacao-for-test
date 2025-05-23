@@ -2,10 +2,11 @@ import streamlit as st
 from paginas.funcoes import ler_sheets_cache
 
 st.set_page_config(layout="wide")
-st.image("imagens/faixa_tela_inicial.png")
+
 
 def check_password():
     def password_entered():
+        st.image("imagens/faixa_tela_inicial.png")
         if (
             st.session_state["username"] in st.secrets["passwords"]
             and st.session_state["password"] == st.secrets["passwords"][st.session_state["username"]]
