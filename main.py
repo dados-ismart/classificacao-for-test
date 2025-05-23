@@ -4,28 +4,29 @@ from paginas.funcoes import ler_sheets_cache
 
 def check_password():
     def password_entered():
+        username = st.session_state["username"].strip()
+        password = st.session_state["password"].strip()
         if (
-            st.session_state["username"] in st.secrets["passwords"]
-            and st.session_state["password"] == st.secrets["passwords"][st.session_state["username"]]
+            username in st.secrets["passwords"]
+            and password == st.secrets["passwords"][username]
         ):
             st.session_state["password_correct"] = True
-            st.session_state["authenticated_username"] = st.session_state["username"]
+            st.session_state["authenticated_username"] = username
             del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
     if "password_correct" not in st.session_state:
-        st.text_input("Usuário", key="username").strip()
-        st.text_input("Senha", type="password", key="password", on_change=password_entered).strip()
+        st.text_input("Usuário", key="username")
+        st.text_input("Senha", type="password", key="password", on_change=password_entered)
         return False
     elif not st.session_state["password_correct"]:
-        st.text_input("Usuário", key="username").strip()
-        st.text_input("Senha", type="password", key="password", on_change=password_entered).strip()
+        st.text_input("Usuário", key="username")
+        st.text_input("Senha", type="password", key="password", on_change=password_entered)
         st.error("😕 Usuário desconhecido ou senha incorreta.")
         return False
     else:
         return True
-
 
 def login_page():
     col1, col2 = st.columns([6, 1])
