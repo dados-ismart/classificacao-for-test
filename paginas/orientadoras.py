@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice
+from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice, check_microsoft_login
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 
@@ -25,7 +25,7 @@ bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificac
 st.title('Formulário de Classificação')
 
 # filtros
-bd_segmentado = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
+bd_segmentado = bd.query(f"Orientadora == '{check_microsoft_login()}'")
 bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora != 'Não' and confirmacao_classificacao_orientadora != 'Sim'")
 
 col1, col2, col3 = st.columns(3)
@@ -60,7 +60,7 @@ if st.session_state['ra_nome'] != ra_nome:
     del st.session_state['ra_nome']
 
 # progresso
-alunos_orientadora_total = bd.query(f"Orientadora == '{st.session_state["authenticated_username"]}'")
+alunos_orientadora_total = bd.query(f"Orientadora == '{check_microsoft_login()}'")
 alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
@@ -523,7 +523,7 @@ if ra_nome is not None:
                         resposta_descricao_caso = '-'
                         resposta_plano_intervencao = '-'
                     df_login = ler_sheets_cache('login')
-                    cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["Cidade"].iloc[0]
+                    cidade_login = df_login.query(f'email == "{check_microsoft_login()}"')["Cidade"].iloc[0]
                     if cidade_login == 'SP':
                         try:
                             registro_resposta_tier = df_historico.loc[df_historico['RA'] == ra, 'tier'].iloc[0]

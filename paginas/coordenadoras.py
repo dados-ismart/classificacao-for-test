@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, check_microsoft_login
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
@@ -22,7 +22,7 @@ st.title('Formulário de Classificação')
 # filtros bd
 bd_segmentado = bd.query("conclusao_classificacao_final != 'Sim'")
 bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
-cidade_login = df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["Cidade"].iloc[0]
+cidade_login = df_login.query(f'email == "{check_microsoft_login()}"')["Cidade"].iloc[0]
 bd_segmentado = bd_segmentado.query(f'Cidade == "{cidade_login}"')
 
 col1, col2, col3, col4 = st.columns(4)
