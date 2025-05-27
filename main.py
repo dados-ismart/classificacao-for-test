@@ -48,8 +48,7 @@ def check_microsoft_login():
 
 def logout():
     """Realiza logout da conta Microsoft e limpa a sessão."""
-    if st.user.is_logged_in:
-        st.logout()
+    st.logout()
     
     # Limpa variáveis da sessão
     keys_to_remove = ["auth_success_shown", "autenticado"]
@@ -107,7 +106,7 @@ if check_microsoft_login() is not None:
                     help="Clique para desconectar-se completamente",
                     use_container_width=True):
             logout()
-            st.rerun()  # Recarrega a aplicação
+            st.rerun() 
    
 else:
     st.stop()
