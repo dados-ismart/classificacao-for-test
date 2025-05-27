@@ -266,4 +266,4 @@ def retornar_indice(lista, variavel):
                 return indice
     except:
         return None
-    
+
