@@ -1,47 +1,64 @@
 import streamlit as st
 from paginas.funcoes import ler_sheets_cache
+import time
+from PIL import Image
 
+logo = Image.open('imagens/logo_ismart.png')
 
-def check_password():
-    def password_entered():
-        username = st.session_state["username"].strip()
-        password = st.session_state["password"].strip()
-        if (
-            username in st.secrets["passwords"]
-            and password == st.secrets["passwords"][username]
-        ):
-            st.session_state["password_correct"] = True
-            st.session_state["authenticated_username"] = username
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
+st.set_page_config(page_title='Ismart - Dashboard EB',
+                   page_icon=logo,
+                   layout="wide",
+                   initial_sidebar_state="collapsed")
 
-    if "password_correct" not in st.session_state:
-        st.text_input("Usuário", key="username")
-        st.text_input("Senha", type="password", key="password", on_change=password_entered)
-        return False
-    elif not st.session_state["password_correct"]:
-        st.text_input("Usuário", key="username")
-        st.text_input("Senha", type="password", key="password", on_change=password_entered)
-        st.error("😕 Usuário desconhecido ou senha incorreta.")
-        return False
-    else:
-        return True
+st.logo(logo, icon_image=logo)
 
-def login_page():
-    col1, col2 = st.columns([6, 1])
-    col2.image("imagens/logo_ismart.png")
-    st.title("Login")
-    if check_password():
-        st.success(f"Bem-vindo, {st.session_state['authenticated_username']}!")
-        st.rerun()  # Força a atualização para mostrar as páginas após login
+def check_microsoft_login():
+    """Autenticação via login da Microsoft e verificação do domínio."""
+    # if not st.user.is_logged_in:   #Esta versão não está disponível no streamlit utilizado para deploy
+    if not st.experimental_user.is_logged_in:
+        st.markdown("<div style='text-align: center; font-size: 32px; font-weight: bold;'>🔐 Bem-vinda(o) ao Dashboard da Educação Básica</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-size: 18px;'>Para acessar as informações, faça login com sua conta institucional.</div>", unsafe_allow_html=True)
+        st.write("")
+        
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col2:
+            st.write("")
+            st.button("🔓 Acessar com minha conta Microsoft", 
+                      on_click=st.login, 
+                      help="Clique para entrar com seu e-mail do Ismart",
+                      use_container_width=True)
+            st.write("")
+        st.stop()
+
+    # usuario = st.user
+    usuario = st.experimental_user
+    email_usuario = usuario.email
+
+    # if not email_usuario.endswith("@ismart.org.br"):
+    #     col1, col2, col3 = st.columns([1, 1.5, 1])
+    #     with col2:
+    #         st.markdown("<div style='text-align: center; font-size: 20px; font-weight: bold;'>⛔ Acesso não autorizado</div>", unsafe_allow_html=True)
+    #         st.markdown("<div style='text-align: center; font-size: 16px;'>Apenas usuários com e-mail institucional (@ismart.org.br) podem acessar este dashboard.</div>", unsafe_allow_html=True)
+    #         st.markdown("<div style='text-align: center; font-size: 14px;'>Caso precise de ajuda, entre em contato com o <b>time de dados</b>!</div>", unsafe_allow_html=True)
+    #         st.write("")
+    #         st.button("↩️ Tentar novamente", on_click=st.logout, use_container_width=True)
+    #     st.stop()
+
+    return email_usuario
 
 def logout():
-    st.session_state["password_correct"] = False
-    st.session_state["authenticated_username"] = None
-    st.rerun()
-
-logout_page = st.Page(logout, title="Sair")
+    """Realiza logout da conta Microsoft e limpa a sessão."""
+    if st.user.is_logged_in:
+        st.logout()
+    
+    # Limpa variáveis da sessão
+    keys_to_remove = ["auth_success_shown", "autenticado"]
+    for key in keys_to_remove:
+        if key in st.session_state:
+            del st.session_state[key]
+    
+    st.toast("🔒 Você foi desconectado com sucesso!", icon="🔒")
+    time.sleep(0.5)
 
 # --- PAGE SETUP ---
 pagina_inicial_coordenadora = st.Page(
@@ -69,12 +86,14 @@ dash_status_preenchimento = st.Page(
     title= "Status de Preenchimento",
     icon= "🕔"
 )
-
+        
 # --- NAVIGATION SETUP [WITH SECTIONS]---
-if st.session_state.get("password_correct"):
-    st.set_page_config(layout="wide")
+if check_microsoft_login() is not None:
+    if "auth_success_shown" not in st.session_state:
+        st.toast("Autenticação realizada com sucesso!", icon="✅")
+        st.session_state.auth_success_shown = True 
     df_login = ler_sheets_cache('login')
-    if df_login.query(f'login == "{st.session_state["authenticated_username"]}"')["cargo"].iloc[0] == "coordenação":
+    if df_login.query(f'email == "{check_microsoft_login()}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
             "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
         })    
@@ -83,6 +102,6 @@ if st.session_state.get("password_correct"):
             "Páginas": [pagina_inicial_orientadora, dash, dash_status_preenchimento],
         })  
 else:
-    pg = st.navigation([st.Page(login_page, title="Login")])
+    st.stop()
 # --- RUN NAVIGATION ---
 pg.run()
