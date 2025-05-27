@@ -12,7 +12,7 @@ df_login = ler_sheets_cache('login')
 df_login = df_login.query("cargo == 'coordenação'")
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 bd = bd.merge(df_login[['Cidade', 'login']], how='left', on='Cidade')
-
+bd = bd.merge(df_login[['email', 'login']], how='left', on='login')
 
 st.title('Geral')
 st.header('Alunos Registrados por Orientadoras')
@@ -56,13 +56,13 @@ with st.expander("Coordenadoras"):
 
 st.title('Micro')
 with st.expander("Orientadoras"):
-    orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
+    orientadoras_por_cidade = bd.groupby('Cidade')['login'].unique().to_dict()
     for cidade, orientadoras in orientadoras_por_cidade.items():
         st.divider()
         st.header(f'{cidade}')
         for orientadora in orientadoras:
             st.subheader(f'{orientadora}')
-            alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
+            alunos_orientadora_total = bd.query(f"login == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
             try:
                 st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
