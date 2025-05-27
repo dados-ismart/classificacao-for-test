@@ -5,7 +5,8 @@ from PIL import Image
 
 logo = Image.open('imagens/logo_ismart.png')
 
-st.set_page_config(page_icon=logo,
+st.set_page_config(page_title='Ismart - Classificação',
+                   page_icon=logo,
                    layout="wide",
                    initial_sidebar_state="collapsed")
 
