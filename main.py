@@ -101,6 +101,14 @@ if check_microsoft_login() is not None:
         pg = st.navigation({
             "Páginas": [pagina_inicial_orientadora, dash, dash_status_preenchimento],
         })  
+    with st.sidebar:
+        if st.button("🚪 **Sair da conta**", 
+                    type="secondary", 
+                    help="Clique para desconectar-se completamente",
+                    use_container_width=True):
+            logout()
+            st.rerun()  # Recarrega a aplicação
+   
 else:
     st.stop()
 # --- RUN NAVIGATION ---
