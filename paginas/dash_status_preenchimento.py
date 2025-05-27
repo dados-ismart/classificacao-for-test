@@ -56,13 +56,13 @@ with st.expander("Coordenadoras"):
 
 st.title('Micro')
 with st.expander("Orientadoras"):
-    orientadoras_por_cidade = bd.groupby('Cidade')['login'].unique().to_dict()
+    orientadoras_por_cidade = bd.groupby('Cidade')['Orientadora'].unique().to_dict()
     for cidade, orientadoras in orientadoras_por_cidade.items():
         st.divider()
         st.header(f'{cidade}')
         for orientadora in orientadoras:
             st.subheader(f'{orientadora}')
-            alunos_orientadora_total = bd.query(f"login == '{orientadora}'")
+            alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
             try:
                 st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
