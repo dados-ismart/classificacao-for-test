@@ -5,7 +5,6 @@ import pytz
 from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-usuario = st.experimental_user
 email = st.experimental_user.email 
 
 caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
@@ -27,7 +26,7 @@ bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificac
 st.title('Formulário de Classificação')
 
 # filtros
-bd_segmentado = bd.query(f"Orientadora == '{email}'")
+bd_segmentado = bd.query(f"Email Orientadora == '{email}'")
 bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora != 'Não' and confirmacao_classificacao_orientadora != 'Sim'")
 
 col1, col2, col3 = st.columns(3)
@@ -62,7 +61,7 @@ if st.session_state['ra_nome'] != ra_nome:
     del st.session_state['ra_nome']
 
 # progresso
-alunos_orientadora_total = bd.query(f"Orientadora == '{email}'")
+alunos_orientadora_total = bd.query(f"Email Orientadora == '{email}'")
 alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
