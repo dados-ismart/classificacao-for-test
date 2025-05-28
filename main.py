@@ -88,16 +88,14 @@ dash_status_preenchimento = st.Page(
     icon= "🕔"
 )
 
-usuario = st.experimental_user
-email = st.experimental_user.email 
-
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if check_microsoft_login():
     if "auth_success_shown" not in st.session_state:
         st.toast("Autenticação realizada com sucesso!", icon="✅")
         st.session_state.auth_success_shown = True 
     df_login = ler_sheets_cache('login')
-
+    
+    email = st.experimental_user.email 
     if df_login.query(f'email == "{email}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
             "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
