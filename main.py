@@ -5,6 +5,11 @@ from PIL import Image
 
 logo = Image.open('imagens/logo_ismart.png')
 
+st.set_page_config(page_title='Ismart - Classificação',
+                page_icon=logo,
+                layout="wide",
+                initial_sidebar_state="collapsed")
+
 st.logo(logo, icon_image=logo)
 
 def check_microsoft_login():
@@ -84,11 +89,6 @@ dash_status_preenchimento = st.Page(
         
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if check_microsoft_login() is not None:
-    st.set_page_config(page_title='Ismart - Classificação',
-                   page_icon=logo,
-                   layout="wide",
-                   initial_sidebar_state="collapsed")
-    
     if "auth_success_shown" not in st.session_state:
         st.toast("Autenticação realizada com sucesso!", icon="✅")
         st.session_state.auth_success_shown = True 
