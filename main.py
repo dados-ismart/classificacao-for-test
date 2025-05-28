@@ -49,7 +49,7 @@ def check_microsoft_login():
 
 def logout():
     """Realiza logout da conta Microsoft e limpa a sessão."""
-    if st.user.is_logged_in:
+    if st.experimental_user.is_logged_in:
         st.logout()
     
     # Limpa variáveis da sessão
