@@ -7,7 +7,7 @@ logo = Image.open('imagens/logo_ismart.png')
 
 st.set_page_config(
                 #page_title='Ismart - Classificação',
-                page_icon=logo,
+                #page_icon=logo,
                 layout="wide",
                 initial_sidebar_state="collapsed")
 
