@@ -5,11 +5,11 @@ from PIL import Image
 
 logo = Image.open('imagens/logo_ismart.png')
 
-st.set_page_config(
-                #page_title='Ismart - Classificação',
-                #page_icon=logo,
-                layout="wide",
-                initial_sidebar_state="collapsed")
+# st.set_page_config(
+#                 page_title='Ismart - Classificação',
+#                 page_icon=logo,
+#                 layout="wide",
+#                 initial_sidebar_state="collapsed")
 
 st.logo(logo, icon_image=logo)
 
@@ -45,7 +45,7 @@ def check_microsoft_login():
     #         st.button("↩️ Tentar novamente", on_click=st.logout, use_container_width=True)
     #     st.stop()
 
-    return email_usuario
+    return True
 
 def logout():
     """Realiza logout da conta Microsoft e limpa a sessão."""
@@ -66,14 +66,14 @@ pagina_inicial_coordenadora = st.Page(
     "paginas/coordenadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    #default=True,
+    default=True,
 )
 
 pagina_inicial_orientadora = st.Page(
     "paginas/orientadoras.py",
     title= "Classificação",
     icon= "⚖️",
-    #default=True,
+    default=True,
 )
 
 dash = st.Page(
@@ -92,13 +92,13 @@ usuario = st.experimental_user
 email = st.experimental_user.email 
 
 # --- NAVIGATION SETUP [WITH SECTIONS]---
-if check_microsoft_login() is not None:
+if check_microsoft_login():
     if "auth_success_shown" not in st.session_state:
         st.toast("Autenticação realizada com sucesso!", icon="✅")
         st.session_state.auth_success_shown = True 
     df_login = ler_sheets_cache('login')
 
-    if df_login.query(f'email == "{check_microsoft_login()}"')["cargo"].iloc[0] == "coordenação":
+    if df_login.query(f'email == "{email}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
             "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
         })    
