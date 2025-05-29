@@ -17,7 +17,7 @@ def check_microsoft_login():
     """Autenticação via login da Microsoft e verificação do domínio."""
     # if not st.user.is_logged_in:   #Esta versão não está disponível no streamlit utilizado para deploy
     if not st.experimental_user.is_logged_in:
-        st.markdown("<div style='text-align: center; font-size: 32px; font-weight: bold;'>🔐 Bem-vinda(o) ao Dashboard da Educação Básica</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center; font-size: 32px; font-weight: bold;'>🔐 Bem-vinda(o) a Plataforma de Classificação</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-size: 18px;'>Para acessar as informações, faça login com sua conta institucional.</div>", unsafe_allow_html=True)
         st.write("")
         
