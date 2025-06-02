@@ -100,7 +100,7 @@ with st.expander("Tabela de Registro Geral Atual"):
                         "Orientadora",
                         required=False
                     ),
-                    "classificacao_final": st.column_config.SelectboxColumn(
+                    "classificacao_final": st.column_config.TextColumn(
                         "Classificação Final",
                         required=False
                     ),
@@ -311,7 +311,7 @@ with st.expander("Tabela de Registro Geral Histórico"):
                         "Orientadora",
                         required=False
                     ),
-                    "classificacao_final": st.column_config.SelectboxColumn(
+                    "classificacao_final": st.column_config.TextColumn(
                         "Classificação Final",
                         required=False
                     ),
