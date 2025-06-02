@@ -21,12 +21,14 @@ df_historico = ler_sheets_cache('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificacao_orientadora'], ascending = False)
+df_login = ler_sheets_cache('login')
 
+orientadora = df_login.loc[df_login['email'] == email, 'login'].iloc[0]
 
 st.title('Formulário de Classificação')
 
 # filtros
-bd_segmentado = bd.query(f"Email_Orientadora == '{email}'")
+bd_segmentado = bd.query(f"Orientadora == '{orientadora}'")
 bd_segmentado = bd_segmentado.query("confirmacao_classificacao_orientadora != 'Não' and confirmacao_classificacao_orientadora != 'Sim'")
 
 col1, col2, col3 = st.columns(3)
@@ -61,7 +63,7 @@ if st.session_state['ra_nome'] != ra_nome:
     del st.session_state['ra_nome']
 
 # progresso
-alunos_orientadora_total = bd.query(f"Email_Orientadora == '{email}'")
+alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
 alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
 try:
     st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
