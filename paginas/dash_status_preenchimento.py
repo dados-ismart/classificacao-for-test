@@ -94,4 +94,4 @@ if st.button('Finalizar Classificação do Mês'):
                                     ,'Nota Biologia','Nota ENEM','Nota PU'
                                     ,'media_calibrada','Orientadora','Ano','Segmento']]
                                     , how='left', on='RA')
-    registrar(df_modelo_historico, 'historico', 'RA')
+    registrar(df_modelo_historico, 'historico', 'RA', False)
