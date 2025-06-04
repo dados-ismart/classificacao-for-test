@@ -95,3 +95,4 @@ if st.button('Finalizar Classificação do Mês'):
                                     ,'media_calibrada','Orientadora','Ano','Segmento']]
                                     , how='left', on='RA')
     registrar(df_modelo_historico, 'historico', 'RA', False)
+    
