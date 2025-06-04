@@ -229,7 +229,7 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     for a in range(1, 4):
         try:
             updared_df = pd.concat([df, df_insert], ignore_index=True)
-            conn.update(worksheet="registro", data=updared_df)
+            conn.update(worksheet=aba, data=updared_df)
             sleep(0.2)
             st.success('Sucesso!')
             sleep(0.5)
