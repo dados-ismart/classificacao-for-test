@@ -322,9 +322,7 @@ if submit_button:
         ]]   
         
         df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-        lista_ras = df_tabela_editavel['RA']
-        lista_ras = lista_ras.to_list()
-        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final', lista_ras)
+        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final')
 
 #Segunda Tabela - Edição dos Dados                 
 df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
@@ -597,8 +595,6 @@ if submit_button:
         df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
         df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['conclusao_classificacao_final']
         df_tabela_editavel['conclusao_classificacao_final'] = 'Sim'
-        lista_ras = df_tabela_editavel['RA']
-        lista_ras = lista_ras.to_list()
-        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final', lista_ras)
+        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final')
     else:
         st.warning('Revise ao menos um aluno antes de registrar')

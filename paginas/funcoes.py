@@ -209,8 +209,8 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
     motivo = motivo[:-2]
     return classificacao, motivo
 
-def registrar(df_insert, aba, coluna_apoio, ra, remover_registros_anteriores=True):
-    #Leitura do ta aba registro e checa se é nula
+def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
+    #Leitura da aba registro e checa se é nula
     for i in range(0, 2):
         df = ler_sheets(aba)
         if df.shape[0] == 0:
@@ -219,12 +219,11 @@ def registrar(df_insert, aba, coluna_apoio, ra, remover_registros_anteriores=Tru
         else: 
             break
 
-    #Limpar linhas repetidas
+    #Limpar linhas duplicadas (registros_anteriores)
     if remover_registros_anteriores:
+        ra = df_insert['RA'].to_list()
         if isinstance(ra, list) and ra: 
             df = df[~df['RA'].isin(ra)]
-        else:
-            df = df[df['RA'] != ra]
 
     #REGISTRAR
     for a in range(1, 4):
