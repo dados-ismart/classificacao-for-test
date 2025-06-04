@@ -906,8 +906,7 @@ else:
                             ]]                                                                                                   
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
+            df_insert.drop_duplicates('RA')
             lista_ras = df_insert['RA']
             lista_ras = lista_ras.to_list()
-            df_insert.drop_duplicates('RA')
             registrar(df_insert, 'registro', 'RA', lista_ras)
-            

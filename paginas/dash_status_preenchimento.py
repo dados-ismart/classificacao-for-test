@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
 
 # importar dados
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-bd = df_login = ler_sheets_cache('bd')
+bd = ler_sheets_cache('bd')
 bd['RA'] = bd['RA'].astype(int)
 df_login = ler_sheets_cache('login')
 df_login = df_login.query("cargo == 'coordenação'")
@@ -82,3 +82,19 @@ with st.expander("Coordenadoras"):
             except ZeroDivisionError:
                 st.error('Zero Resultados')
 
+
+# Automatização da atualização de histórico
+if st.button('Finalizar Classificação do Mês'):
+    bd = ler_sheets_cache('bd')
+    bd_historico = ler_sheets_cache('historico')
+    df_modelo_historico = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
+                                    ,'Nota Português','Nota História','Nota Geografia'
+                                    ,'Nota Inglês','Nota Francês/Alemão e Outros'
+                                    ,'Nota Espanhol','Nota Química','Nota Física'
+                                    ,'Nota Biologia','Nota ENEM','Nota PU'
+                                    ,'media_calibrada','Orientadora','Ano','Segmento']]
+                                    , how='left', on='RA')
+
+    lista_ras = df_modelo_historico['RA']
+    lista_ras = lista_ras.to_list()
+    registrar(df_modelo_historico, 'historico', 'RA', lista_ras)
