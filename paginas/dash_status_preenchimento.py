@@ -86,7 +86,7 @@ with st.expander("Coordenadoras"):
 # Automatização da atualização de histórico
 if st.button('Finalizar Classificação do Mês'):
     bd = ler_sheets_cache('bd')
-    bd_historico = ler_sheets_cache('historico')
+    df = ler_sheets('registro')
     df_modelo_historico = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
                                     ,'Nota Português','Nota História','Nota Geografia'
                                     ,'Nota Inglês','Nota Francês/Alemão e Outros'
