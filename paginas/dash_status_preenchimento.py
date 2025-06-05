@@ -84,7 +84,20 @@ with st.expander("Coordenadoras"):
 
 
 # Automatização da atualização de histórico
-if st.button('Finalizar Classificação do Mês'):
+if 'registro_finalizado' not in st.session_state:
+    st.session_state.registro_finalizado = False
+
+if 'limpeza_finalizada' not in st.session_state:
+    st.session_state.limpeza_finalizada = False
+
+def finalizar():
+    st.session_state.registro_finalizado = True
+    st.session_state.limpeza_finalizada = True
+
+st.button('Finalizar Classificação do Mês', on_click=finalizar)
+
+if st.session_state.registro_finalizado:
+    st.session_state.registro_finalizado = True
     bd = ler_sheets_cache('bd')
     df = ler_sheets('registro')
     df_modelo_historico = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
@@ -95,3 +108,7 @@ if st.button('Finalizar Classificação do Mês'):
                                     ,'media_calibrada','Orientadora','Ano','Segmento']]
                                     , how='left', on='RA')
     registrar(df_modelo_historico, 'historico', 'RA', False)
+
+if st.session_state.limpeza_finalizada:
+    st.session_state.limpeza_finalizada = True
+    st.toast('limpeza limpa')
