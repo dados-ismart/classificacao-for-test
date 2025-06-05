@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pytz
-from streamlit_gsheets import GSheetsConnection
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, conn
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, esvazia_aba
 
 # importar dados
 df = ler_sheets('registro')
@@ -113,9 +112,6 @@ if st.session_state.registro_finalizado:
 if st.session_state.limpeza_finalizada:
     st.session_state.limpeza_finalizada = False
 
-    df_vazio = df.drop(df.index)
-    
-    conn = conn()
-    conn.update(worksheet='registro', data=df_vazio)
+    esvazia_aba('registro')
 
     st.toast("Classificação do Mês Concluída!", icon="✅")

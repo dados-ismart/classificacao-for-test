@@ -255,6 +255,12 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
                     continue
     st.rerun()
 
+def esvazia_aba(aba):
+    df = ler_sheets_cache(aba)
+
+    df_vazio = df.drop(df.index)
+    conn.update(worksheet={aba}, data=df_vazio)
+
 def retornar_indice(lista, variavel):
     if variavel == None:
         return None
