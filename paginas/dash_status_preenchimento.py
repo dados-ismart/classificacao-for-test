@@ -13,6 +13,8 @@ df_login = df_login.query("cargo == 'coordenação'")
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 bd = bd.merge(df_login[['Cidade', 'login']], how='left', on='Cidade')
 
+st.dataframe(bd)
+
 st.title('Geral')
 st.header('Alunos Registrados por Orientadoras')
 qtd_alunos = bd.shape[0]
