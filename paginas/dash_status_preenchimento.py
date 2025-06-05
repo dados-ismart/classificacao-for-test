@@ -8,9 +8,6 @@ df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
 bd = ler_sheets_cache('bd')
 bd['RA'] = bd['RA'].astype(int)
-df_login = ler_sheets_cache('login')
-df_login_coordenacao = df_login.query("cargo == 'coordenação'")
-#bd = bd.merge(df_login_coordenacao[['Cidade', 'login']], how='left', on='Cidade')
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
 
@@ -66,20 +63,6 @@ with st.expander("Orientadoras"):
             st.subheader(f'{orientadora}')
             alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
-            try:
-                st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
-            except ZeroDivisionError:
-                st.error('Zero Resultados')
-
-with st.expander("Coordenadoras"):
-    coordenadoras_por_cidade = bd.groupby('Cidade')['login'].unique().to_dict()
-    for cidade, coordenadoras in coordenadoras_por_cidade.items():
-        st.divider()
-        st.header(f'{cidade}')
-        for coordenadora in coordenadoras:
-            st.subheader(f'{coordenadora}')
-            alunos_orientadora_total = bd.query(f"login == '{coordenadora}'")
-            alunos_orientadora_total_registrados = alunos_orientadora_total.query("conclusao_classificacao_final == 'Sim'")
             try:
                 st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
             except ZeroDivisionError:
