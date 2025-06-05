@@ -97,7 +97,7 @@ def finalizar():
 st.button('Finalizar Classificação do Mês', on_click=finalizar)
 
 if st.session_state.registro_finalizado:
-    st.session_state.registro_finalizado = True
+    st.session_state.registro_finalizado = False
     bd = ler_sheets_cache('bd')
     df = ler_sheets('registro')
     df_modelo_historico = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
@@ -110,5 +110,5 @@ if st.session_state.registro_finalizado:
     registrar(df_modelo_historico, 'historico', 'RA', False)
 
 if st.session_state.limpeza_finalizada:
-    st.session_state.limpeza_finalizada = True
+    st.session_state.limpeza_finalizada = False
     st.toast('limpeza limpa')
