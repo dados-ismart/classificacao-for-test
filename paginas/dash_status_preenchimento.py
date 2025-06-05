@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pytz
+from streamlit_gsheets import GSheetsConnection
 from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, conn
 
 # importar dados
