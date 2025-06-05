@@ -259,7 +259,7 @@ def esvazia_aba(aba):
     df = ler_sheets_cache(aba)
 
     df_vazio = df.drop(df.index)
-    conn.update(worksheet={aba}, data=df_vazio)
+    conn.update(worksheet=aba, data=df_vazio)
 
 def retornar_indice(lista, variavel):
     if variavel == None:
