@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pytz
 from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, esvazia_aba
+from time import sleep
 
 # importar dados
 df = ler_sheets('registro')
@@ -99,3 +100,5 @@ if st.session_state.limpeza_finalizada:
     esvazia_aba('registro')
 
     st.toast("Classificação do Mês Concluída!", icon="✅")
+    sleep(2)
+    st.rerun()
