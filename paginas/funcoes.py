@@ -256,11 +256,19 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     st.rerun()
 
 def esvazia_aba(aba):
-    df = ler_sheets_cache(aba)
+    for i in range(0, 4):
+        df = ler_sheets_cache(aba)
 
-    df_vazio = df.drop(df.index)
-    conn.update(worksheet=aba, data=df_vazio)
-
+        df_vazio = df.drop(df.index)
+        conn.update(worksheet=aba, data=df_vazio)
+        #Leitura da aba registro e checa se é nula
+        df = ler_sheets(aba)
+        if df.shape[0] == 0:
+            continue
+        else: 
+            st.cache_data.clear()
+            break
+        
 def retornar_indice(lista, variavel):
     if variavel == None:
         return None
