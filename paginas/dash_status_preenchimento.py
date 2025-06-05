@@ -11,8 +11,6 @@ bd['RA'] = bd['RA'].astype(int)
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
 
-st.dataframe(bd)
-
 st.title('Geral')
 st.header('Alunos Registrados por Orientadoras')
 qtd_alunos = bd.shape[0]
@@ -64,7 +62,7 @@ with st.expander("Orientadoras"):
             alunos_orientadora_total = bd.query(f"Orientadora == '{orientadora}'")
             alunos_orientadora_total_registrados = alunos_orientadora_total.query("confirmacao_classificacao_orientadora == 'Não' or confirmacao_classificacao_orientadora == 'Sim'")
             try:
-                st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Você registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
+                st.progress(alunos_orientadora_total_registrados.shape[0]/alunos_orientadora_total.shape[0], f'Registrou: **{alunos_orientadora_total_registrados.shape[0]}/{alunos_orientadora_total.shape[0]}**')
             except ZeroDivisionError:
                 st.error('Zero Resultados')
 
