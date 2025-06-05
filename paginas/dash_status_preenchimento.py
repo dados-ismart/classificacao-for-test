@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, conn
 
 # importar dados
 df = ler_sheets('registro')
@@ -111,4 +111,10 @@ if st.session_state.registro_finalizado:
 
 if st.session_state.limpeza_finalizada:
     st.session_state.limpeza_finalizada = False
-    st.toast('limpeza limpa')
+
+    df_vazio = df.drop(df.index)
+    
+    conn = conn()
+    conn.update(worksheet='registro', data=df_vazio)
+
+    st.toast("Classificação do Mês Concluída!", icon="✅")
