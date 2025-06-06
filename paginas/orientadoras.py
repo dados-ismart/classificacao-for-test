@@ -678,7 +678,7 @@ else:
                     options=['Sim', '-'],
                     required=True
                 ),
-                "RA": st.column_config.Column(
+                "RA": st.column_config.NumberColumn(
                     "RA",
                     required=False
                 ),
