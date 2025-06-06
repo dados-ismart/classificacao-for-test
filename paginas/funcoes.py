@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from time import sleep
+from io import BytesIO
+from xlsxwriter import Workbook
 
 @st.cache_resource(ttl=7200)
 def conn():
@@ -276,3 +278,9 @@ def retornar_indice(lista, variavel):
     except:
         return None
 
+def to_excel(df):
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Dados')
+    processed_data = output.getvalue()
+    return processed_data
