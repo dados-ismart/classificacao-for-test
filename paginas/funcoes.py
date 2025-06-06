@@ -23,7 +23,7 @@ def ler_sheets(pagina, ttl=1):
             df = conn.read(worksheet=pagina, ttl=ttl)
             return df
         except:
-            sleep(3)
+            sleep(0.5)
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
@@ -36,7 +36,7 @@ def ler_sheets_cache(pagina):
             df = conn.read(worksheet=pagina)
             return df
         except:
-            sleep(3)
+            sleep(0.5)
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
