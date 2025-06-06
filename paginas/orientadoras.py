@@ -19,7 +19,7 @@ df_historico = ler_sheets_cache('historico')
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificacao_orientadora'], ascending = False)
 df_login = ler_sheets_cache('login')
-df_historico['RA'] = df_historico['RA'].astype(int)
+#df_historico['RA'] = df_historico['RA'].astype(int)
 
 orientadora = df_login.loc[df_login['email'] == email, 'login'].iloc[0]
 
