@@ -85,14 +85,14 @@ if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
     bd = ler_sheets_cache('bd')
     df = ler_sheets('registro')
-    df_modelo_historico = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
+    df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
                                     ,'Nota Português','Nota História','Nota Geografia'
                                     ,'Nota Inglês','Nota Francês/Alemão e Outros'
                                     ,'Nota Espanhol','Nota Química','Nota Física'
                                     ,'Nota Biologia','Nota ENEM','Nota PU'
                                     ,'media_calibrada','Orientadora','Ano','Segmento']]
                                     , how='left', on='RA')
-    registrar(df_modelo_historico, 'historico', 'RA', False)
+    registrar(df_insert, 'historico', 'RA', False)
 
 if st.session_state.limpeza_finalizada:
     st.session_state.limpeza_finalizada = False
