@@ -24,8 +24,6 @@ def ler_sheets(pagina, ttl=1):
             return df
         except:
             sleep(3)
-            conn = st.connection("gsheets", type=GSheetsConnection)
-            pass
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
@@ -39,8 +37,6 @@ def ler_sheets_cache(pagina):
             return df
         except:
             sleep(3)
-            conn = st.connection("gsheets", type=GSheetsConnection)
-            pass
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
