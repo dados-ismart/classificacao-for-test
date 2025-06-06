@@ -69,17 +69,27 @@ with st.expander("Orientadoras"):
 
 
 # Automatização da atualização de histórico
+@st.dialog("Insira seus dados")
+def input_popup():
+    senha = st.text_input("Nome")
+    if st.button("Enviar"):
+        st.session_state.senha = senha
+        st.rerun()
+
+if st.button("Finalizar Classificação do Mês"):
+    input_popup()
+
+
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
 
 if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
 
-def finalizar():
+if st.session_state.senha == 123:
     st.session_state.registro_finalizado = True
     st.session_state.limpeza_finalizada = True
 
-st.button('Finalizar Classificação do Mês', on_click=finalizar)
 
 if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
