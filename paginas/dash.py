@@ -19,7 +19,7 @@ fuso_horario = pytz.timezone('America/Sao_Paulo')
 
 df = ler_sheets('registro')
 df['RA'] = df['RA'].astype(int)
-bd = ler_sheets('bd')
+bd = ler_sheets_cache('bd')
 bd['RA'] = bd['RA'].astype(int)
 df_historico = ler_sheets_cache('historico')
 df_historico['RA'] = df_historico['RA'].astype(int)

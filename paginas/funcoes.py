@@ -39,12 +39,13 @@ def ler_sheets_cache(pagina):
             return df
         except:
             sleep(3)
+            conn = st.connection("gsheets", type=GSheetsConnection)
             pass
-    st.error('Erro na leitura do sheets, tente novamente')
+    st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
     st.stop()
-
+    
 def pontuar(resposta, lista):
     try:
         for index, elemento in enumerate(lista):
