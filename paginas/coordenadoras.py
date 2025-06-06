@@ -10,10 +10,8 @@ email = st.experimental_user.email
 
 #importar e tratar datasets
 df = ler_sheets('registro')
-df['RA'] = df['RA'].astype(int)
 bd = ler_sheets_cache('bd')
 bd = bd.dropna(subset=['RA - NOME'])
-bd['RA'] = bd['RA'].astype(int)
 df_login = ler_sheets_cache('login')
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificacao_orientadora'], ascending = False)
