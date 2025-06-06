@@ -88,13 +88,12 @@ if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
 
 if 'senha' in st.session_state:
-    senha = st.session_state.senha
-st.write(senha)
-if senha == 123:
-    st.session_state.registro_finalizado = True
-    st.session_state.limpeza_finalizada = True
+    if st.session_state.senha == '123':
+        st.session_state.registro_finalizado = True
+        st.session_state.limpeza_finalizada = True
 
-
+st.write(st.session_state.senha)
+st.write(type(st.session_state.senha))
 if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
     bd = ler_sheets_cache('bd')
