@@ -80,22 +80,15 @@ def input_popup():
 if st.button("Finalizar Classificação do Mês"):
     input_popup()
 
-
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
 
 if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
 
-if 'senha' in st.session_state:
-    if st.session_state.senha == '123':
-        st.session_state.registro_finalizado = True
-        st.session_state.limpeza_finalizada = True
-
-st.write(st.session_state.senha)
-st.write(type(st.session_state.senha))
 if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
+    st.session_state.senha == ''
     bd = ler_sheets_cache('bd')
     df = ler_sheets('registro')
     df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
@@ -115,3 +108,9 @@ if st.session_state.limpeza_finalizada:
     st.toast("Classificação do Mês Concluída!", icon="✅")
     sleep(2)
     st.rerun()
+
+if 'senha' in st.session_state:
+    if st.session_state.senha == '123':
+        st.session_state.registro_finalizado = True
+        st.session_state.limpeza_finalizada = True
+        
