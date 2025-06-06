@@ -89,7 +89,7 @@ if 'limpeza_finalizada' not in st.session_state:
 
 if 'senha' in st.session_state:
     senha = st.session_state.senha
-    
+st.write(senha)
 if senha == 123:
     st.session_state.registro_finalizado = True
     st.session_state.limpeza_finalizada = True
