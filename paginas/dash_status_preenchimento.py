@@ -74,11 +74,11 @@ st.divider()
 def input_popup():
     if st.button("Enviar"):
         st.session_state.senha = st.text_input("Senha")
-        st.rerun()
 
 if st.button("Finalizar Classificação do Mês"):
     input_popup()
-
+    st.rerun()
+    
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
 
