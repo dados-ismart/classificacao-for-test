@@ -71,11 +71,12 @@ with st.expander("Orientadoras"):
 # Automatização da atualização de histórico
 st.divider()
 with st.form(key='terminar_classificacao'):
+    st.title('Finalizar a Classificação do Mês')
     senha = st.text_input("Senha")
     submit_button = st.form_submit_button(label='REGISTRAR')
 if submit_button:
     st.session_state.senha = senha
-    
+    st.rerun()
 
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
