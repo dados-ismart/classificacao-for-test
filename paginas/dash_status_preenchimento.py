@@ -70,15 +70,13 @@ with st.expander("Orientadoras"):
 
 # Automatização da atualização de histórico
 st.divider()
-@st.dialog("Insira seus dados")
-def input_popup():
-    if st.button("Enviar"):
-        st.session_state.senha = st.text_input("Senha")
-
-if st.button("Finalizar Classificação do Mês"):
-    input_popup()
-    st.rerun()
+with st.form(key='terminar_classificacao'):
+    senha = st.text_input("Senha")
+    submit_button = st.form_submit_button(label='REGISTRAR')
+if submit_button:
+    st.session_state.senha = senha
     
+
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
 
