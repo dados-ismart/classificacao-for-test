@@ -72,9 +72,8 @@ with st.expander("Orientadoras"):
 st.divider()
 @st.dialog("Insira seus dados")
 def input_popup():
-    senha = st.text_input("Senha")
     if st.button("Enviar"):
-        st.session_state.senha = senha
+        st.session_state.senha = st.text_input("Senha")
         st.rerun()
 
 if st.button("Finalizar Classificação do Mês"):
@@ -88,7 +87,7 @@ if 'limpeza_finalizada' not in st.session_state:
 
 if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
-    st.session_state.senha == ''
+    del st.session_state["senha"]
     bd = ler_sheets_cache('bd')
     df = ler_sheets('registro')
     df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
