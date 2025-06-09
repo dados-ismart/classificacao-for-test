@@ -70,19 +70,25 @@ with st.expander("Orientadoras"):
 
 # Automatização da atualização de histórico
 st.divider()
-with st.form(key='terminar_classificacao'):
-    st.title('Finalizar a Classificação do Mês')
-    senha = st.text_input("Senha")
-    submit_button = st.form_submit_button(label='REGISTRAR')
-if submit_button:
-    st.session_state.senha = senha
-    st.rerun()
+@st.dialog("Insira seus dados")
+def input_popup():
+    if st.button("Enviar"):
+        st.session_state.senha = st.text_input("Senha")
+        st.rerun()
+        
+if st.button("Finalizar Classificação do Mês"):
+    input_popup()
 
 if 'registro_finalizado' not in st.session_state:
     st.session_state.registro_finalizado = False
 
 if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
+
+if 'senha' in st.session_state:
+    if st.session_state.senha == '123':
+        st.session_state.registro_finalizado = True
+        st.session_state.limpeza_finalizada = True
 
 if st.session_state.registro_finalizado:
     st.session_state.registro_finalizado = False
@@ -106,9 +112,4 @@ if st.session_state.limpeza_finalizada:
     st.toast("Classificação do Mês Concluída!", icon="✅")
     sleep(2)
     st.rerun()
-
-if 'senha' in st.session_state:
-    if st.session_state.senha == '123':
-        st.session_state.registro_finalizado = True
-        st.session_state.limpeza_finalizada = True
         
