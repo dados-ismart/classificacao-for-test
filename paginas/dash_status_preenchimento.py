@@ -73,10 +73,9 @@ st.divider()
 @st.dialog("Insira seus dados")
 def input_popup():
     with st.form(key='confirmacao_classificacao_mes'):
-        submit_button = st.form_submit_button(label='REGISTRAR')
-    if submit_button:
         senha = st.text_input("Senha")
-    if st.button("Enviar"):
+        submit_button = st.form_submit_button(label='Confirmar')
+    if submit_button:
         st.session_state.senha = senha
         st.rerun()
         
