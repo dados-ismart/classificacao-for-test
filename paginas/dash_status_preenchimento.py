@@ -70,7 +70,7 @@ with st.expander("Orientadoras"):
 
 # Automatização da atualização de histórico
 st.divider()
-@st.dialog("Insira seus dados")
+@st.dialog("Insira a senha e confirme para reiniciar a classificação")
 def input_popup():
     with st.form(key='confirmacao_classificacao_mes'):
         senha = st.text_input("Senha")
