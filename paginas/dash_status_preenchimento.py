@@ -72,8 +72,12 @@ with st.expander("Orientadoras"):
 st.divider()
 @st.dialog("Insira seus dados")
 def input_popup():
+    with st.form(key='confirmacao_classificacao_mes'):
+        submit_button = st.form_submit_button(label='REGISTRAR')
+    if submit_button:
+        senha = st.text_input("Senha")
     if st.button("Enviar"):
-        st.session_state.senha = st.text_input("Senha")
+        st.session_state.senha = senha
         st.rerun()
         
 if st.button("Finalizar Classificação do Mês"):
