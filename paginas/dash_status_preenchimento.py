@@ -6,9 +6,7 @@ from time import sleep
 
 # importar dados
 df = ler_sheets('registro')
-df['RA'] = df['RA'].astype(int)
 bd = ler_sheets_cache('bd')
-bd['RA'] = bd['RA'].astype(int)
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
 
