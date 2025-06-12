@@ -308,8 +308,7 @@ def enviar_email(contatos, assunto, mensagem):
         mail['To'] = contato
 
         #email pode ter texto e html e encode utf-8
-        mail.add_header('Content-Type','text/html')
-        mail.set_payload(mensagem.encode('utf-8'))
+        mail.set_content(mensagem)
 
         contexto_ssl = ssl.create_default_context()
 
