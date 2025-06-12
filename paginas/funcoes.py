@@ -289,25 +289,18 @@ def to_excel(df):
     processed_data = output.getvalue()
     return processed_data
 
-def enviar_email():
+def enviar_email(contatos, assunto, mensagem):
     #Configurações de login
     EMAIL_ADDRESS = 'dados@ismart.org.br'
     EMAIL_PASSWORD = 'User#1340'
-    contatos = ['feliperiosamaral@gmail.com', 'felipeamral9@AJJSfashgf', 'zzexpvp@faljshfkjashf']
     
     cont = 0
-    
+    st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
     for contato in contatos:
         mail = EmailMessage()
 
         # tópico
-        mail['Subject'] = 'Inscrição!'
-        #mensagem
-        mensagem ='''
-        Olá,
-
-        tudo bem?
-        '''
+        mail['Subject'] = assunto
 
         #De
         mail['From'] = EMAIL_ADDRESS
@@ -332,14 +325,9 @@ def enviar_email():
                 email.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
                 email.send_message(mail)
                 
-                print(f"E-mail enviado com sucesso para {contato}")
-                print(f'load: {cont/len(contatos) * 100:.2f}%')
-
+                st.success(f"E-mail enviado com sucesso para {contato}")
         except Exception as e:
-            print(f"Erro ao enviar e-mail para {contato}: {e}")
-            print(f'load: {cont/len(contatos) * 100:.2f}%')
-            
-        # Pausa entre os envios
+            st.warning(f"Erro ao enviar e-mail para {contato}: {e}") 
         sleep(3)
 
-    print('fim')
+    st.toast("Envio concluio!", icon="✅")

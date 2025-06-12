@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, esvazia_aba
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, esvazia_aba, enviar_email
 from time import sleep
 
 # importar dados
@@ -118,9 +118,7 @@ if st.session_state.limpeza_finalizada:
 
 # ENVIO E E-MAIL
 
-st.header("Pendências das Orientadoras")
-
-with st.expander("Mostrar orientadoras com progresso incompleto"):
+if st.button('Enviar E-mail de lembrete'):
     try:
         # 1. Contar o total de alunos por orientadora
         total_por_orientadora = bd.groupby('Orientadora').size().rename('Total')
@@ -143,11 +141,13 @@ with st.expander("Mostrar orientadoras com progresso incompleto"):
             incompletas_df = incompletas_df.merge(df_login[['Orientadora', 'email']], how='left', on='Orientadora')
             email_list = incompletas_df['email'].to_list()
             registros_faltantes_list = incompletas_df['registros_faltantes'].to_list()
-            st.write(email_list)
-            st.write(registros_faltantes_list)
-      
-
             
+            assunto = 'Preenchimento da classificação'
+            mensagem ='''
+                        Olá, tudo bem?
+                        '''
+            enviar_email(email_list, assunto, mensagem)
+      
 
     except Exception as e:
         st.error(f"Ocorreu um erro ao processar os dados: {e}")
