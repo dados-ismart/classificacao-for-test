@@ -137,17 +137,40 @@ if st.button('Enviar E-mail de lembrete'):
         if incompletas_df.empty:
             st.success("🎉 Todas as orientadoras completaram o registro de seus alunos!")
         else:
-            incompletas_df['registros_faltantes'] = progresso_df['Total'] - progresso_df['Registrados']
             incompletas_df = incompletas_df.merge(df_login[['Orientadora', 'email']], how='left', on='Orientadora')
             email_list = incompletas_df['email'].to_list()
-            registros_faltantes_list = incompletas_df['registros_faltantes'].to_list()
             
             assunto = 'Preenchimento da classificação'
             mensagem = '''
-                        Olá, tudo bem?
+            Olá, tudo bem?
 
-                        Ainda falta um aluno para ser preenchido!
-                    '''
+            Este é um lembrete de que a tarefa de classificação dos alunos referente a este mês ainda consta como pendente em nosso sistema.
+
+            Sua avaliação é fundamental para mantermos os registros atualizados. Para concluir, por favor, acesse o sistema através do link abaixo:
+
+            •	*Links separados por praça:*
+            •	🟣 *BH*: Classificação Praça BH - https://classificacao-ismart-bh.streamlit.app/
+            •	🔵 *RJ*: Classificação Praça RJ - https://classificacao-ismart-rj.streamlit.app/
+            •	🟡 *SJC*: Classificação Praça SJC - https://classificacao-ismart-sjc.streamlit.app/
+            •	🟢 *SP*: Classificação Praça SP - https://classificacao-ismart-sp.streamlit.app/
+            
+            Só lembrando as *categorias de avaliação* (baseadas apenas nas notas):
+            ❌ Crítico Escolar - 1 nota com diferença menor que 1 ponto da média ou mais de 2 notas abaixo da média
+            ⚠️ Atenção Escolar - até 2 notas abaixo da média
+            ➖ Mediano Escolar - nenhuma nota abaixo da média
+            🔶 Pré-Destaque Escolar - mais de 2 notas com diferença maior que 2 pontos da média e pelo menos 1 com diferença maior que 1 ponto da média
+            ⭐ Destaque Escolar - 5 notas com diferença maior que 2 pontos da média
+
+
+            Agradecemos sua atenção e colaboração.
+
+            Atenciosamente,
+
+            Equipe de Dados
+
+            ---
+            *Este é um e-mail automático. Por favor, não responda diretamente.*
+            '''
             enviar_email(email_list, assunto, mensagem)
       
 
