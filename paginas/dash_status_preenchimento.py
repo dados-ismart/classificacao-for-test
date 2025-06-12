@@ -136,7 +136,7 @@ with st.expander("Mostrar orientadoras com progresso incompleto"):
         # 4. Filtrar apenas as orientadoras onde o registrado é menor que o total
         incompletas_df = progresso_df[progresso_df['Registrados'] < progresso_df['Total']]
 
-        progresso_df = progresso_df.merge(df_login[['Orientadora', 'email']], how='left', on='Orientadora')
+        progresso_df = progresso_df.merge(df_login[['login', 'email']], how='left', on='Orientadora')
 
         if incompletas_df.empty:
             st.success("🎉 Todas as orientadoras completaram o registro de seus alunos!")

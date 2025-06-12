@@ -21,7 +21,7 @@ bd = bd.sort_values(by=['conclusao_classificacao_final','confirmacao_classificac
 df_login = ler_sheets_cache('login')
 #df_historico['RA'] = df_historico['RA'].astype(int)
 
-orientadora = df_login.loc[df_login['email'] == email, 'login'].iloc[0]
+orientadora = df_login.loc[df_login['email'] == email, 'Orientadora'].iloc[0]
 
 st.title('Formulário de Classificação')
 
