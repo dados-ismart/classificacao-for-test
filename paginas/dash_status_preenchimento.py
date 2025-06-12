@@ -88,7 +88,7 @@ if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
 
 if 'senha' in st.session_state:
-    if st.session_state.senha == 'Dados_123':
+    if st.session_state.senha == 'User#1340':
         st.session_state.registro_finalizado = True
         st.session_state.limpeza_finalizada = True
 
@@ -115,10 +115,31 @@ if st.session_state.limpeza_finalizada:
     sleep(2)
     st.rerun()
         
-
 # ENVIO E E-MAIL
+@st.dialog("Insira a senha e confirme para enviar os E-mails")
+def input_popup():
+    with st.form(key='confirmacao_classificacao_mes'):
+        senha = st.text_input("Senha")
+        submit_button = st.form_submit_button(label='Confirmar')
+    if submit_button:
+        st.session_state.senha = senha
+        st.rerun()
+        
+if st.button("Enviar E-mail de lembrete"):
+    input_popup()
 
-if st.button('Enviar E-mail de lembrete'):
+if 'registro_finalizado' not in st.session_state:
+    st.session_state.registro_finalizado = False
+
+if 'senha' in st.session_state:
+    if st.session_state.senha == 'User#1340':
+        st.session_state.registro_finalizado = True
+        st.session_state.limpeza_finalizada = True
+
+if st.session_state.registro_finalizado:
+    st.session_state.registro_finalizado = False
+    del st.session_state["senha"]
+
     try:
         # 1. Contar o total de alunos por orientadora
         total_por_orientadora = bd.groupby('Orientadora').size().rename('Total')
@@ -174,7 +195,5 @@ if st.button('Enviar E-mail de lembrete'):
             Este é um e-mail automático. Por favor, não responda diretamente.
             '''
             enviar_email(email_list, assunto, mensagem)
-      
-
     except Exception as e:
         st.error(f"Ocorreu um erro ao processar os dados: {e}")
