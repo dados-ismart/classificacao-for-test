@@ -295,9 +295,9 @@ def enviar_email(contatos, assunto, mensagem):
     EMAIL_PASSWORD = 'User#1340'
     
     cont = 0
-    
+    barra_progresso = st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
     for contato in contatos:
-        st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
+        barra_progresso.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
         mail = EmailMessage()
 
         # tópico
@@ -329,5 +329,4 @@ def enviar_email(contatos, assunto, mensagem):
             st.toast(f"Erro ao enviar e-mail para {contato}: {e}", icon="❌")
         sleep(1)
     st.toast("Envio concluio!", icon="✅")
-    sleep(2)
     st.rerun()
