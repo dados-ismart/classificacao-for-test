@@ -144,6 +144,11 @@ with st.expander("Mostrar orientadoras com progresso incompleto"):
         else:
             st.header('df')
             st.write(incompletas_df)
+            email_list = incompletas_df['email'].to_list()
+            st.write(email_list)
+            registros_faltantes_list = incompletas_df['registros_faltantes'].to_list()
+            st.write(registros_faltantes_list)
+
             
 
     except Exception as e:
