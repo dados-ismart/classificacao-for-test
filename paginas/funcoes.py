@@ -4,6 +4,10 @@ import pandas as pd
 from time import sleep
 from io import BytesIO
 from xlsxwriter import Workbook
+import smtplib
+import ssl
+from email.message import EmailMessage
+    
 
 @st.cache_resource(ttl=7200)
 def conn():
@@ -284,3 +288,58 @@ def to_excel(df):
         df.to_excel(writer, index=False, sheet_name='Dados')
     processed_data = output.getvalue()
     return processed_data
+
+def enviar_email():
+    #Configurações de login
+    EMAIL_ADDRESS = 'dados@ismart.org.br'
+    EMAIL_PASSWORD = 'User#1340'
+    contatos = ['feliperiosamaral@gmail.com', 'felipeamral9@AJJSfashgf', 'zzexpvp@faljshfkjashf']
+    
+    cont = 0
+    
+    for contato in contatos:
+        mail = EmailMessage()
+
+        # tópico
+        mail['Subject'] = 'Inscrição!'
+        #mensagem
+        mensagem ='''
+        Olá,
+
+        tudo bem?
+        '''
+
+        #De
+        mail['From'] = EMAIL_ADDRESS
+        #para
+        mail['To'] = contato
+
+        #email pode ter texto e html e encode utf-8
+        mail.add_header('Content-Type','text/html')
+        mail.set_payload(mensagem.encode('utf-8'))
+
+        contexto_ssl = ssl.create_default_context()
+
+        #Servidor smtp + nome do servidor
+        # Enviar o email
+        cont += 1
+        try:
+            # Inicia a conexão na porta 587
+            with smtplib.SMTP('smtp.office365.com', 587) as email:
+                email.ehlo()
+                email.starttls(context=contexto_ssl)
+                email.ehlo()
+                email.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                email.send_message(mail)
+                
+                print(f"E-mail enviado com sucesso para {contato}")
+                print(f'load: {cont/len(contatos) * 100:.2f}%')
+
+        except Exception as e:
+            print(f"Erro ao enviar e-mail para {contato}: {e}")
+            print(f'load: {cont/len(contatos) * 100:.2f}%')
+            
+        # Pausa entre os envios
+        sleep(3)
+
+    print('fim')

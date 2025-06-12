@@ -114,3 +114,41 @@ if st.session_state.limpeza_finalizada:
     sleep(2)
     st.rerun()
         
+
+# ENVIO E E-MAIL
+
+st.header("Pendências das Orientadoras")
+
+with st.expander("Mostrar orientadoras com progresso incompleto"):
+    try:
+        # 1. Contar o total de alunos por orientadora
+        total_por_orientadora = bd.groupby('Orientadora').size().rename('Total')
+
+        # 2. Filtrar apenas os alunos já registrados e contar por orientadora
+        registrados_df = bd.query("confirmacao_classificacao_orientadora == 'Sim' or confirmacao_classificacao_orientadora == 'Não'")
+        registrados_por_orientadora = registrados_df.groupby('Orientadora').size().rename('Registrados')
+
+        # 3. Combinar os totais e os registrados em um único DataFrame
+        # O .fillna(0) é crucial para orientadoras que não registraram ninguém
+        progresso_df = pd.concat([total_por_orientadora, registrados_por_orientadora], axis=1).fillna(0)
+        progresso_df['Registrados'] = progresso_df['Registrados'].astype(int)
+
+        # 4. Filtrar apenas as orientadoras onde o registrado é menor que o total
+        incompletas_df = progresso_df[progresso_df['Registrados'] < progresso_df['Total']]
+
+        if incompletas_df.empty:
+            st.success("🎉 Todas as orientadoras completaram o registro de seus alunos!")
+        else:
+            st.warning(f"Encontradas {len(incompletas_df)} orientadoras com pendências.")
+            
+            # 5. Exibir a lista
+            for orientadora, dados in incompletas_df.iterrows():
+                st.subheader(orientadora)
+                st.progress(dados['Registrados'] / dados['Total'], text=f"Progresso: {dados['Registrados']}/{dados['Total']}")
+                st.divider()
+
+    except Exception as e:
+        st.error(f"Ocorreu um erro ao processar os dados: {e}")
+
+st.header('INCOMPLETAS DF:')
+st.write(incompletas_df)
