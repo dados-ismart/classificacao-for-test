@@ -129,15 +129,14 @@ if st.button("Enviar E-mail de lembrete"):
     input_popup()
 
 if 'registro_finalizado' not in st.session_state:
-    st.session_state.registro_finalizado = False
+    st.session_state.enviar_email = False
 
 if 'senha' in st.session_state:
     if st.session_state.senha == 'User#1340':
-        st.session_state.registro_finalizado = True
-        st.session_state.limpeza_finalizada = True
+        st.session_state.enviar_email = True
 
-if st.session_state.registro_finalizado:
-    st.session_state.registro_finalizado = False
+if st.session_state.enviar_email:
+    st.session_state.enviar_email = False
     del st.session_state["senha"]
 
     try:
