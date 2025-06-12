@@ -117,22 +117,22 @@ if st.session_state.limpeza_finalizada:
         
 # ENVIO E E-MAIL
 @st.dialog("Insira a senha e confirme para enviar")
-def input_popup():
+def input_popup_email():
     with st.form(key='confirmacao_classificacao_mes'):
         senha = st.text_input("Senha")
         submit_button = st.form_submit_button(label='Confirmar')
     if submit_button:
-        st.session_state.senha = senha
+        st.session_state.senha_email = senha
         st.rerun()
         
 if st.button("Enviar E-mail de lembrete"):
-    input_popup()
+    input_popup_email()
 
 if 'enviar_email' not in st.session_state:
     st.session_state.enviar_email = False
 
 if 'senha' in st.session_state:
-    if st.session_state.senha == 'User#1340':
+    if st.session_state.senha_email == 'User#1340':
         st.session_state.enviar_email = True
 
 if st.session_state.enviar_email:
