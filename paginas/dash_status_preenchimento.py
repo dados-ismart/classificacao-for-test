@@ -7,6 +7,7 @@ from time import sleep
 # importar dados
 df = ler_sheets('registro')
 bd = ler_sheets_cache('bd')
+df_login = ler_sheets_cache('login')
 bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
 
@@ -132,23 +133,17 @@ with st.expander("Mostrar orientadoras com progresso incompleto"):
         # O .fillna(0) é crucial para orientadoras que não registraram ninguém
         progresso_df = pd.concat([total_por_orientadora, registrados_por_orientadora], axis=1).fillna(0)
         progresso_df['Registrados'] = progresso_df['Registrados'].astype(int)
-
         # 4. Filtrar apenas as orientadoras onde o registrado é menor que o total
         incompletas_df = progresso_df[progresso_df['Registrados'] < progresso_df['Total']]
+
+        progresso_df = progresso_df.merge(df_login[['Orientadora', 'email']], how='left', on='Orientadora')
 
         if incompletas_df.empty:
             st.success("🎉 Todas as orientadoras completaram o registro de seus alunos!")
         else:
-            st.warning(f"Encontradas {len(incompletas_df)} orientadoras com pendências.")
+            st.header('df')
+            st.write(incompletas_df)
             
-            # 5. Exibir a lista
-            for orientadora, dados in incompletas_df.iterrows():
-                st.subheader(orientadora)
-                st.progress(dados['Registrados'] / dados['Total'], text=f"Progresso: {dados['Registrados']}/{dados['Total']}")
-                st.divider()
 
     except Exception as e:
         st.error(f"Ocorreu um erro ao processar os dados: {e}")
-
-st.header('INCOMPLETAS DF:')
-st.write(incompletas_df)
