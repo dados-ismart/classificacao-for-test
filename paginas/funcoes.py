@@ -295,8 +295,9 @@ def enviar_email(contatos, assunto, mensagem):
     EMAIL_PASSWORD = 'User#1340'
     
     cont = 0
-    st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
+    
     for contato in contatos:
+        st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
         mail = EmailMessage()
 
         # tópico
@@ -323,14 +324,10 @@ def enviar_email(contatos, assunto, mensagem):
                 email.ehlo()
                 email.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
                 email.send_message(mail)
-                
-                st.success(f"E-mail enviado com sucesso para {contato}")
+                st.toast(f"E-mail enviado com sucesso para {contato}", icon="✅")
         except Exception as e:
-            st.warning(f"Erro ao enviar e-mail para {contato}: {e}") 
-        st.write('sleep')
-        sleep(10)
-        
-
+            st.toast(f"Erro ao enviar e-mail para {contato}: {e}", icon="❌")
+        sleep(1)
     st.toast("Envio concluio!", icon="✅")
     sleep(2)
     st.rerun()
