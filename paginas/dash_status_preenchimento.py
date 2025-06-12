@@ -128,7 +128,7 @@ def input_popup():
 if st.button("Enviar E-mail de lembrete"):
     input_popup()
 
-if 'registro_finalizado' not in st.session_state:
+if 'enviar_email' not in st.session_state:
     st.session_state.enviar_email = False
 
 if 'senha' in st.session_state:
