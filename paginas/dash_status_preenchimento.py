@@ -137,6 +137,7 @@ with st.expander("Mostrar orientadoras com progresso incompleto"):
         incompletas_df = progresso_df[progresso_df['Registrados'] < progresso_df['Total']]
         incompletas_df['registros_faltantes'] = progresso_df['Total'] - progresso_df['Registrados']
         incompletas_df = incompletas_df.merge(df_login[['Orientadora', 'email']], how='left', on='Orientadora')
+        incompletas_df = incompletas_df['email', 'registros_faltantes']
 
         if incompletas_df.empty:
             st.success("🎉 Todas as orientadoras completaram o registro de seus alunos!")
