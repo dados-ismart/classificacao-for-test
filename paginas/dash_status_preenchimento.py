@@ -143,9 +143,11 @@ if st.button('Enviar E-mail de lembrete'):
             registros_faltantes_list = incompletas_df['registros_faltantes'].to_list()
             
             assunto = 'Preenchimento da classificação'
-            mensagem ='''
+            mensagem = '''
                         Olá, tudo bem?
-                        '''
+
+                        Ainda falta um aluno para ser preenchido!
+                    '''
             enviar_email(email_list, assunto, mensagem)
       
 

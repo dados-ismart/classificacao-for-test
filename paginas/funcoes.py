@@ -329,5 +329,6 @@ def enviar_email(contatos, assunto, mensagem):
         except Exception as e:
             st.warning(f"Erro ao enviar e-mail para {contato}: {e}") 
         sleep(3)
+        st.stop()
 
     st.toast("Envio concluio!", icon="✅")
