@@ -116,7 +116,7 @@ if st.session_state.limpeza_finalizada:
     st.rerun()
         
 # ENVIO E E-MAIL
-@st.dialog("Insira a senha e confirme para enviar os E-mails")
+@st.dialog("Insira a senha e confirme para enviar")
 def input_popup():
     with st.form(key='confirmacao_classificacao_mes'):
         senha = st.text_input("Senha")
