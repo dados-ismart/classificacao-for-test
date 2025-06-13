@@ -88,7 +88,7 @@ if 'limpeza_finalizada' not in st.session_state:
     st.session_state.limpeza_finalizada = False
 
 if 'senha' in st.session_state:
-    if st.session_state.senha == 'User#1340':
+    if st.session_state.senha == st.secrets["senha_email"]:
         st.session_state.registro_finalizado = True
         st.session_state.limpeza_finalizada = True
 
@@ -122,7 +122,7 @@ def input_popup_email():
         senha = st.text_input("Senha")
         submit_button = st.form_submit_button(label='Confirmar')
     if submit_button:
-        if senha == 'User#1340':
+        if senha == st.secrets["senha_email"]:
             try:
                 # 1. Contar o total de alunos por orientadora
                 total_por_orientadora = bd.groupby('Orientadora').size().rename('Total')

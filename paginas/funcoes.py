@@ -291,8 +291,8 @@ def to_excel(df):
 
 def enviar_email(contatos, assunto, mensagem):
     #Configurações de login
-    EMAIL_ADDRESS = 'dados@ismart.org.br'
-    EMAIL_PASSWORD = 'User#1340'
+    EMAIL_ADDRESS = st.secrets["email"]
+    EMAIL_PASSWORD = st.secrets["senha_email"]
     
     cont = 0
     barra_progresso = st.progress(cont/len(contatos), f'Envios: **{cont}/{len(contatos)}**')
