@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
-# import gspread
+import gspread
 # from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from time import sleep
@@ -273,26 +273,36 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
 #                     continue
 #     st.rerun()
 
-def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
-    for a in range(1, 4):
+# Função de registro FINALMENTE CORRIGIDA
+def registrar(df_insert, aba):
+    """
+    Registra um DataFrame em uma aba específica do Google Sheets usando o método definitivo.
+    """
+    for a in range(1, 4): # Loop de tentativa
         try:
-            worksheet = conn.worksheet(aba)
+            # 1. Acessar o cliente gspread autenticado através do .session
+            gspread_client = conn.session
+
+            # 2. Abrir a planilha pelo nome (lido dos secrets)
+            spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
+            spreadsheet = gspread_client.open(spreadsheet_name)
+
+            # 3. Selecionar a aba (worksheet) desejada
+            worksheet = spreadsheet.worksheet(aba)
+
+            # 4. Converter o DataFrame e adicionar as linhas
             dados_para_append = df_insert.values.tolist()
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
-            sleep(0.2)
+
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(0.5)
-            break
+            return # Sucesso, sair da função
+        except gspread.exceptions.WorksheetNotFound:
+            st.error(f"Erro Crítico: A aba '{aba}' não foi encontrada na planilha. Verifique o nome.")
+            st.stop()
         except Exception as e:
-            st.toast(f'Erro ao registrar: {e}', icon="❌")
-            sleep(0.5)
-    st.rerun()
-
-# def adicionar_linha(linha, pagina):
-#     conn.update(data=linha, worksheet=pagina)
-#     sleep(0.2)
-#     st.toast("Linha adicionada", icon="✅")
-#     sleep(0.5)
+            st.toast(f'Erro ao registrar ({a}/3): {e}', icon="❌")
+            sleep(2)
 
 def esvazia_aba(aba):
     for i in range(0, 4):
