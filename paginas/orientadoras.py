@@ -627,7 +627,7 @@ if ra_nome is not None:
                                                 }]).to_dict(orient='records')[0]
                             atualizar_linha('registro', ra, df_insert)
 else:
-#Tabela De Confirmação
+    #Tabela De Confirmação
     # Filtro personalizado no histórico
     df_historico_filtrado = df_historico[~df_historico['RA'].isin(df['RA'])]
     df_historico_filtrado = df_historico_filtrado[df_historico_filtrado['RA'].isin(bd_segmentado['RA'])]
@@ -903,4 +903,4 @@ else:
                             ]]                                                                                                   
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
-            registrar(df_insert, 'registro', 'RA')
+            registrar(df_insert, 'registro')
