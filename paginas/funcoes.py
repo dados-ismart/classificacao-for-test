@@ -12,18 +12,15 @@ from email.message import EmailMessage
 
 # Authenticate and connect to Google Sheets
 @st.cache_resource(ttl=7200)
-def connect_to_gsheet(creds_json,spreadsheet_name):
+def connect_to_gsheet():
     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
     
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scope)
+    credentials = st.secrets["connections"]["gsheets"]["spreadsheet"]
     client = gspread.authorize(credentials)
-    spreadsheet = client.open(spreadsheet_name)  # Access the first sheet
+    spreadsheet = client.open('classificacao_api_for_test')  # Access the first sheet
     return spreadsheet.worksheet()
-# Google Sheet credentials file
-SPREADSHEET_NAME = 'classificacao_api_for_test'
-SHEET_NAME = 'registro'
-CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]
+
 
 # @st.cache_resource(ttl=7200)
 # def conn():
@@ -39,7 +36,7 @@ CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]
 #     st.stop()
 #conn = conn()
 # Connect to the Google Sheet
-conn = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME)
+conn = connect_to_gsheet()
 
 
 def ler_sheets(pagina, ttl=1):
