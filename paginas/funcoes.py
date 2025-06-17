@@ -274,7 +274,7 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
 #     st.rerun()
 
 # Função de registro FINALMENTE CORRIGIDA
-def registrar(df_insert, aba):
+def registrar(df_insert, aba, coluna_apoio):
     """
     Registra um DataFrame em uma aba específica do Google Sheets usando o método definitivo.
     """
