@@ -276,7 +276,8 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
 def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     for a in range(1, 4):
         try:
-            conn.append_row(worksheet=aba, data=df_insert)
+            worksheet = conn.worksheet(aba)
+            worksheet.append_rows(data=df_insert)
             sleep(0.2)
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(0.5)
