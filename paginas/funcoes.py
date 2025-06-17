@@ -304,10 +304,8 @@ def registrar(df_insert, aba, coluna_apoio):
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
+            sleep(2)
             break
-        except gspread.exceptions.WorksheetNotFound:
-            st.error(f"Erro Crítico: A aba '{aba}' não foi encontrada na planilha. Verifique o nome.")
-            st.stop()
         except Exception as e:
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
@@ -322,6 +320,11 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
             if isinstance(valor_novo, (datetime, pd.Timestamp)):
                 # Converte para string em um formato padronizado
                 novos_dados[coluna] = valor_novo.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Isso evita o erro 'index out of range' se a linha tiver células vazias no final.
+        if len(valores_antigos) < len(headers):
+            # Preenche a lista com strings vazias até atingir o tamanho do cabeçalho
+            valores_antigos.extend([''] * (len(headers) - len(valores_antigos)))
 
         spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
         worksheet = spreadsheet.worksheet(aba)
@@ -355,7 +358,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         # Passamos uma lista de listas, pois o método pode atualizar várias linhas
         worksheet.update(range_to_update, [novos_valores], value_input_option='USER_ENTERED')
         st.toast("Sucesso!", icon="✅")
-
+        sleep(2)
     except Exception as e:
         st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}", icon="❌")
         sleep(2)
