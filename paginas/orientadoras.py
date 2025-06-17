@@ -482,7 +482,7 @@ if ra_nome is not None:
                                                     }])
                             registrar(df_insert, 'registro', 'nova_classificacao_orientadora')
             else:
-                with st.form(key='formulario_descricao'):
+                with st.form(key='formulario_descricao_x'):
                     resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
                     resposta_novo_motivo_classificacao_orientadora = df.loc[df['RA'] == ra, 'novo_motivo_classificacao_orientadora'].iloc[0]
                     resposta_nova_justificativa_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_justificativa_classificacao_orientadora'].iloc[0]
