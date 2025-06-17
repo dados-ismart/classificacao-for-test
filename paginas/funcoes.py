@@ -277,7 +277,8 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     for a in range(1, 4):
         try:
             worksheet = conn.worksheet(aba)
-            worksheet.append_rows(data=df_insert)
+            dados_para_append = df_insert.values.tolist()
+            worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             sleep(0.2)
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(0.5)
