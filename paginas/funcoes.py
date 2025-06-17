@@ -236,51 +236,51 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
     motivo = motivo[:-2]
     return classificacao, motivo
 
-# def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
-#     #Leitura da aba registro e checa se é nula
-#     for i in range(0, 2):
-#         df = ler_sheets(aba)
-#         if df.shape[0] == 0:
-#             sleep(3)
-#             continue
-#         else: 
-#             break
+def registrar_substituindo_df(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
+    #Leitura da aba registro e checa se é nula
+    for i in range(0, 2):
+        df = ler_sheets(aba)
+        if df.shape[0] == 0:
+            sleep(3)
+            continue
+        else: 
+            break
 
-#     #Limpar linhas duplicadas (registros_anteriores)
-#     if remover_registros_anteriores:
-#         ra = df_insert['RA'].to_list()
-#         if isinstance(ra, list) and ra: 
-#             df = df[~df['RA'].isin(ra)]
+    #Limpar linhas duplicadas (registros_anteriores)
+    if remover_registros_anteriores:
+        ra = df_insert['RA'].to_list()
+        if isinstance(ra, list) and ra: 
+            df = df[~df['RA'].isin(ra)]
 
-#     #REGISTRAR
-#     for a in range(1, 4):
-#         try:
-#             updared_df = pd.concat([df, df_insert], ignore_index=True)
-#             conn.update(worksheet=aba, data=updared_df, append=True)
-#             sleep(0.2)
-#             st.success('Sucesso!')
-#             sleep(0.5)
-#             break
-#         except:
-#             sleep(0.2)
-#             df = ler_sheets(aba)
-#             if type(ra) != list:
-#                 if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
-#                     st.success('Sucesso!')
-#                     break
-#                 else:
-#                     st.warning('Erro')
-#                     sleep(1)
-#                     continue
-#             else:
-#                 if not df.query(f'RA == {ra[0]} and {coluna_apoio} == {coluna_apoio}').empty:
-#                     st.success('Sucesso!')
-#                     break
-#                 else:
-#                     st.warning('Erro')
-#                     sleep(1)
-#                     continue
-#     st.rerun()
+    #REGISTRAR
+    for a in range(1, 4):
+        try:
+            updared_df = pd.concat([df, df_insert], ignore_index=True)
+            conn.update(worksheet=aba, data=updared_df, append=True)
+            sleep(0.2)
+            st.success('Sucesso!')
+            sleep(0.5)
+            break
+        except:
+            sleep(0.2)
+            df = ler_sheets(aba)
+            if type(ra) != list:
+                if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
+                    st.success('Sucesso!')
+                    break
+                else:
+                    st.warning('Erro')
+                    sleep(1)
+                    continue
+            else:
+                if not df.query(f'RA == {ra[0]} and {coluna_apoio} == {coluna_apoio}').empty:
+                    st.success('Sucesso!')
+                    break
+                else:
+                    st.warning('Erro')
+                    sleep(1)
+                    continue
+    st.rerun()
 
 def registrar(df_insert, aba, coluna_apoio):
     st.write("Tentando registrar...") 
@@ -312,6 +312,48 @@ def registrar(df_insert, aba, coluna_apoio):
             sleep(2)
 
     st.rerun()
+
+def atualizar_linha(aba: str, valor_id, novos_dados: dict):
+    try:
+        spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
+        worksheet = spreadsheet.worksheet(aba)
+
+        # PASSO 1: Encontrar a linha
+        cell = worksheet.find(valor_id)
+
+        # PASSO 2: Ler os valores atuais da linha encontrada
+        valores_antigos = worksheet.row_values(cell.row)
+        
+        # Obter os cabeçalhos para mapear as colunas
+        headers = worksheet.row_values(1)
+        
+        # PASSO 3: Modificar os dados na lista
+        # Criamos uma cópia para não alterar a lista original acidentalmente
+        novos_valores = list(valores_antigos) 
+        
+        for coluna, valor_novo in novos_dados.items():
+            if coluna in headers:
+                # Encontra a posição (índice) da coluna
+                col_index = headers.index(coluna)
+                # Atualiza o valor na posição correta da nossa lista
+                novos_valores[col_index] = valor_novo
+            else:
+                st.warning(f"A coluna '{coluna}' não foi encontrada no cabeçalho.")
+                st.stop()
+        
+        # PASSO 4: Escrever a lista inteira de volta com uma única chamada de API
+        # A1 notation para o início da linha, ex: 'A5'
+        range_to_update = f'A{cell.row}' 
+        # Passamos uma lista de listas, pois o método pode atualizar várias linhas
+        worksheet.update(range_to_update, [novos_valores], value_input_option='USER_ENTERED')
+        st.toast("Sucesso!", icon="✅")
+
+    except gspread.exceptions.CellNotFound:
+        st.error(f"Erro: Nenhum registro encontrado com o valor '{valor_id}'.")
+    except Exception as e:
+        st.error(f"Ocorreu um erro inesperado: {e}")
+    st.rerun()
+
 
 def esvazia_aba(aba):
     for i in range(0, 4):

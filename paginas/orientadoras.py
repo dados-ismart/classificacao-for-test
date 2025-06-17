@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice
+from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice, atualizar_linha
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 email = st.experimental_user.email 
@@ -399,7 +399,13 @@ if ra_nome is not None:
                                         'classificacao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0],
                                         'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                         }])
-                registrar(df_insert, 'registro', 'classificacao_automatica')
+                if df.query(f"RA == {ra}").empty:
+                    st.write('X..registrando..X')
+                    registrar(df_insert, 'registro', 'classificacao_automatica')
+                else:
+                    st.write('X..atualizando..X')
+                    atualizar_linha('registro', ra, df_insert)
+                    
     if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
         #Variaveis do sheets
         classificacao_automatica = df.loc[df['RA'] == ra, 'classificacao_automatica'].iloc[0]
