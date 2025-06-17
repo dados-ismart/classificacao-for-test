@@ -315,6 +315,12 @@ def registrar(df_insert, aba, coluna_apoio):
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     try:
+        for coluna, valor_novo in list(novos_dados.items()):
+            # Verifica se o valor é um objeto de data/hora (do Python ou do Pandas)
+            if isinstance(valor_novo, (datetime, pd.Timestamp)):
+                # Converte para string em um formato padronizado
+                novos_dados[coluna] = valor_novo.strftime('%Y-%m-%d %H:%M:%S')
+
         spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
         worksheet = spreadsheet.worksheet(aba)
 
@@ -350,6 +356,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
 
     except Exception as e:
         st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}", icon="❌")
+        sleep(2)
     st.rerun()
 
 
