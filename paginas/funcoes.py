@@ -305,12 +305,10 @@ def registrar(df_insert, aba):
             
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(2)
-            break
+            st.rerun()
         except Exception as e:
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
-
-    st.rerun()
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     """
