@@ -287,6 +287,13 @@ def registrar(df_insert, aba, coluna_apoio):
     Registra um DataFrame em uma aba específica do Google Sheets.
     """
     st.write("Tentando registrar...") # Feedback para o usuário
+
+    # Copia o DataFrame para evitar alterar o original fora da função
+    df_copy = df_insert.copy()
+    for col in df_copy.columns:
+        if pd.api.types.is_datetime64_any_dtype(df_copy[col]):
+            df_copy[col] = df_copy[col].dt.strftime('%Y-%m-%d %H:%M:%S')
+            
     for a in range(1, 4):
         try:
             # Abrir a planilha pelo nome (lido dos secrets)
@@ -297,7 +304,7 @@ def registrar(df_insert, aba, coluna_apoio):
             worksheet = spreadsheet.worksheet(aba)
 
             # Converter dados e adicionar
-            dados_para_append = df_insert.values.tolist()
+            dados_para_append = df_copy.values.tolist()
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
