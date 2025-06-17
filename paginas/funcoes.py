@@ -45,9 +45,9 @@ def ler_sheets(pagina, ttl=1):
         try:
             df = conn.read(worksheet=pagina, ttl=ttl)
             return df
-        except:
-            sleep(0.5)
-    st.error('Erro ao conectar com o sheets')
+        except Exception as e:
+                st.toast(f'Erro na tentativa {i}/10: {e}', icon="❌")
+                sleep(0.5)
     if st.button('Tentar novamente'):
         st.rerun()
     st.stop()
