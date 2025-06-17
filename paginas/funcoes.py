@@ -284,7 +284,7 @@ def registrar_substituindo_df(df_insert, aba, coluna_apoio, remover_registros_an
     st.rerun()
 
 def registrar(df_insert, aba, coluna_apoio):
-    st.write("Tentando registrar...") 
+    st.write("🔄 Tentando registrar...") 
 
     # Copia o DataFrame para evitar alterar o original fora da função
     df_copy = df_insert.copy()
@@ -312,62 +312,69 @@ def registrar(df_insert, aba, coluna_apoio):
 
     st.rerun()
 
+import streamlit as st
+import gspread
+import pandas as pd
+from datetime import datetime
+from time import sleep
+
+# Supondo que gspread_client já está conectado
+# gspread_client = connect_to_gspread()
+
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
-    st.write("Tentando atualizar...") 
+    """
+    Atualiza uma linha específica com a ordem de operações correta e
+    todas as verificações de segurança.
+    """
+    st.write("🔄 Tentando atualizar...")
     try:
+        # PASSO 1: Preparar os dados de entrada
+        # Sanitiza as datas no dicionário 'novos_dados' antes de qualquer outra coisa.
         for coluna, valor_novo in list(novos_dados.items()):
-            # Verifica se o valor é um objeto de data/hora (do Python ou do Pandas)
             if isinstance(valor_novo, (datetime, pd.Timestamp)):
-                # Converte para string em um formato padronizado
                 novos_dados[coluna] = valor_novo.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Isso evita o erro 'index out of range' se a linha tiver células vazias no final.
-        valores_antigos = None
-        # Agora a atribuição principal acontece
-        valores_antigos = worksheet.row_values(cell.row)
-        headers = worksheet.row_values(1)
-    
-        if len(valores_antigos) < len(headers):
-            # Preenche a lista com strings vazias até atingir o tamanho do cabeçalho
-            valores_antigos.extend([''] * (len(headers) - len(valores_antigos)))
-
+        # PASSO 2: Conectar e encontrar a linha
+        # Primeiro, conectamos à planilha e à aba.
         spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
         worksheet = spreadsheet.worksheet(aba)
-
-        # PASSO 1: Encontrar a linha
+        
+        # Depois, encontramos a célula para saber qual linha modificar.
         cell = worksheet.find(str(valor_id))
 
-        # PASSO 2: Ler os valores atuais da linha encontrada
-        valores_antigos = worksheet.row_values(cell.row)
-        
-        # Obter os cabeçalhos para mapear as colunas
+        # PASSO 3: Ler e preparar os dados da planilha
+        # Agora que temos a linha, lemos os valores dela e do cabeçalho.
         headers = worksheet.row_values(1)
-        
-        # PASSO 3: Modificar os dados na lista
-        # Criamos uma cópia para não alterar a lista original acidentalmente
-        novos_valores = list(valores_antigos) 
-        
+        valores_antigos = worksheet.row_values(cell.row)
+
+        # Garante que a linha de valores tenha o mesmo tamanho do cabeçalho
+        if valores_antigos is None:
+            valores_antigos = []
+        if len(valores_antigos) < len(headers):
+            valores_antigos.extend([''] * (len(headers) - len(valores_antigos)))
+
+        # PASSO 4: Mesclar os dados antigos com os novos
+        novos_valores = list(valores_antigos)
         for coluna, valor_novo in novos_dados.items():
             if coluna in headers:
-                # Encontra a posição (índice) da coluna
                 col_index = headers.index(coluna)
-                # Atualiza o valor na posição correta da nossa lista
                 novos_valores[col_index] = valor_novo
             else:
-                st.warning(f"A coluna '{coluna}' não foi encontrada no cabeçalho.")
-                st.stop()
-        
-        # PASSO 4: Escrever a lista inteira de volta com uma única chamada de API
-        # A1 notation para o início da linha, ex: 'A5'
-        range_to_update = f'A{cell.row}' 
-        # Passamos uma lista de listas, pois o método pode atualizar várias linhas
+                st.warning(f"A coluna '{coluna}' não foi encontrada no cabeçalho e será ignorada.")
+
+        # PASSO 5: Escrever os dados de volta com uma única chamada
+        range_to_update = f'A{cell.row}'
         worksheet.update(range_to_update, [novos_valores], value_input_option='USER_ENTERED')
-        st.toast("Sucesso!", icon="✅")
+        
+        st.toast("Registro atualizado com sucesso!", icon="✅")
+        sleep(2) 
+        st.rerun()
+    except gspread.CellNotFound:
+        st.error(f"Erro: Nenhum registro encontrado com o valor '{valor_id}'.")
         sleep(2)
     except Exception as e:
-        st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}", icon="❌")
+        st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
-    st.rerun()
 
 def esvazia_aba(aba):
     for i in range(0, 4):
