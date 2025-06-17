@@ -230,7 +230,7 @@ if ra_nome is not None:
     st.divider()
     caixa_sim_nao = ['Não', 'Sim']
     caixa_reversao = ["Alta", "Média", "Baixa"]
-    if df.query(f"RA == {ra}"):
+    if df.query(f"RA == {ra}").empty:
         #Variaveis Registro
         if df.query(f'RA == {ra}').empty:
             if not df_historico.query(f'RA == {ra}').empty:
