@@ -12,14 +12,14 @@ from email.message import EmailMessage
 
 # Authenticate and connect to Google Sheets
 @st.cache_resource(ttl=7200)
-def connect_to_gsheet(creds_json,spreadsheet_name,sheet_name):
+def connect_to_gsheet(creds_json,spreadsheet_name):
     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
     
     credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scope)
     client = gspread.authorize(credentials)
     spreadsheet = client.open(spreadsheet_name)  # Access the first sheet
-    return spreadsheet.worksheet(sheet_name)
+    return spreadsheet.worksheet()
 # Google Sheet credentials file
 SPREADSHEET_NAME = 'classificacao_api_for_test'
 SHEET_NAME = 'registro'
@@ -39,7 +39,7 @@ CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]["spreadsheet"]
 #     st.stop()
 #conn = conn()
 # Connect to the Google Sheet
-conn = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME, sheet_name=SHEET_NAME)
+conn = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME)
 
 
 def ler_sheets(pagina, ttl=1):
@@ -277,8 +277,8 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
                     continue
     st.rerun()
 
-def adicionar_linha(linha, aba):
-    conn.append_row(data=linha)
+def adicionar_linha(linha, pagina):
+    conn.append_row(data=linha, worksheet=pagina)
     sleep(0.2)
     st.toast("Linha adicionada", icon="✅")
     sleep(0.5)
