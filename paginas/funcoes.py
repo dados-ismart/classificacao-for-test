@@ -1,5 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from time import sleep
 from io import BytesIO
@@ -7,7 +9,24 @@ from xlsxwriter import Workbook
 import smtplib
 import ssl
 from email.message import EmailMessage
+
+# Authenticate and connect to Google Sheets
+def connect_to_gsheet(creds_json,spreadsheet_name,sheet_name):
+    scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
+             "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
     
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scope)
+    client = gspread.authorize(credentials)
+    spreadsheet = client.open(spreadsheet_name)  # Access the first sheet
+    return spreadsheet.worksheet(sheet_name)
+
+# Google Sheet credentials file
+SPREADSHEET_NAME = 'classificacao_api_for_test'
+SHEET_NAME = 'registro'
+CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]["spreadsheet"]
+
+# Connect to the Google Sheet
+sheet_by_name = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME, sheet_name=SHEET_NAME)
 
 @st.cache_resource(ttl=7200)
 def conn():
@@ -259,7 +278,7 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     st.rerun()
 
 def adicionar_linha(linha, aba):
-    conn.append_row(worksheet=aba, data=linha)
+    conn.append_row(data=linha)
     sleep(0.2)
     st.toast("Linha adicionada", icon="✅")
     sleep(0.5)
