@@ -323,6 +323,10 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
 
         # Isso evita o erro 'index out of range' se a linha tiver células vazias no final.
         valores_antigos = None
+        # Agora a atribuição principal acontece
+        valores_antigos = worksheet.row_values(cell.row)
+        headers = worksheet.row_values(1)
+    
         if len(valores_antigos) < len(headers):
             # Preenche a lista com strings vazias até atingir o tamanho do cabeçalho
             valores_antigos.extend([''] * (len(headers) - len(valores_antigos)))
