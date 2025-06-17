@@ -322,6 +322,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
                 novos_dados[coluna] = valor_novo.strftime('%Y-%m-%d %H:%M:%S')
 
         # Isso evita o erro 'index out of range' se a linha tiver células vazias no final.
+        valores_antigos = None
         if len(valores_antigos) < len(headers):
             # Preenche a lista com strings vazias até atingir o tamanho do cabeçalho
             valores_antigos.extend([''] * (len(headers) - len(valores_antigos)))
