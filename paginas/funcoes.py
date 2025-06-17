@@ -40,11 +40,14 @@ def conn():
 # Chama a função de conexão uma vez e armazena em cache
 conn = conn()
 
-def ler_sheets(pagina, ttl=1):
+def ler_sheets(aba, ttl=1):
     for i in range(0, 10):
         try:
-            df = conn.read(worksheet=pagina, ttl=ttl)
-            return df
+            spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
+            spreadsheet = conn.open(spreadsheet_name)
+            worksheet = spreadsheet.worksheet(aba)
+            dados = worksheet.get_all_records()
+            return pd.DataFrame(dados)
         except Exception as e:
                 st.toast(f'Erro na tentativa {i}/10: {e}', icon="❌")
                 sleep(0.5)
@@ -53,11 +56,14 @@ def ler_sheets(pagina, ttl=1):
     st.stop()
 
 @st.cache_data(show_spinner=False, ttl=7200) 
-def ler_sheets_cache(pagina):
+def ler_sheets_cache(aba):
     for i in range(0, 10):
         try:
-            df = conn.read(worksheet=pagina)
-            return df
+            spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
+            spreadsheet = conn.open(spreadsheet_name)
+            worksheet = spreadsheet.worksheet(aba)
+            dados = worksheet.get_all_records()
+            return pd.DataFrame(dados)
         except Exception as e:
                 st.toast(f'Erro na tentativa {i}/10: {e}', icon="❌")
                 sleep(0.5)
