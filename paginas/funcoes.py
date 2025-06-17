@@ -258,6 +258,12 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
                     continue
     st.rerun()
 
+def adicionar_linha(linha, aba):
+    conn.append_row(worksheet=aba, data=linha)
+    sleep(0.2)
+    st.toast("Linha adicionada", icon="✅")
+    sleep(0.5)
+
 def esvazia_aba(aba):
     for i in range(0, 4):
         df = ler_sheets_cache(aba)

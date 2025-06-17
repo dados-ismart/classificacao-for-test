@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice
+from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice, adicionar_linha
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 email = st.experimental_user.email 
@@ -623,7 +623,6 @@ if ra_nome is not None:
 
                                                     }])
                                 registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora')
-
 else:
 #Tabela De Confirmação
     # Filtro personalizado no histórico
@@ -901,4 +900,5 @@ else:
                             ]]                                                                                                   
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
-            registrar(df_insert, 'registro', 'RA')
+            #registrar(df_insert, 'registro', 'RA')
+            adicionar_linha(df_insert,'registro')
