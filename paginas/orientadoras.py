@@ -900,5 +900,5 @@ else:
                             ]]                                                                                                   
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
-            #registrar(df_insert, 'registro', 'RA')
-            adicionar_linha(df_insert,'registro')
+            registrar(df_insert, 'registro', 'RA')
+            # adicionar_linha(df_insert,'registro')

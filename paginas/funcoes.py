@@ -10,33 +10,32 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 
-# Authenticate and connect to Google Sheets
-@st.cache_resource(ttl=7200)
-def connect_to_gsheet():
-    scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-             "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-    
-    credentials = st.secrets["connections"]["gsheets"]["spreadsheet"]
-    client = gspread.authorize(credentials)
-    spreadsheet = client.open('classificacao_api_for_test')  # Access the first sheet
-    return spreadsheet.worksheet()
-
-
+# # Authenticate and connect to Google Sheets
 # @st.cache_resource(ttl=7200)
-# def conn():
-#     for i in range(0, 10):
-#         try:
-#             return st.connection("gsheets", type=GSheetsConnection)
-#         except:
-#             sleep(3)
-#             pass
-#     st.error('Erro ao conectar com o sheets, tente novamente')
-#     if st.button('Tentar novamente'):
-#         st.rerun()
-#     st.stop()
-#conn = conn()
-# Connect to the Google Sheet
-conn = connect_to_gsheet()
+# def connect_to_gsheet():
+#     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
+#              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+    
+#     credentials = st.secrets["connections"]["gsheets"]["spreadsheet"]
+#     client = gspread.authorize(credentials)
+#     spreadsheet = client.open('classificacao_api_for_test')  # Access the first sheet
+#     return spreadsheet.worksheet()
+# conn = connect_to_gsheet()
+
+@st.cache_resource(ttl=7200)
+def conn():
+    for i in range(0, 10):
+        try:
+            return st.connection("gsheets", type=GSheetsConnection)
+        except:
+            sleep(3)
+            pass
+    st.error('Erro ao conectar com o sheets, tente novamente')
+    if st.button('Tentar novamente'):
+        st.rerun()
+    st.stop()
+conn = conn()
+
 
 
 def ler_sheets(pagina, ttl=1):
@@ -248,7 +247,7 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
     for a in range(1, 4):
         try:
             updared_df = pd.concat([df, df_insert], ignore_index=True)
-            conn.update(worksheet=aba, data=updared_df)
+            conn.update(worksheet=aba, data=updared_df, append=True)
             sleep(0.2)
             st.success('Sucesso!')
             sleep(0.5)
@@ -274,11 +273,11 @@ def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
                     continue
     st.rerun()
 
-def adicionar_linha(linha, pagina):
-    conn.append_row(data=linha, worksheet=pagina)
-    sleep(0.2)
-    st.toast("Linha adicionada", icon="✅")
-    sleep(0.5)
+# def adicionar_linha(linha, pagina):
+#     conn.update(data=linha, worksheet=pagina)
+#     sleep(0.2)
+#     st.toast("Linha adicionada", icon="✅")
+#     sleep(0.5)
 
 def esvazia_aba(aba):
     for i in range(0, 4):
