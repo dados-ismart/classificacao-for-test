@@ -319,7 +319,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         worksheet = spreadsheet.worksheet(aba)
 
         # PASSO 1: Encontrar a linha
-        cell = worksheet.find(valor_id)
+        cell = worksheet.find(str(valor_id))
 
         # PASSO 2: Ler os valores atuais da linha encontrada
         valores_antigos = worksheet.row_values(cell.row)
