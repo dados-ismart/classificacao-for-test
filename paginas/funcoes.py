@@ -11,6 +11,7 @@ import ssl
 from email.message import EmailMessage
 
 # Authenticate and connect to Google Sheets
+@st.cache_resource(ttl=7200)
 def connect_to_gsheet(creds_json,spreadsheet_name,sheet_name):
     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
@@ -19,28 +20,27 @@ def connect_to_gsheet(creds_json,spreadsheet_name,sheet_name):
     client = gspread.authorize(credentials)
     spreadsheet = client.open(spreadsheet_name)  # Access the first sheet
     return spreadsheet.worksheet(sheet_name)
-
 # Google Sheet credentials file
 SPREADSHEET_NAME = 'classificacao_api_for_test'
 SHEET_NAME = 'registro'
 CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]["spreadsheet"]
 
+# @st.cache_resource(ttl=7200)
+# def conn():
+#     for i in range(0, 10):
+#         try:
+#             return st.connection("gsheets", type=GSheetsConnection)
+#         except:
+#             sleep(3)
+#             pass
+#     st.error('Erro ao conectar com o sheets, tente novamente')
+#     if st.button('Tentar novamente'):
+#         st.rerun()
+#     st.stop()
+#conn = conn()
 # Connect to the Google Sheet
-sheet_by_name = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME, sheet_name=SHEET_NAME)
+conn = connect_to_gsheet(CREDENTIALS_FILE, SPREADSHEET_NAME, sheet_name=SHEET_NAME)
 
-@st.cache_resource(ttl=7200)
-def conn():
-    for i in range(0, 10):
-        try:
-            return st.connection("gsheets", type=GSheetsConnection)
-        except:
-            sleep(3)
-            pass
-    st.error('Erro ao conectar com o sheets, tente novamente')
-    if st.button('Tentar novamente'):
-        st.rerun()
-    st.stop()
-conn = conn()
 
 def ler_sheets(pagina, ttl=1):
     for i in range(0, 10):
