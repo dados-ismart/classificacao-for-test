@@ -303,8 +303,6 @@ def registrar(df_insert, aba, coluna_apoio):
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
-            return
-
         except gspread.exceptions.WorksheetNotFound:
             st.error(f"Erro Crítico: A aba '{aba}' não foi encontrada na planilha. Verifique o nome.")
             st.stop()
