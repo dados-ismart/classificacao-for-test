@@ -902,5 +902,7 @@ else:
                                 'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
                             ]]                                                                                                   
             df_insert['data_submit'] = datetime.now(fuso_horario)
-            df_insert = pd.concat([df, df_insert], ignore_index=True)
+            df_insert['data_submit'] = df_insert['data_submit'].dt.strftime('%Y-%m-%d %H:%M:%S')
+            # (Opcional) Se você ainda usa o concat, ele vem depois da conversão
+            # df_insert = pd.concat([df, df_insert], ignore_index=True)
             registrar(df_insert, 'registro')
