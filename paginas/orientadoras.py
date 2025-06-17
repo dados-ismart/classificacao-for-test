@@ -230,7 +230,7 @@ if ra_nome is not None:
     st.divider()
     caixa_sim_nao = ['Não', 'Sim']
     caixa_reversao = ["Alta", "Média", "Baixa"]
-    if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == confirmacao_classificacao_orientadora").empty:
+    if df.query(f"RA == {ra} and confirmacao_classificacao_orientadora == ''"):
         #Variaveis Registro
         if df.query(f'RA == {ra}').empty:
             if not df_historico.query(f'RA == {ra}').empty:
@@ -271,8 +271,7 @@ if ra_nome is not None:
                 registro_resposta_seguranca_profissional = None
                 registro_resposta_curso_apoiado = None
                 registro_resposta_nota_condizente = None
-
-        if not df.query(f'RA == {ra}').empty:
+        else:
             registro_resposta_argumentacao = df.loc[df['RA'] == ra, 'resposta_argumentacao'].iloc[0]
             registro_resposta_rotina_estudos = df.loc[df['RA'] == ra, 'resposta_rotina_estudos'].iloc[0]
             registro_resposta_faltas = df.loc[df['RA'] == ra, 'resposta_faltas'].iloc[0]
@@ -901,4 +900,3 @@ else:
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
             registrar(df_insert, 'registro', 'RA')
-            
