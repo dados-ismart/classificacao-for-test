@@ -284,9 +284,14 @@ def registrar_substituindo_df(df_insert, aba, coluna_apoio, remover_registros_an
     st.rerun()
 
 def registrar(df_insert, aba):
-    st.write("🔄 Tentando registrar...") 
-
-    # Copia o DataFrame para evitar alterar o original fora da função
+    """
+    Registra um DataFrame no Google Sheets, garantindo que a ordem das colunas
+    corresponda exatamente à da planilha, preenchendo colunas ausentes com
+    valores vazios.
+    """
+    st.write("🔄 Preparando e registrando dados...")
+    
+    # Prepara uma cópia e sanitiza as datas (lógica que já tínhamos)
     df_copy = df_insert.copy()
     for col in df_copy.columns:
         if pd.api.types.is_datetime64_any_dtype(df_copy[col]):
@@ -294,21 +299,38 @@ def registrar(df_insert, aba):
             
     for a in range(1, 4):
         try:
-            # Abrir a planilha pelo nome (lido dos secrets)
             spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
             spreadsheet = conn.open(spreadsheet_name)
-            # Selecionar a aba (worksheet)
             worksheet = spreadsheet.worksheet(aba)
-            # Converter dados e adicionar
-            dados_para_append = df_copy.values.tolist()
+
+            # --- INÍCIO DA CORREÇÃO ---
+            # 1. Pega o cabeçalho da planilha. Esta é a ordem correta e completa.
+            headers = worksheet.row_values(1)
+
+            # 2. Reordena o df_copy para que ele tenha exatamente as mesmas colunas
+            #    do cabeçalho, na mesma ordem.
+            #    As colunas que existem no Sheets mas não no df_copy serão criadas com valor 'NaN'.
+            df_final = df_copy.reindex(columns=headers)
+
+            # 3. Substitui os valores 'NaN' (criados pelo reindex) por strings vazias,
+            #    que é o formato que o Google Sheets entende como célula em branco.
+            df_final = df_final.fillna('')
+            
+            # 4. Converte o DataFrame FINAL e ordenado para a lista de listas
+            dados_para_append = df_final.values.tolist()
+            # --- FIM DA CORREÇÃO ---
+
+            # 5. Envia os dados já na ordem correta para o Sheets
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(2)
-            st.rerun()
+            st.rerun() 
+
         except Exception as e:
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
+    st.error("Falha ao registrar dados após 3 tentativas.")
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     """
