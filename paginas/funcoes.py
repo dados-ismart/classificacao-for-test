@@ -23,7 +23,7 @@ def connect_to_gsheet(creds_json,spreadsheet_name):
 # Google Sheet credentials file
 SPREADSHEET_NAME = 'classificacao_api_for_test'
 SHEET_NAME = 'registro'
-CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]["spreadsheet"]
+CREDENTIALS_FILE = st.secrets["connections"]["gsheets"]
 
 # @st.cache_resource(ttl=7200)
 # def conn():
