@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice, adicionar_linha
+from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
 email = st.experimental_user.email 
@@ -901,4 +901,4 @@ else:
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert = pd.concat([df, df_insert], ignore_index=True)
             registrar(df_insert, 'registro', 'RA')
-            # adicionar_linha(df_insert,'registro')
+            
