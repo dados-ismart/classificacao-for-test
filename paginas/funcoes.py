@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+# import gspread
+# from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from time import sleep
 from io import BytesIO
@@ -227,50 +227,63 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
     motivo = motivo[:-2]
     return classificacao, motivo
 
+# def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
+#     #Leitura da aba registro e checa se é nula
+#     for i in range(0, 2):
+#         df = ler_sheets(aba)
+#         if df.shape[0] == 0:
+#             sleep(3)
+#             continue
+#         else: 
+#             break
+
+#     #Limpar linhas duplicadas (registros_anteriores)
+#     if remover_registros_anteriores:
+#         ra = df_insert['RA'].to_list()
+#         if isinstance(ra, list) and ra: 
+#             df = df[~df['RA'].isin(ra)]
+
+#     #REGISTRAR
+#     for a in range(1, 4):
+#         try:
+#             updared_df = pd.concat([df, df_insert], ignore_index=True)
+#             conn.update(worksheet=aba, data=updared_df, append=True)
+#             sleep(0.2)
+#             st.success('Sucesso!')
+#             sleep(0.5)
+#             break
+#         except:
+#             sleep(0.2)
+#             df = ler_sheets(aba)
+#             if type(ra) != list:
+#                 if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
+#                     st.success('Sucesso!')
+#                     break
+#                 else:
+#                     st.warning('Erro')
+#                     sleep(1)
+#                     continue
+#             else:
+#                 if not df.query(f'RA == {ra[0]} and {coluna_apoio} == {coluna_apoio}').empty:
+#                     st.success('Sucesso!')
+#                     break
+#                 else:
+#                     st.warning('Erro')
+#                     sleep(1)
+#                     continue
+#     st.rerun()
+
 def registrar(df_insert, aba, coluna_apoio, remover_registros_anteriores=True):
-    #Leitura da aba registro e checa se é nula
-    for i in range(0, 2):
-        df = ler_sheets(aba)
-        if df.shape[0] == 0:
-            sleep(3)
-            continue
-        else: 
-            break
-
-    #Limpar linhas duplicadas (registros_anteriores)
-    if remover_registros_anteriores:
-        ra = df_insert['RA'].to_list()
-        if isinstance(ra, list) and ra: 
-            df = df[~df['RA'].isin(ra)]
-
-    #REGISTRAR
     for a in range(1, 4):
         try:
-            updared_df = pd.concat([df, df_insert], ignore_index=True)
-            conn.update(worksheet=aba, data=updared_df, append=True)
+            conn.update(worksheet=aba, data=df_insert, append=True)
             sleep(0.2)
-            st.success('Sucesso!')
+            st.toast("Registrado com sucesso!", icon="✅")
             sleep(0.5)
             break
-        except:
-            sleep(0.2)
-            df = ler_sheets(aba)
-            if type(ra) != list:
-                if not df.query(f'RA == {ra} and {coluna_apoio} == {coluna_apoio}').empty:
-                    st.success('Sucesso!')
-                    break
-                else:
-                    st.warning('Erro')
-                    sleep(1)
-                    continue
-            else:
-                if not df.query(f'RA == {ra[0]} and {coluna_apoio} == {coluna_apoio}').empty:
-                    st.success('Sucesso!')
-                    break
-                else:
-                    st.warning('Erro')
-                    sleep(1)
-                    continue
+        except Exception as e:
+            st.toast(f'Erro ao registrar: {e}', icon="❌")
+            sleep(0.5)
     st.rerun()
 
 # def adicionar_linha(linha, pagina):
