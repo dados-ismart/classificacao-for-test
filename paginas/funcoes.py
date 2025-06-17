@@ -348,10 +348,10 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         worksheet.update(range_to_update, [novos_valores], value_input_option='USER_ENTERED')
         st.toast("Sucesso!", icon="✅")
 
-    except gspread.exceptions.CellNotFound:
+    except gspread.CellNotFound:
         st.error(f"Erro: Nenhum registro encontrado com o valor '{valor_id}'.")
     except Exception as e:
-        st.error(f"Ocorreu um erro inesperado: {e}")
+        st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
     st.rerun()
 
 
