@@ -104,7 +104,7 @@ if st.session_state.registro_finalizado:
                                     ,'Nota Biologia','Nota ENEM','Nota PU'
                                     ,'media_calibrada','Orientadora','Ano','Segmento']]
                                     , how='left', on='RA')
-    registrar(df_insert, 'historico', 'RA', False)
+    registrar(df_insert, 'historico')
 
 if st.session_state.limpeza_finalizada:
     st.session_state.limpeza_finalizada = False
