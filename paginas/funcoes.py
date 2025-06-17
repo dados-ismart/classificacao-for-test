@@ -369,9 +369,6 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.toast("Registro atualizado com sucesso!", icon="✅")
         sleep(2) 
         st.rerun()
-    except gspread.CellNotFound:
-        st.error(f"Erro: Nenhum registro encontrado com o valor '{valor_id}'.")
-        sleep(2)
     except Exception as e:
         st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
