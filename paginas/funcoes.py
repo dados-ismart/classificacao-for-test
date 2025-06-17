@@ -315,6 +315,7 @@ def registrar(df_insert, aba, coluna_apoio):
     st.rerun()
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
+    st.write("Tentando atualizar...") 
     try:
         for coluna, valor_novo in list(novos_dados.items()):
             # Verifica se o valor é um objeto de data/hora (do Python ou do Pandas)
@@ -359,7 +360,6 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}", icon="❌")
         sleep(2)
     st.rerun()
-
 
 def esvazia_aba(aba):
     for i in range(0, 4):

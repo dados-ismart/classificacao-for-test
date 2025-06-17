@@ -400,10 +400,8 @@ if ra_nome is not None:
                                         'motivo_classificao_automatica': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1],
                                         }]).to_dict(orient='records')[0]
                 if df.query(f"RA == {ra}").empty:
-                    st.write('X..registrando..X')
-                    registrar(df_insert, 'registro', 'classificacao_automatica')
+                    registrar(df_insert, 'registro')
                 else:
-                    st.write('X..atualizando..X')
                     atualizar_linha('registro', ra, df_insert)
 
     if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
@@ -485,8 +483,8 @@ if ra_nome is not None:
                                                 'nova_justificativa_classificacao_orientadora': resposta_nova_justificativa_classificacao_orientadora,
                                                 'classificacao_final': resposta_nova_classificacao_orientadora,
                                                 'motivo_final': resposta_novo_motivo_classificacao_orientadora
-                                                }])
-                        registrar(df_insert, 'registro', 'nova_classificacao_orientadora')
+                                                }]).to_dict(orient='records')[0]
+                        atualizar_linha('registro', ra, df_insert)
         else:
             with st.form(key='formulario_descricao'):
                 resposta_nova_classificacao_orientadora = df.loc[df['RA'] == ra, 'nova_classificacao_orientadora'].iloc[0]
@@ -587,8 +585,8 @@ if ra_nome is not None:
                                                 'justificativa_classificacao_coord': '-',
                                                 'classificacao_final': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[0],
                                                 'motivo_final': classificar(media_calibrada, portugues, matematica, humanas, idiomas, ciencias_naturais, resposta_faltas, ano, caixa_nota_condizente, resposta_adaptacao_projeto , resposta_nota_condizente, resposta_seguranca_profissional, resposta_curso_apoiado , caixa_fragilidade, resposta_questoes_saude, resposta_questoes_familiares, resposta_questoes_psiquicas, resposta_ideacao_suicida , caixa_ideacao_suicida , resposta_argumentacao, resposta_rotina_estudos, resposta_atividades_extracurriculares, resposta_respeita_escola, resposta_atividades_obrigatorias_ismart, resposta_colaboracao, resposta_atividades_nao_obrigatorias_ismart, resposta_networking, resposta_proatividade,caixa_argumentacao,caixa_rotina_estudos,caixa_sim_nao,caixa_atividades_extracurriculares,caixa_nunca_eventualmente_sempre,caixa_networking, caixa_classificacao, caixa_justificativa_classificacao)[1]
-                                                }])
-                            registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora')
+                                                }]).to_dict(orient='records')[0]
+                            atualizar_linha('registro', ra, df_insert)
                         elif resposta_confirmar_classificacao == 'Não':
                             df_insert = pd.DataFrame([{
                                                 'RA': ra,
@@ -625,8 +623,8 @@ if ra_nome is not None:
                                                 'classificacao_final': nova_classificacao_orientadora,
                                                 'motivo_final': novo_motivo_classificacao_orientadora
 
-                                                }])
-                            registrar(df_insert, 'registro', 'confirmacao_classificacao_orientadora')
+                                                }]).to_dict(orient='records')[0]
+                            atualizar_linha('registro', ra, df_insert)
 else:
 #Tabela De Confirmação
     # Filtro personalizado no histórico
