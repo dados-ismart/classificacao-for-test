@@ -283,7 +283,7 @@ def registrar_substituindo_df(df_insert, aba, coluna_apoio, remover_registros_an
                     continue
     st.rerun()
 
-def registrar(df_insert, aba, coluna_apoio):
+def registrar(df_insert, aba):
     st.write("🔄 Tentando registrar...") 
 
     # Copia o DataFrame para evitar alterar o original fora da função
@@ -311,15 +311,6 @@ def registrar(df_insert, aba, coluna_apoio):
             sleep(2)
 
     st.rerun()
-
-import streamlit as st
-import gspread
-import pandas as pd
-from datetime import datetime
-from time import sleep
-
-# Supondo que gspread_client já está conectado
-# gspread_client = connect_to_gspread()
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     """
