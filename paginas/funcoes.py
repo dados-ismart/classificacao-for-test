@@ -36,7 +36,8 @@ def conn():
     
     except Exception as e:
         st.error(f"Erro ao conectar com o Google Sheets: {e}")
-        st.stop()
+        if st.button('Tentar novamente'):
+            st.rerun()
 
 # Chama a função de conexão uma vez e armazena em cache
 conn = conn()
@@ -51,7 +52,7 @@ def ler_sheets(aba, ttl=1):
             return pd.DataFrame(dados)
         except Exception as e:
                 st.toast(f'Erro na tentativa {i}/10: {e}', icon="❌")
-                sleep(0.5)
+                sleep(0.2)
     if st.button('Tentar novamente'):
         st.rerun()
     st.stop()
@@ -67,7 +68,7 @@ def ler_sheets_cache(aba):
             return pd.DataFrame(dados)
         except Exception as e:
                 st.toast(f'Erro na tentativa {i}/10: {e}', icon="❌")
-                sleep(0.5)
+                sleep(0.2)
     st.error('Erro ao conectar com o sheets')
     if st.button('Tentar novamente'):
         st.rerun()
