@@ -283,10 +283,7 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
 #     st.rerun()
 
 def registrar(df_insert, aba, coluna_apoio):
-    """
-    Registra um DataFrame em uma aba específica do Google Sheets.
-    """
-    st.write("Tentando registrar...") # Feedback para o usuário
+    st.write("Tentando registrar...") 
 
     # Copia o DataFrame para evitar alterar o original fora da função
     df_copy = df_insert.copy()
@@ -299,16 +296,14 @@ def registrar(df_insert, aba, coluna_apoio):
             # Abrir a planilha pelo nome (lido dos secrets)
             spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
             spreadsheet = conn.open(spreadsheet_name)
-
             # Selecionar a aba (worksheet)
             worksheet = spreadsheet.worksheet(aba)
-
             # Converter dados e adicionar
             dados_para_append = df_copy.values.tolist()
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
-            return # Sucesso!
+            return
 
         except gspread.exceptions.WorksheetNotFound:
             st.error(f"Erro Crítico: A aba '{aba}' não foi encontrada na planilha. Verifique o nome.")
@@ -317,8 +312,7 @@ def registrar(df_insert, aba, coluna_apoio):
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
 
-    st.error("Falha ao registrar os dados após 3 tentativas.")
-
+    st.rerun()
 
 def esvazia_aba(aba):
     for i in range(0, 4):
