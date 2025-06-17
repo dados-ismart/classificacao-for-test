@@ -402,7 +402,7 @@ if ra_nome is not None:
                 if df.query(f"RA == {ra}").empty:
                     registrar(df_insert, 'registro')
                 else:
-                    df_insert.to_dict(orient='records')[0]
+                    df_insert = df_insert.to_dict(orient='records')[0]
                     atualizar_linha('registro', ra, df_insert)
 
     if not df.query(f"RA == {ra} and classificacao_automatica == classificacao_automatica").empty:
