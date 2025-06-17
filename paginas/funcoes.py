@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import gspread
+from google.oauth2.service_account import Credentials
 # from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from time import sleep
@@ -10,33 +11,34 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 
-# # Authenticate and connect to Google Sheets
-# @st.cache_resource(ttl=7200)
-# def connect_to_gsheet():
-#     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-#              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-    
-#     credentials = st.secrets["connections"]["gsheets"]["spreadsheet"]
-#     client = gspread.authorize(credentials)
-#     spreadsheet = client.open('classificacao_api_for_test')  # Access the first sheet
-#     return spreadsheet.worksheet()
-# conn = connect_to_gsheet()
-
 @st.cache_resource(ttl=7200)
 def conn():
-    for i in range(0, 10):
-        try:
-            return st.connection("gsheets", type=GSheetsConnection)
-        except:
-            sleep(3)
-            pass
-    st.error('Erro ao conectar com o sheets, tente novamente')
-    if st.button('Tentar novamente'):
-        st.rerun()
-    st.stop()
+    """
+    Conecta-se ao Google Sheets usando as credenciais dos secrets
+    e retorna o cliente gspread autorizado.
+    """
+    try:
+        # Define os escopos de permissão
+        scope = [
+            "https://spreadsheets.google.com/feeds",
+            'https://www.googleapis.com/auth/spreadsheets',
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive"
+        ]
+        
+        # Carrega as credenciais do st.secrets
+        creds_dict = st.secrets["connections"]["gsheets"]
+        creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
+        
+        # Autoriza e retorna o cliente gspread
+        return gspread.authorize(creds)
+    
+    except Exception as e:
+        st.error(f"Erro ao conectar com o Google Sheets: {e}")
+        st.stop()
+
+# Chama a função de conexão uma vez e armazena em cache
 conn = conn()
-
-
 
 def ler_sheets(pagina, ttl=1):
     for i in range(0, 10):
@@ -273,36 +275,36 @@ def classificar(media_calibrada, portugues, matematica, humanas, idiomas, cienci
 #                     continue
 #     st.rerun()
 
-# Função de registro FINALMENTE CORRIGIDA
-def registrar(df_insert, aba, coluna_apoio):
+def registrar(df_insert, aba):
     """
-    Registra um DataFrame em uma aba específica do Google Sheets usando o método definitivo.
+    Registra um DataFrame em uma aba específica do Google Sheets.
     """
-    for a in range(1, 4): # Loop de tentativa
+    st.write("Tentando registrar...") # Feedback para o usuário
+    for a in range(1, 4):
         try:
-            # 1. Acessar o cliente gspread autenticado através do .session
-            gspread_client = conn.session
-
-            # 2. Abrir a planilha pelo nome (lido dos secrets)
+            # Abrir a planilha pelo nome (lido dos secrets)
             spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
-            spreadsheet = gspread_client.open(spreadsheet_name)
+            spreadsheet = conn.open(spreadsheet_name)
 
-            # 3. Selecionar a aba (worksheet) desejada
+            # Selecionar a aba (worksheet)
             worksheet = spreadsheet.worksheet(aba)
 
-            # 4. Converter o DataFrame e adicionar as linhas
+            # Converter dados e adicionar
             dados_para_append = df_insert.values.tolist()
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
-
+            
             st.toast("Registrado com sucesso!", icon="✅")
-            sleep(0.5)
-            return # Sucesso, sair da função
+            return # Sucesso!
+
         except gspread.exceptions.WorksheetNotFound:
             st.error(f"Erro Crítico: A aba '{aba}' não foi encontrada na planilha. Verifique o nome.")
             st.stop()
         except Exception as e:
-            st.toast(f'Erro ao registrar ({a}/3): {e}', icon="❌")
+            st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
+
+    st.error("Falha ao registrar os dados após 3 tentativas.")
+
 
 def esvazia_aba(aba):
     for i in range(0, 4):
