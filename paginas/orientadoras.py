@@ -899,8 +899,10 @@ else:
                                 'classificacao_automatica', 'motivo_classificao_automatica',
                                 'confirmacao_classificacao_orientadora', 'nova_classificacao_orientadora',
                                 'novo_motivo_classificacao_orientadora', 'nova_justificativa_classificacao_orientadora',
-                                'reversao', 'descricao_caso', 'plano_intervencao', 'tier','classificacao_final', 'motivo_final'
-                            ]]                                                                                                   
+                                'reversao', 'descricao_caso', 'plano_intervencao', 'tier', 'justificativa_classificacao_coord', 'classificacao_final', 'motivo_final'
+                            ]]  
+            df_insert['confirmacao_classificacao_coordenacao'] = ''                                                                                       
+            #df_insert['justificativa_classificacao_coord'] = ''                                                                                                                                                                             
             df_insert['data_submit'] = datetime.now(fuso_horario)
             df_insert['data_submit'] = df_insert['data_submit'].dt.strftime('%Y-%m-%d %H:%M:%S')
             # (Opcional) Se você ainda usa o concat, ele vem depois da conversão
