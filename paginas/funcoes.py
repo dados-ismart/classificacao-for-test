@@ -10,7 +10,6 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 from datetime import datetime
-from gspread.utils import get_column_letter
 
 @st.cache_resource(ttl=7200)
 def conn():
