@@ -385,19 +385,41 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
 
-def esvazia_aba(aba):
-    for i in range(0, 4):
-        df = ler_sheets_cache(aba)
+def esvazia_aba(aba: str):
+    st.write(f"Iniciando limpeza da aba '{aba}'...")
+    
+    # Tenta executar a operação até 3 vezes
+    for i in range(1, 4):
+        try:
+            # PASSO 1: Conectar à aba correta
+            spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
+            worksheet = spreadsheet.worksheet(aba)
 
-        df_vazio = df.drop(df.index)
-        conn.update(worksheet=aba, data=df_vazio)
-        #Leitura da aba registro e checa se é nula
-        df = ler_sheets(aba)
-        if df.shape[0] == 0:
-            continue
-        else: 
+            # PASSO 2: Obter todos os valores para saber o número de linhas com conteúdo
+            all_data = worksheet.get_all_values()
+            
+            # PASSO 3: Se houver mais que 1 linha (o cabeçalho), apagar da linha 2 em diante
+            if len(all_data) > 1:
+                st.write(f"Encontradas {len(all_data) - 1} linhas de dados. Apagando...")
+                # Apaga todas as linhas da segunda (índice 2) até a última
+                worksheet.delete_rows(2, len(all_data))
+                st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
+            else:
+                st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
+
+            # PASSO 4: Limpar o cache do Streamlit e sair do loop
+            # Isso força a releitura dos dados em outras partes do app
             st.cache_data.clear()
-            break
+            sleep(1) # Pequena pausa para garantir que o usuário veja o toast
+            break # Sai do loop 'for' pois a operação foi bem-sucedida
+
+        except Exception as e:
+            st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
+            sleep(2)
+            # Se for a última tentativa e falhou, mostra um erro persistente
+            if i == 3:
+                st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
+
         
 def retornar_indice(lista, variavel):
     if variavel == None:
