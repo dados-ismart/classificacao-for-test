@@ -290,48 +290,32 @@ def registrar(df_insert, aba):
     corresponda exatamente à da planilha, preenchendo colunas ausentes com
     valores vazios.
     """
-    st.write("🔄 Preparando e registrando dados...")
-    
-    # Prepara uma cópia e sanitiza as datas
+    st.write(f"🔄 Registrando dados na aba '{aba}'...")
     df_copy = df_insert.copy()
     for col in df_copy.columns:
         if pd.api.types.is_datetime64_any_dtype(df_copy[col]):
             df_copy[col] = df_copy[col].dt.strftime('%Y-%m-%d %H:%M:%S')
-            
+
     for a in range(1, 4):
         try:
-            spreadsheet_name = st.secrets["connections"]["gsheets"]["spreadsheet_name"]
-            spreadsheet = conn.open(spreadsheet_name)
+            # ... (lógica de conexão, reindex, etc. continua a mesma) ...
+            spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
             worksheet = spreadsheet.worksheet(aba)
-
-            # --- INÍCIO DA CORREÇÃO ---
-            # 1. Pega o cabeçalho da planilha. Esta é a ordem correta e completa.
             headers = worksheet.row_values(1)
-
-            # 2. Reordena o df_copy para que ele tenha exatamente as mesmas colunas
-            #    do cabeçalho, na mesma ordem.
-            #    As colunas que existem no Sheets mas não no df_copy serão criadas com valor 'NaN'.
-            df_final = df_copy.reindex(columns=headers)
-
-            # 3. Substitui os valores 'NaN' (criados pelo reindex) por strings vazias,
-            #    que é o formato que o Google Sheets entende como célula em branco.
-            df_final = df_final.fillna('')
-            
-            # 4. Converte o DataFrame FINAL e ordenado para a lista de listas
+            df_final = df_copy.reindex(columns=headers).fillna('')
             dados_para_append = df_final.values.tolist()
-            # --- FIM DA CORREÇÃO ---
-
-            # 5. Envia os dados já na ordem correta para o Sheets
             worksheet.append_rows(dados_para_append, value_input_option='USER_ENTERED')
             
             st.toast("Registrado com sucesso!", icon="✅")
-            sleep(2)
-            st.rerun() 
+            sleep(1)
+            return True  
 
         except Exception as e:
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
+
     st.error("Falha ao registrar dados após 3 tentativas.")
+    return False  
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     """
@@ -387,34 +371,26 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
 
 def esvaziar_aba(aba: str):
     st.write(f"Iniciando limpeza da aba '{aba}'...")
-    
-    # Tenta executar a operação até 3 vezes
     for i in range(1, 4):
         try:
-            # PASSO 1: Conectar à aba correta
+            # ... (lógica de conexão e delete_rows continua a mesma) ...
             spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
             worksheet = spreadsheet.worksheet(aba)
-
-            # PASSO 2: Obter todos os valores para saber o número de linhas com conteúdo
             all_data = worksheet.get_all_values()
             
-            # PASSO 3: Se houver mais que 1 linha (o cabeçalho), apagar da linha 2 em diante
             if len(all_data) > 1:
-                st.write(f"Encontradas {len(all_data) - 1} linhas de dados. Apagando...")
-                # Apaga todas as linhas da segunda (índice 2) até a última
                 worksheet.delete_rows(2, len(all_data))
                 st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
             else:
                 st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
+            return True  
 
-            sleep(2) 
-            st.rerun()
         except Exception as e:
             st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
-            # Se for a última tentativa e falhou, mostra um erro persistente
-            if i == 3:
-                st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
+
+    st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
+    return False  
         
 def retornar_indice(lista, variavel):
     if variavel == None:

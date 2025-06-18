@@ -77,44 +77,54 @@ else:
             senha = st.text_input("Senha")
             submit_button = st.form_submit_button(label='Confirmar')
         if submit_button:
-            st.session_state.senha = senha
+            # Apenas definimos a senha e saímos. O rerun fará o resto.
+            st.session_state.senha_finalizacao = senha
             st.rerun()
 
-    if st.button("Finalizar Classificação do Mês"):      
+    # O botão que inicia o processo
+    if st.button("Finalizar Classificação do Mês"):
         input_popup()
 
-    if 'registro_finalizado' not in st.session_state:
-        st.session_state.registro_finalizado = False
+    # Bloco principal que executa a lógica após a senha ser inserida
+    if 'senha_finalizacao' in st.session_state:
+        # Verifica a senha
+        if st.session_state.senha_finalizacao == st.secrets["senha_email"]:
+            
+            with st.spinner("Executando finalização do mês... Por favor, aguarde."):
+                # 1. Copia os dados para o histórico
+                bd = ler_sheets_cache('bd')
+                df = ler_sheets('registro')
 
-    if 'limpeza_finalizada' not in st.session_state:
-        st.session_state.limpeza_finalizada = False
+                if df.empty:
+                    st.warning("A aba 'registro' já estava vazia. Nenhum dado foi arquivado.")
+                else:
+                    # Prepara o DataFrame para registro
+                    df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática','Nota Português','Nota História','Nota Geografia','Nota Inglês','Nota Francês/Alemão e Outros','Nota Espanhol','Nota Química','Nota Física','Nota Biologia','Nota ENEM','Nota PU','media_calibrada','Orientadora','Ano','Segmento']], how='left', on='RA')
+                    
+                    # CHAMA A FUNÇÃO E VERIFICA O RESULTADO
+                    sucesso_registro = registrar(df_insert, 'historico')
 
-    if 'senha' in st.session_state:
-        if st.session_state.senha == st.secrets["senha_email"]:
-            st.session_state.registro_finalizado = True
-            st.session_state.limpeza_finalizada = True
+                    # SÓ EXECUTA A LIMPEZA SE O REGISTRO FOI BEM-SUCEDIDO
+                    if sucesso_registro:
+                        st.write("Dados arquivados com sucesso. Limpando registros mensais...")
+                        sucesso_limpeza = esvaziar_aba('registro')
+                        
+                        if sucesso_limpeza:
+                            st.success("🎉 Processo de finalização do mês concluído!")
+                            st.balloons()
+                        else:
+                            st.error("ERRO CRÍTICO: Os dados foram arquivados, mas a limpeza da aba 'registro' falhou. Por favor, verifique a planilha.")
+                    else:
+                        st.error("ERRO CRÍTICO: Falha ao arquivar os dados no histórico. A aba 'registro' NÃO foi limpa para evitar perda de dados.")
 
-    if st.session_state.registro_finalizado:
-        st.session_state.registro_finalizado = False
-        del st.session_state["senha"]
-        bd = ler_sheets_cache('bd')
-        df = ler_sheets('registro')
-        df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática'
-                                        ,'Nota Português','Nota História','Nota Geografia'
-                                        ,'Nota Inglês','Nota Francês/Alemão e Outros'
-                                        ,'Nota Espanhol','Nota Química','Nota Física'
-                                        ,'Nota Biologia','Nota ENEM','Nota PU'
-                                        ,'media_calibrada','Orientadora','Ano','Segmento']]
-                                        , how='left', on='RA')
-        registrar(df_insert, 'historico')
+        else:
+            st.error("Senha incorreta.")
 
-    if st.session_state.limpeza_finalizada:
-        st.session_state.limpeza_finalizada = False
-
-        esvaziar_aba('registro')
-
-        st.toast("Classificação do Mês Concluída!", icon="✅")
-        sleep(2)
+        # Limpa a senha da sessão para não executar o processo novamente
+        del st.session_state['senha_finalizacao']
+        
+        # Pausa para o usuário ler as mensagens finais
+        sleep(4)
         st.rerun()
             
     # ENVIO E E-MAIL
