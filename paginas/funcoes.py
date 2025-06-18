@@ -370,58 +370,27 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         sleep(2)
 
 def esvaziar_aba(aba: str):
-    """
-    Limpa o conteúdo de todas as células de uma aba a partir da segunda linha,
-    preservando cabeçalhos, formatação e células mescladas.
-    Versão revisada para maior eficiência e clareza.
-    """
-    st.write(f"Iniciando verificação da aba '{aba}'...")
-    
-    try:
-        # ETAPA DE PREPARAÇÃO (Fora do loop de tentativas)
-        # Conectamos e lemos os dados apenas uma vez para verificar o estado da aba.
-        spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
-        worksheet = spreadsheet.worksheet(aba)
-        all_data = worksheet.get_all_values()
-        num_rows = len(all_data)
-
-        # VERIFICAÇÃO INICIAL: Se a aba já está vazia ou não tem colunas, não há o que fazer.
-        if num_rows <= 1:
-            st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
-            return True # Retorna sucesso, pois o objetivo foi alcançado.
-
-        num_cols = len(all_data[0]) if num_rows > 0 else 0
-        if num_cols == 0:
-            st.toast(f"Aba '{aba}' não tem colunas.", icon="ℹ️")
-            return True
-
-    except Exception as e:
-        # Se a preparação falhar (ex: aba não encontrada), o erro é imediato.
-        st.error(f"Erro ao acessar a planilha ou aba '{aba}': {e}")
-        return False
-
-    # Se chegamos aqui, significa que a aba tem dados e precisa ser limpa.
-    # Agora iniciamos o loop de tentativas para a operação de escrita.
+    st.write(f"Iniciando limpeza da aba '{aba}'...")
     for i in range(1, 4):
         try:
-            # ETAPA DE OPERAÇÃO (Dentro do loop de tentativas)
-            last_col_letter = get_column_letter(num_cols)
-            range_to_clear = f'A2:{last_col_letter}{num_rows}'
+            # ... (lógica de conexão e delete_rows continua a mesma) ...
+            spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
+            worksheet = spreadsheet.worksheet(aba)
+            all_data = worksheet.get_all_values()
             
-            st.write(f"Tentativa {i}/3: Limpando o intervalo {range_to_clear}...")
-
-            worksheet.batch_clear([range_to_clear])
-            
-            st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
-            sleep(1)
-            return True 
+            if len(all_data) > 1:
+                worksheet.delete_rows(2, len(all_data))
+                st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
+            else:
+                st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
+            return True  
 
         except Exception as e:
-            st.toast(f"Erro ao limpar (tentativa {i}/3): {e}", icon="❌")
+            st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
-    # Se o loop terminar sem um 'return True', todas as tentativas falharam.
+
     st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
-    return False
+    return False  
         
 def retornar_indice(lista, variavel):
     if variavel == None:
