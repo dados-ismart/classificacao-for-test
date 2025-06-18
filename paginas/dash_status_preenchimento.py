@@ -9,7 +9,7 @@ df = ler_sheets('registro')
 bd = ler_sheets_cache('bd')
 df_login = ler_sheets_cache('login')
 if df.empty:
-    st.info("✅ Todos os registros foram processados e arquivados. Não há pendências para este mês.")
+    st.info("Nenhum registro feito.")
 else:
     bd = bd.merge(df[['RA', 'confirmacao_classificacao_orientadora','conclusao_classificacao_final']], how='left', on='RA')
 
