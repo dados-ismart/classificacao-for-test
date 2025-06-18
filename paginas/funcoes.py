@@ -370,27 +370,52 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         sleep(2)
 
 def esvaziar_aba(aba: str):
+    """
+    Limpa o conteúdo de todas as células de uma aba a partir da segunda linha,
+    preservando cabeçalhos, formatação e células mescladas.
+    """
     st.write(f"Iniciando limpeza da aba '{aba}'...")
+    
     for i in range(1, 4):
         try:
-            # ... (lógica de conexão e delete_rows continua a mesma) ...
+            # PASSO 1: Conectar à aba correta
             spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
             worksheet = spreadsheet.worksheet(aba)
-            all_data = worksheet.get_all_values()
-            
-            if len(all_data) > 1:
-                worksheet.delete_rows(2, len(all_data))
-                st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
-            else:
-                st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
-            return True  
 
+            # PASSO 2: Descobrir as dimensões da planilha
+            all_data = worksheet.get_all_values()
+            num_rows = len(all_data)
+            
+            # Se não houver dados além do cabeçalho, não faz nada
+            if num_rows <= 1:
+                st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
+                st.cache_data.clear()
+                return True # Retorna sucesso, pois a aba já está vazia
+
+            # Pega o número de colunas a partir do cabeçalho
+            num_cols = len(all_data[0]) if num_rows > 0 else 0
+            if num_cols == 0:
+                st.toast(f"Aba '{aba}' não tem colunas.", icon="ℹ️")
+                return True
+
+            # PASSO 3: Construir o intervalo de células a ser limpo (ex: "A2:Z100")
+            # A2 é o início. O final é a última linha e última coluna com dados.
+            last_col_letter = conn(num_cols)
+            range_to_clear = f'A2:{last_col_letter}{num_rows}'
+            
+            st.write(f"Encontradas {num_rows - 1} linhas de dados. Limpando o intervalo {range_to_clear}...")
+
+            worksheet.batch_clear([range_to_clear])
+            
+            st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
+            sleep(1)
+            return True 
         except Exception as e:
             st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
-
     st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
-    return False  
+    return False 
+
         
 def retornar_indice(lista, variavel):
     if variavel == None:
