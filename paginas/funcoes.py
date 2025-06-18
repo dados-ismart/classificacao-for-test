@@ -292,7 +292,7 @@ def registrar(df_insert, aba):
     """
     st.write("🔄 Preparando e registrando dados...")
     
-    # Prepara uma cópia e sanitiza as datas (lógica que já tínhamos)
+    # Prepara uma cópia e sanitiza as datas
     df_copy = df_insert.copy()
     for col in df_copy.columns:
         if pd.api.types.is_datetime64_any_dtype(df_copy[col]):
@@ -385,7 +385,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
 
-def esvazia_aba(aba: str):
+def esvaziar_aba(aba: str):
     st.write(f"Iniciando limpeza da aba '{aba}'...")
     
     # Tenta executar a operação até 3 vezes
@@ -407,19 +407,14 @@ def esvazia_aba(aba: str):
             else:
                 st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
 
-            # PASSO 4: Limpar o cache do Streamlit e sair do loop
-            # Isso força a releitura dos dados em outras partes do app
-            st.cache_data.clear()
-            sleep(1) # Pequena pausa para garantir que o usuário veja o toast
-            break # Sai do loop 'for' pois a operação foi bem-sucedida
-
+            sleep(2) 
+            st.rerun()
         except Exception as e:
             st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
             # Se for a última tentativa e falhou, mostra um erro persistente
             if i == 3:
                 st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
-
         
 def retornar_indice(lista, variavel):
     if variavel == None:
