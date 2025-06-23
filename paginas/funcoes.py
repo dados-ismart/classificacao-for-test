@@ -372,7 +372,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
 
-def atualizar_linhas_otimista(aba: str, df_updates: pd.DataFrame, id_column: str):
+def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
     """
     Atualiza múltiplas linhas usando uma estratégia de travamento otimista (hash/checksum)
     para prevenir condições de corrida sem usar uma célula de lock.
