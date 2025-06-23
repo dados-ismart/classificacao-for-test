@@ -422,7 +422,7 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
             worksheet.clear()
             worksheet.update('A1', dados_para_escrever, value_input_option='USER_ENTERED')
             
-            st.success("🎉 Registros atualizados com sucesso!")
+            st.toast("Registros atualizados com sucesso!", icon="🎉")
             st.balloons()
             sleep(2)
             st.rerun()
