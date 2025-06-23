@@ -283,7 +283,7 @@ def registrar_substituindo_df(df_insert, aba, coluna_apoio, remover_registros_an
                     continue
     st.rerun()
 
-def registrar(df_insert, aba):
+def registrar(df_insert, aba, rerun=True):
     """
     Registra um DataFrame no Google Sheets, garantindo que a ordem das colunas
     corresponda exatamente à da planilha, preenchendo colunas ausentes com
@@ -307,13 +307,16 @@ def registrar(df_insert, aba):
             
             st.toast("Registrado com sucesso!", icon="✅")
             sleep(1)
-            return True  
+            if rerun:
+                st.rerun()
+            else:
+                return True  
 
         except Exception as e:
             st.toast(f'Erro na tentativa {a}/3: {e}', icon="❌")
             sleep(2)
 
-    st.error("Falha ao registrar dados após 3 tentativas.")
+    st.toast("Falha ao registrar dados após 3 tentativas.")
     return False  
 
 def atualizar_linha(aba: str, valor_id, novos_dados: dict):
@@ -365,7 +368,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         sleep(2) 
         st.rerun()
     except Exception as e:
-        st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
+        st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
 
 def int_para_letra_coluna(n: int) -> str:
@@ -378,7 +381,6 @@ def int_para_letra_coluna(n: int) -> str:
         n, remainder = divmod(n - 1, 26)
         string = chr(65 + remainder) + string
     return string
-
 
 def esvaziar_aba(aba: str):
     """
@@ -426,7 +428,7 @@ def esvaziar_aba(aba: str):
             st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
 
-    st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
+    st.toast(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
     return False
 
 def retornar_indice(lista, variavel):

@@ -102,7 +102,7 @@ else:
                     df_insert = df.merge(bd[['RA', 'Cidade','Escola','Nota Matemática','Nota Português','Nota História','Nota Geografia','Nota Inglês','Nota Francês/Alemão e Outros','Nota Espanhol','Nota Química','Nota Física','Nota Biologia','Nota ENEM','Nota PU','media_calibrada','Orientadora','Ano','Segmento']], how='left', on='RA')
                     
                     # CHAMA A FUNÇÃO E VERIFICA O RESULTADO
-                    sucesso_registro = registrar(df_insert, 'historico')
+                    sucesso_registro = registrar(df_insert, 'historico', False)
 
                     # SÓ EXECUTA A LIMPEZA SE O REGISTRO FOI BEM-SUCEDIDO
                     if sucesso_registro:
