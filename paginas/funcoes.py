@@ -370,6 +370,96 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     except Exception as e:
         st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
+LOCK_CELL = 'Z1'
+def atualizar_linhas_seguro(aba: str, df_updates: pd.DataFrame, id_column: str):
+    """
+    Atualiza múltiplas linhas de forma segura, usando um sistema de lock para
+    prevenir condições de corrida entre múltiplos usuários.
+    """
+    st.write("🔄 Iniciando atualização segura em lote...")
+    worksheet = None  # Inicializa para garantir que a variável exista no 'finally'
+    
+    try:
+        # ETAPA 1: ADQUIRIR O LOCK
+        spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
+        worksheet = spreadsheet.worksheet(aba)
+        
+        lock_value = worksheet.acell(LOCK_CELL).value
+        if lock_value is not None and lock_value != '':
+            st.warning("A planilha está sendo atualizada por outro processo. Por favor, tente novamente em alguns instantes.")
+            return False
+
+        # Trava a planilha com um timestamp
+        worksheet.update_acell(LOCK_CELL, f'LOCKED_{datetime.now().isoformat()}')
+        st.toast("Lock adquirido. Processando atualizações...", icon="🔒")
+
+        # ETAPA 2: LER OS DADOS E PREPARAR AS ATUALIZAÇÕES
+        df_sheet = pd.DataFrame(worksheet.get_all_records(expected_headers=worksheet.row_values(1)))
+        
+        # Garante que a chave de junção seja do mesmo tipo
+        df_sheet[id_column] = df_sheet[id_column].astype(str)
+        df_updates[id_column] = df_updates[id_column].astype(str)
+        
+        # Sanitiza as datas
+        for col in df_updates.columns:
+            if pd.api.types.is_datetime64_any_dtype(df_updates[col]):
+                df_updates[col] = df_updates[col].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Prepara a lista de atualizações para o batch_update
+        updates_payload = []
+        headers = worksheet.row_values(1)
+
+        for index, update_row in df_updates.iterrows():
+            # Encontra o número da linha na planilha correspondente ao RA
+            match = df_sheet.loc[df_sheet[id_column] == update_row[id_column]]
+            if not match.empty:
+                # O índice do gspread é 1-based, e o do pandas é 0-based. +1 pelo header.
+                row_number = match.index[0] + 2 
+                
+                # Monta a linha de valores na ordem correta do cabeçalho
+                ordered_values = []
+                for header in headers:
+                    if header in update_row:
+                        ordered_values.append(update_row[header])
+                    else:
+                        # Pega o valor antigo se a coluna não estiver na atualização
+                        ordered_values.append(match.iloc[0].get(header, ''))
+                
+                # Adiciona ao payload
+                updates_payload.append({
+                    'range': f'A{row_number}:{int_para_letra_coluna(len(headers))}{row_number}',
+                    'values': [ordered_values]
+                })
+
+        # ETAPA 3: EXECUTAR A ATUALIZAÇÃO EM LOTE
+        if updates_payload:
+            st.write(f"Enviando {len(updates_payload)} atualizações de linha para a API...")
+            worksheet.batch_update(updates_payload, value_input_option='USER_ENTERED')
+            st.success("🎉 Registros atualizados com sucesso!")
+            st.cache_data.clear()
+        else:
+            st.toast("Nenhum registro correspondente encontrado para atualizar.", icon="ℹ️")
+
+        return True
+
+    except Exception as e:
+        st.error(f"Ocorreu um erro inesperado durante a atualização: {e}")
+        return False
+        
+    finally:
+        # ETAPA 4: LIBERAR O LOCK (SEMPRE EXECUTA)
+        # Garante que, mesmo em caso de erro, a planilha seja destravada.
+        if worksheet is not None:
+            worksheet.update_acell(LOCK_CELL, '') # Limpa a célula de lock
+            st.toast("Lock liberado.", icon="✅")
+
+# Você precisará desta função auxiliar que criamos antes
+def int_para_letra_coluna(n: int) -> str:
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
 
 def int_para_letra_coluna(n: int) -> str:
     """
