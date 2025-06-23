@@ -290,7 +290,7 @@ def registrar(df_insert, aba, rerun=True):
     corresponda exatamente à da planilha, preenchendo colunas ausentes com
     valores vazios.
     """
-    st.write(f"🔄 Registrando dados na aba '{aba}'...")
+    st.toast(f"🔄 Registrando dados na aba '{aba}'...")
     df_copy = df_insert.copy()
     for col in df_copy.columns:
         if pd.api.types.is_datetime64_any_dtype(df_copy[col]):
@@ -325,7 +325,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
     Atualiza uma linha específica com a ordem de operações correta e
     todas as verificações de segurança.
     """
-    st.write("🔄 Tentando atualizar...")
+    st.toast("Tentando atualizar...", icon="🔄")
     try:
         # PASSO 1: Preparar os dados de entrada
         # Sanitiza as datas no dicionário 'novos_dados' antes de qualquer outra coisa.
@@ -359,7 +359,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
                 col_index = headers.index(coluna)
                 novos_valores[col_index] = valor_novo
             else:
-                st.warning(f"A coluna '{coluna}' não foi encontrada no cabeçalho e será ignorada.")
+                st.toast(f"A coluna '{coluna}' não foi encontrada no cabeçalho e será ignorada.")
 
         # PASSO 5: Escrever os dados de volta com uma única chamada
         range_to_update = f'A{cell.row}'
@@ -369,7 +369,7 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         sleep(2) 
         st.rerun()
     except Exception as e:
-        st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}")
+        st.toast(f"Ocorreu um erro inesperado ao atualizar: {e}", icon="❌")
         sleep(2)
 
 def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
@@ -377,7 +377,7 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
     Atualiza múltiplas linhas usando uma estratégia de travamento otimista (hash/checksum)
     para prevenir condições de corrida sem usar uma célula de lock.
     """
-    st.write("🔄 Iniciando atualização otimista em lote...")
+    st.toast("Iniciando atualização em lote...", icon="🔄")
 
     if df_updates.empty:
         st.toast("Nenhum dado para atualizar.", icon="ℹ️")
@@ -410,36 +410,30 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
         df_final = df_sheet_indexed.reset_index()
 
         # ETAPA 3: LEITURA DE VERIFICAÇÃO E NOVO "FINGERPRINT"
-        st.write("Verificando se houve alterações externas...")
+        st.toast("Verificando se houve alterações externas...")
         df_sheet_atual = pd.DataFrame(worksheet.get_all_records(expected_headers=worksheet.row_values(1)))
         hash_atual = hashlib.sha256(df_sheet_atual.to_json().encode()).hexdigest()
 
         # ETAPA 4: COMPARAÇÃO E ESCRITA SEGURA
         if hash_inicial == hash_atual:
             # Os hashes são iguais! Ninguém mexeu. É seguro escrever.
-            st.write("Nenhuma alteração detectada. Escrevendo dados na planilha...")
+            st.toast("Nenhuma alteração detectada. Escrevendo dados na planilha...")
             dados_para_escrever = [df_final.columns.tolist()] + df_final.values.tolist()
             worksheet.clear()
             worksheet.update('A1', dados_para_escrever, value_input_option='USER_ENTERED')
             
             st.success("🎉 Registros atualizados com sucesso!")
+            st.balloons()
             sleep(2)
             st.rerun()
         else:
             # Os hashes são diferentes! Alguém alterou a planilha. Abortar.
-            st.warning("⚠️ A planilha foi modificada por outro processo enquanto você trabalhava. Sua atualização foi cancelada para evitar perda de dados. Por favor, tente novamente.")
+            st.toast("A planilha foi modificada por outro processo enquanto você trabalhava. Sua atualização foi cancelada para evitar perda de dados. Por favor, tente novamente.", icon="⚠️")
             return False
 
     except Exception as e:
-        st.error(f"Ocorreu um erro inesperado durante a atualização: {e}")
+        st.toast(f"Ocorreu um erro inesperado durante a atualização: {e}", icon="❌")
         return False
-
-def int_para_letra_coluna(n: int) -> str:
-    string = ""
-    while n > 0:
-        n, remainder = divmod(n - 1, 26)
-        string = chr(65 + remainder) + string
-    return string
 
 def int_para_letra_coluna(n: int) -> str:
     """
@@ -457,7 +451,7 @@ def esvaziar_aba(aba: str):
     Limpa o conteúdo de todas as células de uma aba a partir da segunda linha,
     sem depender de gspread.utils.
     """
-    st.write(f"Iniciando limpeza da aba '{aba}'...")
+    st.toast(f"Iniciando limpeza da aba '{aba}'...")
     
     for i in range(1, 4):
         try:
@@ -484,7 +478,7 @@ def esvaziar_aba(aba: str):
             last_col_letter = int_para_letra_coluna(num_cols)
             range_to_clear = f'A2:{last_col_letter}{num_rows}'
             
-            st.write(f"Limpando o intervalo {range_to_clear}...")
+            st.toast(f"Limpando o intervalo {range_to_clear}...")
 
             # O resto da lógica continua a mesma
             worksheet.batch_clear([range_to_clear])
