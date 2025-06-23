@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar
+from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, atualizar_linhas_seguro
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
@@ -320,7 +320,7 @@ if submit_button:
         ]]   
         
         df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
-        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final')
+        atualizar_linhas_seguro('registro', df_tabela_editavel, 'RA')
 
 #Segunda Tabela - Edição dos Dados                 
 df_tabela_editavel = df[df['RA'].isin(bd_segmentado['RA'])]
@@ -593,6 +593,6 @@ if submit_button:
         df_tabela_editavel['data_submit'] = datetime.now(fuso_horario)
         df_tabela_editavel['confirmacao_classificacao_coordenacao'] = df_tabela_editavel['conclusao_classificacao_final']
         df_tabela_editavel['conclusao_classificacao_final'] = 'Sim'
-        registrar(df_tabela_editavel, 'registro', 'conclusao_classificacao_final')
+        atualizar_linhas_seguro('registro', df_tabela_editavel, 'RA')
     else:
         st.warning('Revise ao menos um aluno antes de registrar')
