@@ -381,7 +381,8 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
 
     if df_updates.empty:
         st.toast("Nenhum dado para atualizar.", icon="ℹ️")
-        return True
+        sleep(2)
+        st.rerun()
 
     try:
         # ETAPA 1: LEITURA INICIAL E CRIAÇÃO DO "FINGERPRINT" (HASH)
@@ -422,8 +423,8 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
             worksheet.update('A1', dados_para_escrever, value_input_option='USER_ENTERED')
             
             st.success("🎉 Registros atualizados com sucesso!")
-            st.cache_data.clear()
-            return True
+            sleep(2)
+            st.rerun()
         else:
             # Os hashes são diferentes! Alguém alterou a planilha. Abortar.
             st.warning("⚠️ A planilha foi modificada por outro processo enquanto você trabalhava. Sua atualização foi cancelada para evitar perda de dados. Por favor, tente novamente.")
@@ -433,7 +434,6 @@ def atualizar_linhas(aba: str, df_updates: pd.DataFrame, id_column: str):
         st.error(f"Ocorreu um erro inesperado durante a atualização: {e}")
         return False
 
-# Você precisará desta função auxiliar que criamos antes
 def int_para_letra_coluna(n: int) -> str:
     string = ""
     while n > 0:

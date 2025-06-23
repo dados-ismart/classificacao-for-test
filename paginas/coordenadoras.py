@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pytz
-from paginas.funcoes import ler_sheets, ler_sheets_cache, registrar, atualizar_linhas
+from paginas.funcoes import ler_sheets, ler_sheets_cache, atualizar_linhas
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
