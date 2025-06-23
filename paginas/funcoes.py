@@ -368,29 +368,67 @@ def atualizar_linha(aba: str, valor_id, novos_dados: dict):
         st.error(f"Ocorreu um erro inesperado ao atualizar: {e}")
         sleep(2)
 
+def int_para_letra_coluna(n: int) -> str:
+    """
+    Converte um número de coluna (1-based) para sua letra correspondente no Excel/Sheets.
+    Ex: 1 -> 'A', 27 -> 'AA'.
+    """
+    string = ""
+    while n > 0:
+        n, remainder = divmod(n - 1, 26)
+        string = chr(65 + remainder) + string
+    return string
+
+
 def esvaziar_aba(aba: str):
+    """
+    Limpa o conteúdo de todas as células de uma aba a partir da segunda linha,
+    sem depender de gspread.utils.
+    """
     st.write(f"Iniciando limpeza da aba '{aba}'...")
+    
     for i in range(1, 4):
         try:
-            # ... (lógica de conexão e delete_rows continua a mesma) ...
+            # Conecta à planilha e seleciona a aba
             spreadsheet = conn.open(st.secrets["connections"]["gsheets"]["spreadsheet_name"])
             worksheet = spreadsheet.worksheet(aba)
+
+            # Pega todos os valores para saber as dimensões da planilha
             all_data = worksheet.get_all_values()
+            num_rows = len(all_data)
             
-            if len(all_data) > 1:
-                worksheet.delete_rows(2, len(all_data))
-                st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
-            else:
+            if num_rows <= 1:
                 st.toast(f"Aba '{aba}' já está vazia.", icon="ℹ️")
-            return True  
+                st.cache_data.clear()
+                return True
+
+            num_cols = len(all_data[0]) if num_rows > 0 else 0
+            if num_cols == 0:
+                st.toast(f"Aba '{aba}' não tem colunas.", icon="ℹ️")
+                return True
+
+            # --- MUDANÇA PRINCIPAL AQUI ---
+            # Usa nossa própria função para obter a letra da última coluna
+            last_col_letter = int_para_letra_coluna(num_cols)
+            range_to_clear = f'A2:{last_col_letter}{num_rows}'
+            
+            st.write(f"Limpando o intervalo {range_to_clear}...")
+
+            # O resto da lógica continua a mesma
+            worksheet.batch_clear([range_to_clear])
+            
+            st.toast(f"Aba '{aba}' limpa com sucesso!", icon="✅")
+            st.cache_data.clear()
+            sleep(1)
+            return True # Sucesso!
 
         except Exception as e:
             st.toast(f"Erro ao limpar a aba na tentativa {i}/3: {e}", icon="❌")
             sleep(2)
 
     st.error(f"Não foi possível limpar a aba '{aba}' após 3 tentativas.")
-    return False  
-        
+    return False
+
 def retornar_indice(lista, variavel):
     if variavel == None:
         return None
