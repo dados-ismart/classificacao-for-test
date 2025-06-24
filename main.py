@@ -16,7 +16,7 @@ st.logo(logo, icon_image=logo)
 def check_microsoft_login():
     """Autenticação via login da Microsoft e verificação do domínio."""
     # if not st.user.is_logged_in:   #Esta versão não está disponível no streamlit utilizado para deploy
-    if not st.experimental_user.is_logged_in:
+    if not st.user.is_logged_in:
         st.markdown("<div style='text-align: center; font-size: 32px; font-weight: bold;'>🔐 Bem-vinda(o) a Plataforma de Classificação</div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center; font-size: 18px;'>Para acessar as informações, faça login com sua conta institucional.</div>", unsafe_allow_html=True)
         st.write("")
@@ -32,7 +32,7 @@ def check_microsoft_login():
         st.stop()
 
     # usuario = st.user
-    usuario = st.experimental_user
+    usuario = st.user
     email_usuario = usuario.email
 
     # if not email_usuario.endswith("@ismart.org.br"):
@@ -49,7 +49,7 @@ def check_microsoft_login():
 
 def logout():
     """Realiza logout da conta Microsoft e limpa a sessão."""
-    if st.experimental_user.is_logged_in:
+    if st.user.is_logged_in:
         st.logout()
     
     # Limpa variáveis da sessão
@@ -88,6 +88,12 @@ dash_status_preenchimento = st.Page(
     icon= "🕔"
 )
 
+tutorial = st.Page(
+    "paginas/tutorial.py",
+    title= "Tutorial",
+    icon= "🎥"
+)
+
 # --- NAVIGATION SETUP [WITH SECTIONS]---
 if check_microsoft_login():
     if "auth_success_shown" not in st.session_state:
@@ -95,15 +101,15 @@ if check_microsoft_login():
         st.session_state.auth_success_shown = True 
     df_login = ler_sheets_cache('login')
     
-    email = st.experimental_user.email 
+    email = st.user.email 
     if df_login.query(f'email == "{email}"')["cargo"].iloc[0] == "coordenação":
         pg = st.navigation({
-            "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento],
-        })    
+            "Páginas": [pagina_inicial_coordenadora, dash, dash_status_preenchimento, tutorial],
+        }, position='top')    
     else:
         pg = st.navigation({
-            "Páginas": [pagina_inicial_orientadora, dash, dash_status_preenchimento],
-        })  
+            "Páginas": [pagina_inicial_orientadora, dash, dash_status_preenchimento, tutorial],
+        }, position='top')  
 
     with st.sidebar:
         if st.button("🚪 **Sair da conta**", 
@@ -112,7 +118,11 @@ if check_microsoft_login():
                     use_container_width=True):
             logout()
             st.rerun() 
-   
+        if st.button('Limpar Cache'):
+            st.cache_data.clear()
+            st.cache_resource.clear()
+            st.rerun()
+
 else:
     st.stop()
 # --- RUN NAVIGATION ---
