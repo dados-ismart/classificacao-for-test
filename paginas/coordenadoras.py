@@ -6,7 +6,7 @@ from paginas.funcoes import ler_sheets, ler_sheets_cache, atualizar_linhas
 
 #set de fuso e conexão com sheets
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-email = st.experimental_user.email 
+email = st.user.email 
 
 #importar e tratar datasets
 df = ler_sheets('registro')
