@@ -5,7 +5,7 @@ import pytz
 from paginas.funcoes import ler_sheets,ler_sheets_cache, registrar, classificar, retornar_indice, atualizar_linha
 
 fuso_horario = pytz.timezone('America/Sao_Paulo')
-email = st.experimental_user.email 
+email = st.user.email 
 
 caixa_classificacao = ['Destaque', 'Pré-Destaque', 'Mediano', 'Atenção', 'Crítico', 'Crítico OP']
 caixa_justificativa_classificacao = ['Acadêmico', 'Perfil', 'Familiar', 'Saúde', 'Psicológico', 'Curso não apoiado', 'Curso concorrido', 'Escolha frágil']
